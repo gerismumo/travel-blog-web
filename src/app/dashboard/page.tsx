@@ -1,8 +1,14 @@
+import Link from 'next/link'
 import React from 'react'
+
 
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <>
+    <div className="flex ">
+        <h1>DashBoard page</h1>
+    </div>
+    </>
   )
 }
 
