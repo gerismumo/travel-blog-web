@@ -11,8 +11,8 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({data}) => {
   const {isSidebarOpen, toggleSidebar} = data;
   return (
-    <div className={`bg-[#ffffff] fixed z-[50] top-0  right-0 ${isSidebarOpen ? 'left-0 lg:left-[250px]': 'w-[100%] left-0'} `}>
-      <nav className="flex flex-col  w-[100%] py-[10px]  px-[20px]  gap-[20px] shadow-sm">
+    <div className={`bg-lightRed fixed z-[50] top-0  right-0 ${isSidebarOpen ? 'left-0 lg:left-[250px]': 'w-[100%] left-0'} `}>
+      <nav className="flex flex-col  w-[100%] py-[15px]  px-[20px]  gap-[20px] shadow-sm">
         <div className="flex flex-row items-center justify-between ">
           <button onClick={toggleSidebar}
             className='text-white'
@@ -23,11 +23,11 @@ const Header: React.FC<HeaderProps> = ({data}) => {
             </button>
             <div className="flex flex-row items-center gap-[30px]">
               <div className="flex flex-col items-center">
-                <h2 className='font-[500]'>John Doe</h2>
-                <p className='text-[14px]'>Admin</p>
+                <h2 className='font-[500] text-[15px]'>John Doe</h2>
+                <p className='text-[13px]'>Admin</p>
               </div>
                 <button
-                className='font-[700]'
+                className=' bg-darkBlue px-[25px] py-[8px] rounded-[6px] text-white '
                 >Logout</button>
             </div>
         </div>
