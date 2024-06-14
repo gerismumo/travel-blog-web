@@ -46,12 +46,15 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
             </button>
             {openDestinationTabs && (
               <div className="flex flex-col gap-[10px]">
-                <Link href="/dashboard/add-destination"
+                <Link href="/dashboard/destination/add"
                 className='text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
                 >Add</Link>
-                <Link href="/dashboard/destination-weather"
+                <Link href="/dashboard/destination/weather"
                 className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >Add Weather</Link>
+                <Link href="/dashboard/destination/add-info"
+                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >Add Content</Link>
               </div>
             )}
             <Link href=""
