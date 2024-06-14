@@ -55,6 +55,15 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                 <Link href="/dashboard/destination/add-info"
                 className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >Add Content</Link>
+                <Link href="/dashboard/destination/add-month-info"
+                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >Add Month Info</Link>
+                <Link href="/dashboard/destination/add-faq"
+                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >Add FaQ</Link>
+                <Link href="/dashboard/destination/add-monthly-faq"
+                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >Add Monthly FaQ</Link>
               </div>
             )}
             <Link href=""
