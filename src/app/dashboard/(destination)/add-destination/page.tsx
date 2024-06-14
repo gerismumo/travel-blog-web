@@ -43,10 +43,10 @@ const AddDestination = () => {
 
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-row items-center justify-center">
       <form 
       onSubmit={(e) => handleSubmit(e)}
-      className='flex flex-col gap-[10px]'
+      className='flex flex-col gap-[10px] w-[100%] sm:w-[500px]'
       >
         <div className="flex flex-col">
           <label htmlFor="destination">Destination</label>

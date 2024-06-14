@@ -18,7 +18,7 @@ export default function DashboardDetails({
     return (
         <div className="flex">
             <SideBar data={{isSidebarOpen, toggleSidebar}} />
-            <div className={`flex flex-col bg-darkPrimary ${isSidebarOpen ? 'lg:ml-[250px] ml-[0px]' :'ml-[0px] w-[100%]'} `}>
+            <div className={`flex flex-col bg-darkPrimary ${isSidebarOpen ? 'lg:ml-[250px] ml-[0px] w-[100%]' :'ml-[0px] w-[100%]'} `}>
                 <Header data={{isSidebarOpen, toggleSidebar}} />
                 <div className="mt-[100px] px-[20px] py-[10px]">
                     {children}

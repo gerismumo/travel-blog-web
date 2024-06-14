@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome} from '@fortawesome/free-solid-svg-icons';
+import { faHome, faAngleDown, faAngleUp} from '@fortawesome/free-solid-svg-icons';
 
 interface SideBarProps {
   data: {
@@ -12,6 +12,7 @@ interface SideBarProps {
 
 const SideBar: React.FC<SideBarProps> = ({ data }) => {
   const { isSidebarOpen, toggleSidebar } = data;
+  const [openDestinationTabs, setOpenDestinationTabs] = useState<boolean>(false);
 
   return (
     <div className={`fixed flex flex-col bg-slate-300 gap-[30px]   w-[250px] z-[999] px-[25px] py-[10px] overflow-auto h-[100%] ${isSidebarOpen ? '': 'hidden'}`}>
@@ -36,12 +37,23 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
               />
               <span className='text-nowrap '>Home</span>
             </Link>
-            <Link href="/dashboard/add-destination"
-            className='text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
-            >Add Destination</Link>
-            <Link href=""
-            className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-            >Add Region</Link>
+            <button
+            onClick={() => setOpenDestinationTabs(!openDestinationTabs)}
+            className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
+            >
+              <span>Destination</span>
+              {openDestinationTabs ? <FontAwesomeIcon icon={faAngleUp} />: <FontAwesomeIcon icon={faAngleDown} /> }
+            </button>
+            {openDestinationTabs && (
+              <div className="flex flex-col gap-[10px]">
+                <Link href="/dashboard/add-destination"
+                className='text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
+                >Add</Link>
+                <Link href="/dashboard/destination-weather"
+                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >Add Weather</Link>
+              </div>
+            )}
             <Link href=""
             className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
             >Current Weather</Link>
