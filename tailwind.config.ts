@@ -15,6 +15,7 @@ const config: Config = {
       'lightRed':'#FF5F5F',
       'lightGrey': '#F5F5F5',
       'grey': 'grey',
+      'lightOrange': '#DC5F00',
       ...colors,
     },
     extend: {

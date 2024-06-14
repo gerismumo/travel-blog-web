@@ -5,7 +5,7 @@ import React from 'react'
 const Dashboard = () => {
   return (
     <>
-    <div className="flex ">
+    <div className="flex flex-col  ">
         <h1>DashBoard page</h1>
     </div>
     </>

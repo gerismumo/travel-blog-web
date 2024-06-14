@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome} from '@fortawesome/free-solid-svg-icons';
 
 interface SideBarProps {
   data: {
@@ -26,6 +28,14 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
           </button>
         </div>
         <div className="flex flex-col gap-[10px]">
+           <Link href="/dashboard"
+            className=' flex flex-row items-cemter gap-[5px]  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
+            >
+              <FontAwesomeIcon icon={faHome} 
+              className='text-[24px] text-lightRed '
+              />
+              <span className='text-nowrap '>Home</span>
+            </Link>
             <Link href="/dashboard/add-destination"
             className='text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
             >Add Destination</Link>

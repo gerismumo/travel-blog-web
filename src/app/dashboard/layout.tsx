@@ -20,7 +20,7 @@ export default function DashboardDetails({
             <SideBar data={{isSidebarOpen, toggleSidebar}} />
             <div className={`flex flex-col bg-darkPrimary ${isSidebarOpen ? 'lg:ml-[250px] ml-[0px]' :'ml-[0px] w-[100%]'} `}>
                 <Header data={{isSidebarOpen, toggleSidebar}} />
-                <div className="mt-[100px]">
+                <div className="mt-[100px] px-[20px] py-[10px]">
                     {children}
                 </div>
             </div>
