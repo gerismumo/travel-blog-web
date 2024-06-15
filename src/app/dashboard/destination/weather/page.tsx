@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useState } from 'react';
+import { getDestinations, IDestinationList } from '@/utils/(apis)/destinations/api';
+import React, { useEffect, useState } from 'react';
 
 
 const TemperatureForm: React.FC = () => {
@@ -11,6 +12,23 @@ const TemperatureForm: React.FC = () => {
   const [waterTemperature, setWaterTemperature] = useState<string>('');
   const [condition, setCondition] = useState<string>("");
   const [sunnyHours, setSunnyHours] = useState<string>("");
+
+
+  const [destinations, setDestinations] = useState<IDestinationList[]>([]);
+    const [error, setError] = useState<string | null>(null);
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const data = await getDestinations();
+          setDestinations(data);
+        } catch (error : any) {
+          setError(error.message);
+        }
+      };
+  
+      fetchData();
+    }, []);
 
  
 
@@ -52,7 +70,9 @@ const TemperatureForm: React.FC = () => {
             onChange={(e) => setDestination(e.target.value)}
           >
             <option value="">select destination</option>
-            <option value="London">London</option>
+            {destinations.length > 0 && destinations.map((obj) => (
+              <option key={obj._id} value={obj.name}>{obj.name}</option>
+            ))}
           </select>
         </div>
         <div className="flex flex-col">

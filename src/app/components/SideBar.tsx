@@ -66,9 +66,9 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                 >Add Monthly FaQ</Link>
               </div>
             )}
-            <Link href=""
+            <Link href="/dashboard/destination/list"
             className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-            >Current Weather</Link>
+            >Destnation List</Link>
         </div>
     </div>
   )

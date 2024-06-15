@@ -1,33 +1,11 @@
 "use client"
 
 import React, { useState } from 'react'
+import axios from 'axios'
+import { toast } from 'react-hot-toast';
 
 const AddDestination = () => {
   const[destination, setDestination] = useState<string>('');
-
-  // const[openAddRegion, setOpenAddRegion] = useState<Boolean>(false);
-  // const[regions, setRegions] = useState<string[]>([]);
-  // const[newRegion, setNewRegion] = useState<string>('');
-
-
-  // const handleOpenAddRegion = (e: any) => {
-  //   e.preventDefault();
-  //   setOpenAddRegion(!openAddRegion);
-  // }
-
-  // const handleNewRegion = (e: any) => {
-  //   e.preventDefault();
-
-  //   if(newRegion === '' || destination === '') {
-  //     alert("fill all the required fields");
-  //     return;
-  //   }
-
-  //   setRegions([...regions, newRegion]);
-  //   setNewRegion('');
-  // }
-
-
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -37,32 +15,20 @@ const AddDestination = () => {
       return;
     }
 
-   try {
-    const response = await fetch('/api/destination', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-       name:destination,
-      }),
-    })
+    try {
+      const response = await axios.post('/api/destination', {
+        name: destination,
+      });
 
-    const result = await response.json();
-
-      if (result.success) {
-        alert("Destination added successfully");
-        setDestination(''); 
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setDestination('');
       } else {
-        alert(`Failed to add destination: ${result.message}`);
+        toast.error(response.data.message);
       }
-
-   }catch(error) {
-     console.error('Error adding destination:', error);
-      alert('An error occurred while adding the destination');
-   }
-  
-
+    } catch (error) {
+      toast.error('An error occurred while adding the destination');
+    }
   }
 
 

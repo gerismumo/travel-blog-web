@@ -15,7 +15,6 @@ export async function POST(req: NextRequest) {
     await Destination.create({name});
     return NextResponse.json({ success: true, message: 'Added successfully' }); 
   } catch (err: any) {
-    console.error(`Error creating destination: ${err.message}`);
     return NextResponse.json({ success: false, message: 'Error adding destination' }); 
   }
 }
@@ -26,7 +25,6 @@ export async function GET(req: NextRequest) {
     const destinations = await Destination.find({});
     return NextResponse.json({ success: true, destinations });
   } catch (err: any) {
-    console.error(`Error retrieving destinations: ${err.message}`);
     return NextResponse.json({ success: false, message: 'Error retrieving destinations' });
   }
 }
