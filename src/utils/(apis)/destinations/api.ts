@@ -1,10 +1,8 @@
 
+import { IDestinationList } from '@/(types)/destination';
 import axios from 'axios';
 
-export interface IDestinationList {
-  _id: string;
-  name: string;
-}
+
 
 export const getDestinations = async (): Promise<IDestinationList[]> => {
   try {

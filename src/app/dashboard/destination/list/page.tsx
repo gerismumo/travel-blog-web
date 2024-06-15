@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import { getDestinations, IDestinationList } from '@/utils/(apis)/destinations/api';
+import { getDestinations} from '@/utils/(apis)/destinations/api';
+import { IDestinationList } from '@/(types)/destination';
 
 const Page = () => {
 

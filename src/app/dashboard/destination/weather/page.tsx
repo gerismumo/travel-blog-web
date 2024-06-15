@@ -1,6 +1,7 @@
 "use client"
 
-import { getDestinations, IDestinationList } from '@/utils/(apis)/destinations/api';
+import { IDestinationList } from '@/(types)/destination';
+import { getDestinations} from '@/utils/(apis)/destinations/api';
 import React, { useEffect, useState } from 'react';
 
 

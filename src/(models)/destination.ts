@@ -1,9 +1,8 @@
-import mongoose, {Schema, Document} from 'mongoose';
+import { IDestination } from '@/(types)/destination';
+import mongoose, {Schema} from 'mongoose';
 
 
-export interface IDestination extends Document {
-    name: string;
-  }
+
 
 const destinationSchema : Schema<IDestination> = new mongoose.Schema({
   name: {
