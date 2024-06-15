@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Destination from '@/(models)/destination';
 import connectDB from '@/utils/dbConnect';
+import { Destination } from '@/(models)/destination';
 
 export async function POST(req: NextRequest) {
   const body = await req.json();

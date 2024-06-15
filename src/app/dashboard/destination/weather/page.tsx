@@ -1,8 +1,10 @@
 "use client"
 
-import { IDestinationList } from '@/(types)/destination';
+import { IDestinationList, IWeatherData } from '@/(types)/destination';
 import { getDestinations} from '@/utils/(apis)/destinations/api';
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 
 const TemperatureForm: React.FC = () => {
@@ -33,28 +35,46 @@ const TemperatureForm: React.FC = () => {
 
  
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    console.log({
-      destination,
+    const weatherData: IWeatherData = {
+      destinationId: destination,
       date: selectedDate,
-      air_temperature: temperature,
-      water_temperature: waterTemperature,
+      airTemperature: temperature,
+      waterTemperature: waterTemperature,
       humidity,
       condition,
-      sunny_hours: sunnyHours,
-    });
+      sunnyHours: sunnyHours,
+    };
 
+    for(const[key, value] of Object.entries(weatherData)) {
+      if(!value) {
+        toast.error("all fields are required");
+        return;
+      }
+    }
+    
+    try {
+      const response = await axios.post('/api/destination-weather',weatherData);
+      
+      if(response.data.success) {
+          toast.success(response.data.message);
+        //reset all fieds values
 
-    // Reset form fields after submission if needed
-    setDestination('');
-    setSelectedDate('');
-    setTemperature('');
-    setHumidity('');
-    setCondition('');
-    setWaterTemperature('');
-    setSunnyHours('');
+          setDestination('');
+          setSelectedDate('');
+          setTemperature('');
+          setHumidity('');
+          setCondition('');
+          setWaterTemperature('');
+          setSunnyHours('');
+      }else {
+        toast.error(response.data.message);
+      }
+    }catch(error: any) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -72,7 +92,7 @@ const TemperatureForm: React.FC = () => {
           >
             <option value="">select destination</option>
             {destinations.length > 0 && destinations.map((obj) => (
-              <option key={obj._id} value={obj.name}>{obj.name}</option>
+              <option key={obj._id} value={obj._id}>{obj.name}</option>
             ))}
           </select>
         </div>
