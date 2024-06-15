@@ -1,4 +1,4 @@
-import { IDestination, IWeatherData } from '@/(types)/destination';
+import { IDestination, IWeatherData } from '@/(types)/type';
 import mongoose, {Schema} from 'mongoose';
 
 

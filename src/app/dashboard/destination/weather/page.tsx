@@ -1,10 +1,10 @@
 "use client"
 
-import { IDestinationList, IWeatherData } from '@/(types)/destination';
-import { getDestinations} from '@/utils/(apis)/destinations/api';
+import { IDestinationList, IWeatherData } from '@/(types)/type';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import { getDestinations } from '@/utils/(apis)/destinationApi';
 
 
 const TemperatureForm: React.FC = () => {

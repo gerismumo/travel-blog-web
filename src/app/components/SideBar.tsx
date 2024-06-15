@@ -68,7 +68,10 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
             )}
             <Link href="/dashboard/destination/list"
             className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-            >Destnation List</Link>
+            >Destination List</Link>
+            <Link href="/dashboard/weather"
+            className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+            >Weather Data</Link>
         </div>
     </div>
   )

@@ -16,3 +16,14 @@ export interface IWeatherData {
     condition: string;
     sunnyHours: string;
 }
+
+export interface IWeatherDataList {
+    _id: string;
+    destinationId: string; 
+    date: string;
+    airTemperature: string;
+    waterTemperature: string;
+    humidity: string;
+    condition: string;
+    sunnyHours: string;
+}

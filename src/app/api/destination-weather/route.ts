@@ -1,5 +1,5 @@
 import { DestinationWeatherData } from "@/(models)/destination";
-import { IWeatherData } from "@/(types)/destination";
+import { IWeatherData } from "@/(types)/type";
 import connectDB from "@/utils/dbConnect";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -37,4 +37,14 @@ export async function POST(req:NextRequest) {
     }catch(error) {
         return NextResponse.json({success: false, message: "server error"})
     } 
+}
+
+export async function GET(req: NextRequest) {
+    try{
+        await connectDB();
+        const destinationWeather = await DestinationWeatherData.find();
+        return NextResponse.json({success: true, data: destinationWeather});
+    }catch(error) {
+        return NextResponse.json({success: false, message: "server error"})
+    }
 }

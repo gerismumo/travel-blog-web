@@ -1,8 +1,9 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import { getDestinations} from '@/utils/(apis)/destinations/api';
-import { IDestinationList } from '@/(types)/destination';
+import { IDestinationList } from '@/(types)/type';
+import { getDestinations } from '@/utils/(apis)/destinationApi';
+import toast from 'react-hot-toast';
 
 const Page = () => {
 
@@ -21,6 +22,10 @@ const Page = () => {
   
       fetchData();
     }, []);
+
+    if(error) {
+        toast.error(error);
+    }
 
   return (
     <div className="flex flex-row justify-center">
