@@ -3,31 +3,32 @@
 import React, { useState } from 'react'
 
 const AddDestination = () => {
-  const[openAddRegion, setOpenAddRegion] = useState<Boolean>(false);
-  const[regions, setRegions] = useState<string[]>([]);
   const[destination, setDestination] = useState<string>('');
-  const[newRegion, setNewRegion] = useState<string>('');
+
+  // const[openAddRegion, setOpenAddRegion] = useState<Boolean>(false);
+  // const[regions, setRegions] = useState<string[]>([]);
+  // const[newRegion, setNewRegion] = useState<string>('');
 
 
-  const handleOpenAddRegion = (e: any) => {
-    e.preventDefault();
-    setOpenAddRegion(!openAddRegion);
-  }
+  // const handleOpenAddRegion = (e: any) => {
+  //   e.preventDefault();
+  //   setOpenAddRegion(!openAddRegion);
+  // }
 
-  const handleNewRegion = (e: any) => {
-    e.preventDefault();
+  // const handleNewRegion = (e: any) => {
+  //   e.preventDefault();
 
-    if(newRegion === '' || destination === '') {
-      alert("fill all the required fields");
-      return;
-    }
+  //   if(newRegion === '' || destination === '') {
+  //     alert("fill all the required fields");
+  //     return;
+  //   }
 
-    setRegions([...regions, newRegion]);
-    setNewRegion('');
-  }
+  //   setRegions([...regions, newRegion]);
+  //   setNewRegion('');
+  // }
 
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
 
@@ -36,8 +37,31 @@ const AddDestination = () => {
       return;
     }
 
-    console.log(destination);
-    console.log(regions)
+   try {
+    const response = await fetch('/api/destination', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+       name:destination,
+      }),
+    })
+
+    const result = await response.json();
+
+      if (result.success) {
+        alert("Destination added successfully");
+        setDestination(''); 
+      } else {
+        alert(`Failed to add destination: ${result.message}`);
+      }
+
+   }catch(error) {
+     console.error('Error adding destination:', error);
+      alert('An error occurred while adding the destination');
+   }
+  
 
   }
 
@@ -57,7 +81,7 @@ const AddDestination = () => {
           className='input'
            />
         </div>
-        <div className="flex flex-col">
+        {/* <div className="flex flex-col">
           <button
           onClick={(e) => handleOpenAddRegion(e)}
           className='bg-darkBlue px-[15px] py-[3px] text-[15px] rounded-[3px] text-white'
@@ -96,7 +120,7 @@ const AddDestination = () => {
               </div>
             )}
           </div>
-        )}
+        )} */}
         <button
         type='submit'
         className='bg-lightRed px-[30px] py-[6px] rounded-[6px] w-[100%] text-white'
