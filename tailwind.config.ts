@@ -10,7 +10,8 @@ const config: Config = {
   theme: {
     colors: {
       'white' : '#ffffff',
-      'darkBlue' : '#30475E',
+      'darkBlue' : '#222831',
+      'lightDark' : '#31363F',
       'dark': '#121212',
       'lightRed':'#FF5F5F',
       'lightGrey': '#F5F5F5',

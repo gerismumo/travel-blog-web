@@ -9,8 +9,6 @@ export async function POST(req:NextRequest) {
         const body:IWeatherData = await req.json();
 
         const {destinationId, date} = body;
-
-        console.log(body);
         for(const[key, value] of Object.entries(body)) {
             if(!value) {
                 return NextResponse.json({success: false, message: "kkall fileds are required"});

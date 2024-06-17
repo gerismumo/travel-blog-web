@@ -25,20 +25,45 @@ export async function PUT(req: NextRequest) {
     const id = url.pathname.split('/').pop();  
     try {
         const body = await req.json();
+
         for(const[key, value] of Object.entries(body)) {
             if(!value) {
                return NextResponse.json({ success:false, message:"all fields are required"});
             }
           }
-
+          const { destinationId, date, ...updateFields } = body;
         await connectDB(); 
-        const updateData = await DestinationWeatherData.findByIdAndUpdate(id, body, { new: true });
-        if(updateData) {
-            return NextResponse.json({ success: true, message: 'Updated successfully' });
-        }else {
-            return NextResponse.json({ success: false, message: 'Something went wrong' });
+          //validate date input
+        
+        const existingRecord = await DestinationWeatherData.findOne({ destinationId, date });
+
+        let updateData;
+
+        if (existingRecord) {
+            //failed to update date or destination
+            updateData = await DestinationWeatherData.findByIdAndUpdate(id, 
+                {
+                    airTemperature: body.airTemperature,
+                    waterTemperature: body.waterTemperature,
+                    humidity: body.humidity,
+                    condition: body.condition,
+                    sunnyHours: body.sunnyHours,
+                }
+                , { new: true });
+
+                return NextResponse.json({ success: true, message: 'Record with same date updated' });
+        } else {
+            updateData = await DestinationWeatherData.findByIdAndUpdate(id, { destinationId, date, ...updateFields }, { new: true });
         }
+
+        if (updateData) {
+            return NextResponse.json({ success: true, message: 'Updated successfully' });
+          } else {
+            return NextResponse.json({ success: false, message: 'Something went wrong' });
+          }
+        
     } catch (error) {
+        console.log(error);
         return NextResponse.json({ success: false, message:'server error' }); 
     }
 }
