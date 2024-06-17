@@ -21,7 +21,7 @@ const Page = () => {
       };
   
       fetchData();
-    }, []);
+    }, [setDestinations, setError]);
 
     if(error) {
         toast.error(error);

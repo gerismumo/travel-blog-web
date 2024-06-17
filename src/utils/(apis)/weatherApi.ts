@@ -1,8 +1,8 @@
 
-import { IWeatherData } from '@/(types)/type';
+import { IWeatherDataList } from '@/(types)/type';
 import axios from 'axios';
 
-export const getWeatherData = async (): Promise<IWeatherData[]> => {
+export const getWeatherData = async (): Promise<IWeatherDataList[]> => {
   try {
     const response = await axios.get('/api/destination-weather');
     if (response.data.success) {
