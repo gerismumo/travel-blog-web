@@ -13,6 +13,9 @@ interface SideBarProps {
 const SideBar: React.FC<SideBarProps> = ({ data }) => {
   const { isSidebarOpen, toggleSidebar } = data;
   const [openDestinationTabs, setOpenDestinationTabs] = useState<boolean>(false);
+  const [openWeatherTabs, setOpenWeatherTabs] = useState<boolean>(false);
+  const [openContentTabs, setOpenContentTabs] = useState<boolean>(false);
+  const [openFaqTabs, setOpenFaqTabs] = useState<boolean>(false);
 
   return (
     <div className={`fixed flex flex-col bg-slate-300 gap-[30px]   w-[250px] z-[999] px-[25px] py-[10px] overflow-auto h-[100%] ${isSidebarOpen ? '': 'hidden'}`}>
@@ -49,29 +52,63 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                 <Link href="/dashboard/destination/add"
                 className='text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
                 >Add</Link>
-                <Link href="/dashboard/destination/weather"
+                <Link href="/dashboard/destination/list"
                 className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >Add Weather</Link>
-                <Link href="/dashboard/destination/add-info"
+                >Destination List</Link>
+              </div>
+            )}
+            <button
+            onClick={() => setOpenWeatherTabs(!openWeatherTabs)}
+            className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
+            >
+              <span>Weather</span>
+              {openWeatherTabs ? <FontAwesomeIcon icon={faAngleUp} />: <FontAwesomeIcon icon={faAngleDown} /> }
+            </button>
+            {openWeatherTabs && (
+              <div className="flex flex-col gap-[10px]">
+                <Link href="/dashboard/weather"
+                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >Add</Link>
+                <Link href="/dashboard/weather/data"
+                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >Data</Link>
+              </div>
+            )}
+            <button
+            onClick={() => setOpenContentTabs(!openContentTabs)}
+            className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
+            >
+              <span>Content</span>
+              {openContentTabs ? <FontAwesomeIcon icon={faAngleUp} />: <FontAwesomeIcon icon={faAngleDown} /> }
+            </button>
+            {openContentTabs && (
+              <div className="flex flex-col gap-[10px]">
+                <Link href="/dashboard/content"
                 className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >Add Content</Link>
-                <Link href="/dashboard/destination/add-month-info"
+                <Link href="/dashboard/content/montly"
                 className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >Add Month Info</Link>
-                <Link href="/dashboard/destination/add-faq"
+              </div>
+            )}
+            <button
+            onClick={() => setOpenFaqTabs(!openFaqTabs)}
+            className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
+            >
+              <span>Faqs</span>
+              {openFaqTabs ? <FontAwesomeIcon icon={faAngleUp} />: <FontAwesomeIcon icon={faAngleDown} /> }
+            </button> 
+            {openFaqTabs && (
+              <div className="flex flex-col gap-[10px]">
+                <Link href="/dashboard/faqs"
                 className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >Add FaQ</Link>
-                <Link href="/dashboard/destination/add-monthly-faq"
+                <Link href="/dashboard/faqs/montly"
                 className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >Add Monthly FaQ</Link>
               </div>
             )}
-            <Link href="/dashboard/destination/list"
-            className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-            >Destination List</Link>
-            <Link href="/dashboard/weather"
-            className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-            >Weather Data</Link>
+              
         </div>
     </div>
   )

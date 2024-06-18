@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useState } from 'react'
-import { months } from '../add-monthly-faq/page';
+import { months } from '../../faqs/montly/page';
+
 
 const page = () => {
     const[destination, setDestination] = useState<string>("");
