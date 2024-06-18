@@ -246,13 +246,13 @@ const HandleDelete = async(id : string) => {
             </caption>
             <thead>
               <tr>
-                <th className='border border-slate-600 px-[20px] py-[15px]'>Destination</th>
-                <th className='border border-slate-600 px-[20px] py-[15px]'>Date</th>
-                <th className='border border-slate-600 px-[20px] py-[15px]'>Air Temperature</th>
-                <th className='border border-slate-600 px-[20px] py-[15px]'>Water Temperature</th>
-                <th className='border border-slate-600 px-[20px] py-[15px]'>Humidity</th>
-                <th className='border border-slate-600 px-[20px] py-[15px]'>Condition</th>
-                <th className='border border-slate-600 px-[20px] py-[15px]'>Sunny Hours</th>
+                <th className='table-cell'>Destination</th>
+                <th className='table-cell'>Date</th>
+                <th className='table-cell'>Air Temperature</th>
+                <th className='table-cell'>Water Temperature</th>
+                <th className='table-cell'>Humidity</th>
+                <th className='table-cell'>Condition</th>
+                <th className='table-cell'>Sunny Hours</th>
               </tr>
             </thead>
             <tbody>
@@ -260,27 +260,27 @@ const HandleDelete = async(id : string) => {
                 <tr>
                   <td colSpan={7}>
                     <div className="flex flex-col justify-center items-center">
-                    <p className='font-[800] text-[13px] '>no available data</p>
-                  </div>
+                      <p className='font-[800] text-[13px] '>no available data</p>
+                    </div>
                   </td>
                 </tr>
                 
               ):filteredData.map((d) => (
                 <React.Fragment key={d._id}>
                   <tr>
-                    <td className='border border-slate-600 px-[20px] py-[15px] '>{destinations.find(ob => ob._id === d.destinationId)?.name}</td>
-                    <td className='border border-slate-600 px-[20px] py-[15px] '>{d?.date}</td>
-                    <td className='border border-slate-600 px-[20px] py-[15px] '>{d?.airTemperature}</td>
-                    <td className='border border-slate-600 px-[20px] py-[15px] '>{d?.waterTemperature}</td>
-                    <td className='border border-slate-600 px-[20px] py-[15px] '>{d.humidity}</td>
-                    <td className='border border-slate-600 px-[20px] py-[15px] '>{d.condition}</td>
-                    <td className='border border-slate-600 px-[20px] py-[15px] '>{d.sunnyHours}</td>
-                    <td className='border border-slate-600 px-[20px] py-[15px] '>
+                    <td className='table-cell '>{destinations.find(ob => ob._id === d.destinationId)?.name}</td>
+                    <td className='table-cell '>{d?.date}</td>
+                    <td className='table-cell '>{d?.airTemperature}</td>
+                    <td className='table-cell '>{d?.waterTemperature}</td>
+                    <td className='table-cell '>{d.humidity}</td>
+                    <td className='table-cell '>{d.condition}</td>
+                    <td className='table-cell '>{d.sunnyHours}</td>
+                    <td className='table-cell '>
                       <button
                       onClick={() => HandleEdit(d._id)}
                       >{(openEdit && openEditId === d._id) ? "Close": "Edit"}</button>
                     </td>
-                    <td className='border border-slate-600 px-[20px] py-[15px] '>
+                    <td className='table-cell '>
                       <button
                       onClick={() => HandleDelete(d._id)}
                       >Delete</button>
@@ -288,7 +288,7 @@ const HandleDelete = async(id : string) => {
                   </tr>
                   {openEdit && openEditId === d._id && (
                     <tr>
-                      <td className='border border-slate-600 px-[20px] py-[15px]' colSpan={9}>
+                      <td className='table-cell' colSpan={9}>
                         <div className="flex flex-col">
                           <form onSubmit={handleSubmitEdit} 
                             className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full">

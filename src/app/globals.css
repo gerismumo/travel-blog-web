@@ -30,3 +30,7 @@ body {
 .input {
   @apply border-[1px] border-grey py-[6px] px-[4px] rounded-[3px] outline-none focus:border-lightOrange ;
 }
+
+.table-cell {
+  @apply border-[1px] border-slate-400 px-[20px] py-[3px];
+}

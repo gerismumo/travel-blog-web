@@ -85,10 +85,16 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
               <div className="flex flex-col gap-[10px]">
                 <Link href="/dashboard/content"
                 className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >Add Content</Link>
+                >Add Info</Link>
                 <Link href="/dashboard/content/month"
                 className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >Add Month Info</Link>
+                <Link href="/dashboard/content/data"
+                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >Info</Link>
+                <Link href="/dashboard/content/month-data"
+                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >Month Info</Link>
               </div>
             )}
             <button
