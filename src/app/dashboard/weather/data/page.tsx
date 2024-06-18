@@ -1,27 +1,12 @@
 "use client"
 
 import { IDestinationList, IWeatherData, IWeatherDataList } from '@/(types)/type'
+import { months } from '@/lib/months'
 import { getDestinations } from '@/utils/(apis)/destinationApi'
 import { getWeatherData } from '@/utils/(apis)/weatherApi'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-
-const months = [
-  { id: 1, name: 'January' },
-  { id: 2, name: 'February' },
-  { id: 3, name: 'March' },
-  { id: 4, name: 'April' },
-  { id: 5, name: 'May' },
-  { id: 6, name: 'June' },
-  { id: 7, name: 'July' },
-  { id: 8, name: 'August' },
-  { id: 9, name: 'September' },
-  { id: 10, name: 'October' },
-  { id: 11, name: 'November' },
-  { id: 12, name: 'December' }
-];
-
 
 const page = () => {
   const[data, setData] = useState<IWeatherDataList[]>([])

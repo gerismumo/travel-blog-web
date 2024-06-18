@@ -1,3 +1,8 @@
+export interface IMonth {
+  name: string;
+  id: number;
+};
+
 export interface IDestination{
     name: string;
   }

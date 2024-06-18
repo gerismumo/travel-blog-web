@@ -1,7 +1,7 @@
 "use client"
 
+import { months } from '@/lib/months';
 import React, { useState } from 'react'
-import { months } from '../../faqs/montly/page';
 
 
 const page = () => {
@@ -43,7 +43,7 @@ const page = () => {
           >
             <option value="">select month</option>
             {months.map((month) => (
-                <option key={month.number} value={month.name}>{month.name}</option>
+                <option key={month.id} value={month.name}>{month.name}</option>
             ))}
           </select>
         </div>
