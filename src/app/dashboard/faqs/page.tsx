@@ -1,15 +1,56 @@
 "use client"
 
-import React, { useState } from 'react'
+import { IDestinationList, IDestionationFaq } from '@/(types)/type';
+import { getDestinations } from '@/utils/(apis)/destinationApi';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast';
 
 const page = () => {
     const[destination, setDestination] = useState<string>("");
     const[question, setQuestion] = useState<string>('');
     const[answer, setAnswer] = useState<string>('');
+    const [destinations, setDestinations] = useState<IDestinationList[]>([]);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const data = await getDestinations();
+            setDestinations(data);
+          } catch (error : any) {
+            toast.error(error.message);
+          }
+        };
+    
+        fetchData();
+      }, [setDestinations]);
+
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        if(destination === "" || question === "" || answer === "") {
+            return toast.error("all fields are required")
+        }
+
+        const data: IDestionationFaq = {
+            destinationId: destination,
+            question: question,
+            answer: answer
+        }
+
+        try{
+            const response = await axios.post('/api/faq', data);
+            if(response.data.success) {
+                toast.success(response.data.message);
+                setDestination('');
+                setQuestion('');
+                setAnswer('');
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error : any) {
+            toast.error(error.message);
+        }
     }
 
   return (
@@ -26,7 +67,9 @@ const page = () => {
             onChange={(e) => setDestination(e.target.value)}
           >
             <option value="">select destination</option>
-            <option value="London">London</option>
+            {destinations.map((d) => (
+                <option key={d._id} value={d._id}>{d.name}</option>
+            ))}
           </select>
         </div>
         <div className="flex flex-col">
@@ -54,7 +97,7 @@ const page = () => {
         </div>
         <div className="flex flex-row w-[100%]">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-lightDark hover:dark text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
             Submit

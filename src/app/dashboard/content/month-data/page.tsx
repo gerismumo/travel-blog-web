@@ -119,7 +119,10 @@ const page = () => {
             contentList.filter((item) =>
                 destinations.find((dest) => dest._id === item.destinationId)?.name
                     .toLowerCase()
-                    .includes(searchQuery.toLowerCase())
+                    .includes(searchQuery.toLowerCase()) ||
+                months.find((m) => m.id === parseInt(item.month))?.name
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())
             )
         );
     }, [searchQuery, contentList, destinations]);
@@ -128,7 +131,7 @@ const page = () => {
     <div className="flex flex-col gap-[20px]">
         <div className="flex flex-col w-[300px] justify-end">
             <input type="text"
-            placeholder="Search destination..."
+            placeholder="Search destination or month..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="input"

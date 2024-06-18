@@ -1,4 +1,4 @@
-import { IDestination, IDestinationContent, IDestinationMonthContent, IWeatherData } from '@/(types)/type';
+import { IDestination, IDestinationContent, IDestinationMonthContent, IDestionationFaq, IDestionationMonthFaq, IWeatherData } from '@/(types)/type';
 import mongoose, {mongo, Schema} from 'mongoose';
 
 
@@ -84,4 +84,38 @@ const destinationMonthContentSchema: Schema<IDestinationMonthContent> = new mong
     }
 })
 
-export const DestinationMonthContent = mongoose.models.DestinationMonthContent || mongoose.model<IDestinationMonthContent>('DestinationMonthContent', destinationMonthContentSchema)
+export const DestinationMonthContent = mongoose.models.DestinationMonthContent || mongoose.model<IDestinationMonthContent>('DestinationMonthContent', destinationMonthContentSchema);
+
+const destinationFaqSchema: Schema<IDestionationFaq> = new mongoose.Schema({
+    destinationId: {
+        type: String,
+        required: true,
+    },
+    question: {
+        type: String,
+        required: true,
+    },
+    answer: {
+        type: String,
+        required: true,
+    }
+})
+
+export const DestinationFaq = mongoose.models.DestinationFaq || mongoose.model<IDestionationFaq>('DestinationFaq', destinationFaqSchema);
+
+const destinationMonthFaqSchema: Schema<IDestionationMonthFaq> = new mongoose.Schema({
+    destinationId: {
+        type: String,
+        required: true,
+    },
+    question: {
+        type: String,
+        required: true,
+    },
+    answer: {
+        type: String,
+        required: true,
+    }
+})
+
+export const DestinationMonthFaq = mongoose.models.DestinationMonthFaq || mongoose.model<IDestionationMonthFaq>('DestinationMonthFaq', destinationMonthFaqSchema);

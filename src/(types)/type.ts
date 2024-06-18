@@ -60,3 +60,31 @@ export interface IDestinationMonthContentList {
   weatherInfo: string;
   destinationInfo: string;
 }
+
+export interface IDestionationFaq {
+  destinationId: string;
+  question: string;
+  answer: string;
+}
+
+export interface IDestionationFaqList {
+  _id: string;
+  destinationId: string;
+  question: string;
+  anwer: string;
+}
+
+export interface IDestionationMonthFaq {
+  destinationId: string;
+  month: string;
+  question: string;
+  answer: string;
+}
+
+export interface IDestionationMonthFaqList {
+  _id: string;
+  destinationId: string;
+  month: string;
+  question: string;
+  anwer: string;
+}
