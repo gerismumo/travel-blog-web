@@ -52,3 +52,11 @@ export interface IDestinationMonthContent {
   weatherInfo: string;
   destinationInfo: string;
 }
+
+export interface IDestinationMonthContentList {
+  _id: string;
+  destinationId: string;
+  month: string;
+  weatherInfo: string;
+  destinationInfo: string;
+}

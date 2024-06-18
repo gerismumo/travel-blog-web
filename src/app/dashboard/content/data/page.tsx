@@ -15,6 +15,7 @@ const page = () => {
     const[destination, setDestination] = useState<string>("");
     const[weatherInfo, setWeatherInfo] = useState<string>("");
     const[destinationMoreInfo, setDestinationMoreInfo] =useState<string>("");
+    const [searchQuery, setSearchQuery] = useState<string>("");
 
     const fetchData = async () => {
         try {
@@ -108,13 +109,29 @@ const page = () => {
           }
       }
 
-  return (
-    <div className="flex flex-col">
-        {/* <div className="flex flex-col">
-            <input type="text"
+      //search query
+    const[filteredData, setFilteredData] = useState<IDestinationContentList[]>([])
 
+    useEffect(() => {
+        setFilteredData(
+            contentList.filter((item) =>
+                destinations.find((dest) => dest._id === item.destinationId)?.name
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase())
+            )
+        );
+    }, [searchQuery, contentList, destinations]);
+
+  return (
+    <div className="flex flex-col gap-[20px]">
+        <div className="flex flex-col w-[300px] justify-end">
+            <input type="text"
+            placeholder="Search destination..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="input"
              />
-        </div> */}
+        </div>
         <div className="overflow-auto">
             <table className='border-collapse'>
                 <thead>
@@ -125,7 +142,7 @@ const page = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {contentList.length === 0 ? (
+                    {filteredData.length === 0 ? (
                         <tr>
                             <td colSpan={3} className='table-cell' >
                                 <div className="flex flex-col justify-center items-center">
@@ -133,12 +150,12 @@ const page = () => {
                                 </div>
                             </td>
                         </tr>
-                    ): contentList.map((d) => (
+                    ): filteredData.map((d) => (
                         <React.Fragment key={d._id}>
                             <tr>
                                 <td className='table-cell'>{destinations.find(ob => ob._id === d.destinationId)?.name}</td>
                                 <td className='table-cell'>{d.weatherInfo}</td>
-                                <td className='table-cell'>{d.weatherInfo}</td>
+                                <td className='table-cell'>{d.destinationInfo}</td>
                                 <td className='table-cell'>
                                     <button
                                     onClick={() => handleEditOpen(d._id)}
@@ -156,21 +173,6 @@ const page = () => {
                                         <div className="">
                                             <form onSubmit={handleSubmitEdit} 
                                                 className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                                                <div className="flex flex-col">
-                                                <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                                                    Destination
-                                                </label>
-                                                <select name="destination" id="destination"
-                                                className='input w-full'
-                                                    value={editObject?.destinationId}
-                                                    onChange={(e) => setEditObject(editObject ? {...editObject, destinationId: e.target.value}: null)}
-                                                >
-                                                    <option value="">select destination</option>
-                                                    {destinations.map((d) => (
-                                                        <option key={d._id} value={d._id}>{d.name}</option>
-                                                    ))}
-                                                </select>
-                                                </div>
                                                 <div className="flex flex-col">
                                                 <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
                                                     Weather Info

@@ -30,3 +30,13 @@ export async function POST(req:NextRequest) {
         return NextResponse.json({success: false, message: "server error"})
     }
 }
+
+export async function GET(req:NextRequest) {
+    try{
+        await connectDB();
+        const destinationContent = await DestinationMonthContent.find();
+        return NextResponse.json({ success: true, data: destinationContent });
+    }catch(error) {
+        return NextResponse.json({ success: false, message:'server error' });
+    }
+}
