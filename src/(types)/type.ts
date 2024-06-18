@@ -32,3 +32,16 @@ export interface IWeatherDataList {
     condition: string;
     sunnyHours: string;
 }
+
+export interface IDestinationContent {
+  destinationId: string;
+  weatherInfo: string;
+  destinationInfo: string;
+}
+
+export interface IDestinationMonthContent {
+  destinationId: string;
+  month: string;
+  weatherInfo: string;
+  destinationInfo: string;
+}

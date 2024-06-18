@@ -17,7 +17,7 @@ const TemperatureForm: React.FC = () => {
   const [sunnyHours, setSunnyHours] = useState<string>("");
 
 
-  const [destinations, setDestinations] = useState<IDestinationList[]>([]);
+    const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [error, setError] = useState<string | null>(null);
   
     useEffect(() => {
@@ -32,6 +32,10 @@ const TemperatureForm: React.FC = () => {
   
       fetchData();
     }, []);
+
+    if(error) {
+        toast.error(error);
+    }
 
  
 

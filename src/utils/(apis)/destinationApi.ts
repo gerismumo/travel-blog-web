@@ -11,6 +11,7 @@ export const getDestinations = async (): Promise<IDestinationList[]> => {
       throw new Error(response.data.message);
     }
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
