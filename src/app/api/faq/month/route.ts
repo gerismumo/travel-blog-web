@@ -10,6 +10,8 @@ export async function POST(req:NextRequest) {
 
         const {destinationId, month, question, answer} = body;
 
+        console.log('fqss',body)
+
         if(destinationId === "" || month === "" || answer === "" || question === "") {
             return NextResponse.json({success: false, message: "all fields are required"})
         }

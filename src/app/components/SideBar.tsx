@@ -109,12 +109,15 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                 <Link href="/dashboard/faqs"
                 className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >Add FaQ</Link>
-                <Link href="/dashboard/faqs/montly"
+                <Link href="/dashboard/faqs/month"
                 className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >Add Monthly FaQ</Link>
                 <Link href="/dashboard/faqs/data"
                 className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >Data</Link>
+                <Link href="/dashboard/faqs/month/data"
+                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >Months Data</Link>
               </div>
             )}
               

@@ -108,6 +108,10 @@ const destinationMonthFaqSchema: Schema<IDestionationMonthFaq> = new mongoose.Sc
         type: String,
         required: true,
     },
+    month: {
+        type: String,
+        required: true,
+    },
     question: {
         type: String,
         required: true,
