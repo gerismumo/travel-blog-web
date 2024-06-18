@@ -71,7 +71,7 @@ export interface IDestionationFaqList {
   _id: string;
   destinationId: string;
   question: string;
-  anwer: string;
+  answer: string;
 }
 
 export interface IDestionationMonthFaq {
@@ -86,5 +86,5 @@ export interface IDestionationMonthFaqList {
   destinationId: string;
   month: string;
   question: string;
-  anwer: string;
+  answer: string;
 }
