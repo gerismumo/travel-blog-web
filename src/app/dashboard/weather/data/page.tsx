@@ -66,7 +66,7 @@ const page = () => {
 //delete data fun
 const HandleDelete = async(id : string) => {
   try {
-    const response = await axios.delete(`/api/destination-weather/${id}`)
+    const response = await axios.delete(`/api/weather/${id}`)
     if(response.data.success) {
       fetchData();
       return toast.success(response.data.message);
@@ -117,7 +117,7 @@ const HandleDelete = async(id : string) => {
 
     //submit data
     try {
-      const response = await axios.put(`/api/destination-weather/${currrentData._id}`, weatherData);
+      const response = await axios.put(`/api/weather/${currrentData._id}`, weatherData);
       if(response.data.success) {
         toast.success(response.data.message);
         setOpenEdit(false);
