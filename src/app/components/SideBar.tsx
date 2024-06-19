@@ -1,7 +1,11 @@
 import Link from 'next/link'
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faAngleDown, faAngleUp} from '@fortawesome/free-solid-svg-icons';
+import fontawesome from '@/(icons)/fontawesome';
+
+
+
+
 
 interface SideBarProps {
   data: {
@@ -35,8 +39,8 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
            <Link href="/dashboard"
             className=' flex flex-row items-cemter gap-[5px]  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
             >
-              <FontAwesomeIcon icon={faHome} 
-              className='text-[24px] text-lightRed '
+              <FontAwesomeIcon icon={fontawesome.faHouse} 
+              className=' text-lightRed '
               />
               <span className='text-nowrap '>Home</span>
             </Link>
@@ -44,80 +48,152 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
             onClick={() => setOpenDestinationTabs(!openDestinationTabs)}
             className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
             >
+              <FontAwesomeIcon icon={fontawesome.faPlaneDeparture}
+              className=' text-lightRed '
+              />
               <span>Destination</span>
-              {openDestinationTabs ? <FontAwesomeIcon icon={faAngleUp} />: <FontAwesomeIcon icon={faAngleDown} /> }
+              {openDestinationTabs ? <FontAwesomeIcon icon={fontawesome.angleUp} />: <FontAwesomeIcon icon={fontawesome.angleDown} /> }
             </button>
             {openDestinationTabs && (
               <div className="flex flex-col gap-[10px]">
                 <Link href="/dashboard/destination"
-                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >List</Link>
+                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className='  '
+                  />
+                  List
+                  </Link>
                 <Link href="/dashboard/destination/add"
-                className='text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
-                >Add</Link>
+                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className='  '
+                  />
+                  Add
+                  </Link>
               </div>
             )}
             <button
             onClick={() => setOpenWeatherTabs(!openWeatherTabs)}
             className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
             >
+              <FontAwesomeIcon icon={fontawesome.faBolt}
+              className=' text-lightRed '
+              />
               <span>Weather</span>
-              {openWeatherTabs ? <FontAwesomeIcon icon={faAngleUp} />: <FontAwesomeIcon icon={faAngleDown} /> }
+              {openWeatherTabs ? <FontAwesomeIcon icon={fontawesome.angleUp} />: <FontAwesomeIcon icon={fontawesome.angleDown} /> }
             </button>
             {openWeatherTabs && (
               <div className="flex flex-col gap-[10px]">
                 <Link href="/dashboard/weather"
-                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >Add</Link>
+                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className='  '
+                  />
+                  Add
+                </Link>
                 <Link href="/dashboard/weather/data"
-                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >Data</Link>
+                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className=''
+                  />
+                  Data
+                </Link>
               </div>
             )}
             <button
             onClick={() => setOpenContentTabs(!openContentTabs)}
             className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
             >
+              <FontAwesomeIcon icon={fontawesome.faCircleInfo}
+              className=' text-lightRed '
+              />
               <span>Content</span>
-              {openContentTabs ? <FontAwesomeIcon icon={faAngleUp} />: <FontAwesomeIcon icon={faAngleDown} /> }
+              {openContentTabs ? <FontAwesomeIcon icon={fontawesome.angleUp} />: <FontAwesomeIcon icon={fontawesome.angleDown} /> }
             </button>
             {openContentTabs && (
               <div className="flex flex-col gap-[10px]">
                 <Link href="/dashboard/content"
-                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >Add Info</Link>
+                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className=''
+                  />
+                  Add Info
+                </Link>
                 <Link href="/dashboard/content/month"
-                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >Add Month Info</Link>
+                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className=''
+                  />
+                  Add Month Info
+                </Link>
                 <Link href="/dashboard/content/data"
-                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >Info</Link>
+                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className=''
+                  />
+                  Info
+                </Link>
                 <Link href="/dashboard/content/month-data"
-                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >Month Info</Link>
+                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className=''
+                  />
+                  Month Info
+                </Link>
               </div>
             )}
             <button
             onClick={() => setOpenFaqTabs(!openFaqTabs)}
             className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
             >
+              <FontAwesomeIcon icon={fontawesome.faCircleQuestion}
+              className=' text-lightRed '
+              />
               <span>Faqs</span>
-              {openFaqTabs ? <FontAwesomeIcon icon={faAngleUp} />: <FontAwesomeIcon icon={faAngleDown} /> }
+              {openFaqTabs ? <FontAwesomeIcon icon={fontawesome.angleUp} />: <FontAwesomeIcon icon={fontawesome.angleDown} /> }
             </button> 
             {openFaqTabs && (
               <div className="flex flex-col gap-[10px]">
                 <Link href="/dashboard/faqs"
-                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >Add FaQ</Link>
+                className='flex flex-row items-center gap-[5px] pl-[50px]  text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className=''
+                  />
+                  Add FaQ
+                </Link>
                 <Link href="/dashboard/faqs/month"
-                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >Add Monthly FaQ</Link>
+                className='flex flex-row items-center gap-[5px] pl-[50px]  text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className=''
+                  />
+                  Add Monthly FaQ
+                </Link>
                 <Link href="/dashboard/faqs/data"
-                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >Data</Link>
+                className='flex flex-row items-center gap-[5px] pl-[50px]  text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className=''
+                  />
+                  Data
+                </Link>
                 <Link href="/dashboard/faqs/month/data"
-                className='text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >Months Data</Link>
+                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className=''
+                  />
+                  Months Data
+                </Link>
               </div>
             )}
               
