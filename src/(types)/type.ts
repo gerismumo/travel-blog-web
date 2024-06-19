@@ -35,6 +35,31 @@ export interface IWeatherDataList {
     sunnyHours: string;
 }
 
+export interface IWeatherMonthData {
+  destinationId: string;
+  year: number;
+  month: number;
+  day: number;
+  airTemperature: string;
+  waterTemperature: string;
+  humidity: string;
+  condition: string;
+  sunnyHours: string;
+}
+
+export interface IWeatherMonthDataList {
+  _id: string;
+  destinationId: string;
+  year: number;
+  month: number;
+  day: number;
+  airTemperature: string;
+  waterTemperature: string;
+  humidity: string;
+  condition: string;
+  sunnyHours: string;
+}
+
 export interface IDestinationContent {
   destinationId: string;
   weatherInfo: string;

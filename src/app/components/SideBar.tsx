@@ -1,3 +1,5 @@
+"use client"
+
 import Link from 'next/link'
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -101,6 +103,14 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   className=''
                   />
                   Data
+                </Link>
+                <Link href="/dashboard/weather/month"
+                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className=''
+                  />
+                  Add Month Data
                 </Link>
               </div>
             )}
