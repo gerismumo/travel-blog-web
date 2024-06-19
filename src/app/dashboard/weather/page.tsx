@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
+import Loader from '@/app/components/Loader';
 
 
 const TemperatureForm: React.FC = () => {
@@ -15,6 +16,7 @@ const TemperatureForm: React.FC = () => {
   const [waterTemperature, setWaterTemperature] = useState<string>('');
   const [condition, setCondition] = useState<string>("");
   const [sunnyHours, setSunnyHours] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
 
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
@@ -27,6 +29,8 @@ const TemperatureForm: React.FC = () => {
           setDestinations(data);
         } catch (error : any) {
           setError(error.message);
+        }finally {
+          setLoading(false);
         }
       };
   
@@ -81,6 +85,13 @@ const TemperatureForm: React.FC = () => {
     }
   };
 
+
+  if (loading) {
+    return (
+      <Loader/>
+    )
+  }
+    
   return (
     <div className="max-w-xl mx-auto">
       <form onSubmit={handleSubmit} 
@@ -190,7 +201,7 @@ const TemperatureForm: React.FC = () => {
         </div>
         <div className="flex flex-row w-[100%]">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-lightDark hover:bg-dark text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
             Submit

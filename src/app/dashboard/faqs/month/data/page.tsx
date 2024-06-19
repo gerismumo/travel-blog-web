@@ -1,6 +1,7 @@
 "use client"
 
 import { IDestinationList, IDestionationMonthFaqList } from '@/(types)/type';
+import Loader from '@/app/components/Loader';
 import { months } from '@/lib/months';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
@@ -14,6 +15,8 @@ const page = () => {
     const [openEditId, setOpenEditId] = useState<string | null>(null);
     const [editObject, setEditObject] = useState<IDestionationMonthFaqList | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>("");
+    const [loadingDestination, setLoadingDestination] = useState<boolean>(true);
+    const [loadingContent, setLoadingContent] = useState<boolean>(true);
 
     const fetchData = async () => {
         try {
@@ -25,6 +28,8 @@ const page = () => {
             }
         } catch (error) {
             toast.error('network error');
+        }finally {
+            setLoadingContent(false);
         }
     };
 
@@ -39,6 +44,8 @@ const page = () => {
             setDestinations(data);
           } catch (error : any) {
             toast.error(error.message);
+          }finally {
+            setLoadingDestination(false);
           }
         };
     
@@ -123,6 +130,13 @@ const page = () => {
             )
         );
     }, [searchQuery, contentList, destinations]);
+
+    //loader
+    if(loadingContent || loadingDestination) {
+        return (
+            <Loader/>
+        )
+    }
 
   return (
     <div className="flex flex-col gap-[20px]">

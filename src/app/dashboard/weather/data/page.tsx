@@ -1,6 +1,7 @@
 "use client"
 
 import { IDestinationList, IWeatherData, IWeatherDataList } from '@/(types)/type'
+import Loader from '@/app/components/Loader'
 import { months } from '@/lib/months'
 import { getDestinations } from '@/utils/(apis)/destinationApi'
 import { getWeatherData } from '@/utils/(apis)/weatherApi'
@@ -15,6 +16,8 @@ const page = () => {
   const[openEditId, setOpenEditId] = useState<string | null>(null);
   const [destinations, setDestinations] = useState<IDestinationList[]>([]);
   const [filteredData, setFilteredData] = useState<IWeatherDataList[]>([]);
+  const [loadingWeather, setLoadingWeather] = useState<boolean>(true);
+  const [loadingDestinations, setLoadingDestinations] = useState<boolean>(true);
 
   const fetchData = async () => {
     try {
@@ -23,6 +26,8 @@ const page = () => {
       setFilteredData(data);
     } catch (error: any) {
       setError(error.message)
+    }finally{
+      setLoadingWeather(false);
     }
   }
 
@@ -42,6 +47,8 @@ const page = () => {
           setDestinations(data);
         } catch (error : any) {
           setError(error.message);
+        }finally{
+          setLoadingDestinations(false);
         }
       };
   
@@ -163,6 +170,12 @@ const HandleDelete = async(id : string) => {
     setFilteredData(data);
   };
 
+  //loader
+  if(loadingWeather || loadingDestinations) {
+    return(
+      <Loader/>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-[30px]">

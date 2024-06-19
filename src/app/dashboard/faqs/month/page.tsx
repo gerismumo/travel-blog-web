@@ -1,6 +1,7 @@
 "use client"
 
 import { IDestinationList, IDestionationMonthFaq } from '@/(types)/type';
+import Loader from '@/app/components/Loader';
 import { months } from '@/lib/months';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
@@ -13,6 +14,7 @@ const page = () => {
     const[answer, setAnswer] = useState<string>('');
     const[month, setMonth] = useState<string>('');
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,6 +23,8 @@ const page = () => {
             setDestinations(data);
           } catch (error : any) {
             toast.error(error.message);
+          }finally {
+            setLoading(false);
           }
         };
     
@@ -55,6 +59,13 @@ const page = () => {
         } catch (error : any) {
             toast.error(error.message);
         }
+    }
+
+    //loader
+    if(loading) {
+      return(
+        <Loader/>
+      )
     }
 
   return (

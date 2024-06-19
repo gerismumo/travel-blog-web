@@ -1,6 +1,7 @@
 "use client"
 
 import { IDestinationContent, IDestinationList } from '@/(types)/type';
+import Loader from '@/app/components/Loader';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
@@ -13,6 +14,7 @@ const page = () => {
 
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
   
     useEffect(() => {
       const fetchData = async () => {
@@ -21,6 +23,8 @@ const page = () => {
           setDestinations(data);
         } catch (error : any) {
           setError(error.message);
+        }finally {
+          setLoading(false);
         }
       };
   
@@ -59,6 +63,12 @@ const page = () => {
         }catch(error) {
             toast.error("network error");
         }
+    }
+
+    if(loading) {
+      return (
+        <Loader/>
+      )
     }
 
   return (

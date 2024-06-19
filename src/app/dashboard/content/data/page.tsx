@@ -1,6 +1,7 @@
 "use client"
 
 import { IDestinationContentList, IDestinationList } from '@/(types)/type'
+import Loader from '@/app/components/Loader';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
@@ -12,10 +13,9 @@ const page = () => {
     const [openEdit , setOpenEdit] = useState<boolean>(false);
     const [openEditId, setOpenEditId] = useState<string | null>(null);
     const [editObject, setEditObject] = useState<IDestinationContentList | null>(null);
-    const[destination, setDestination] = useState<string>("");
-    const[weatherInfo, setWeatherInfo] = useState<string>("");
-    const[destinationMoreInfo, setDestinationMoreInfo] =useState<string>("");
     const [searchQuery, setSearchQuery] = useState<string>("");
+    const [loadingDestinations, setLoadingDestinations] = useState<boolean>(true);
+    const [loadingContent, setLoadingContent] = useState<boolean>(true);
 
     const fetchData = async () => {
         try {
@@ -27,6 +27,8 @@ const page = () => {
             }
         } catch (error) {
             toast.error('network error');
+        }finally {
+            setLoadingContent(false);
         }
     };
 
@@ -41,6 +43,8 @@ const page = () => {
             setDestinations(data);
           } catch (error : any) {
             toast.error(error.message);
+          }finally {
+            setLoadingDestinations(false);
           }
         };
     
@@ -121,6 +125,13 @@ const page = () => {
             )
         );
     }, [searchQuery, contentList, destinations]);
+
+    //loader
+    if(loadingContent || loadingDestinations) {
+        return (
+            <Loader/>
+        )
+    }
 
   return (
     <div className="flex flex-col gap-[20px]">
