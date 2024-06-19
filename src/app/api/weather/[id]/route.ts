@@ -31,11 +31,11 @@ export async function PUT(req: NextRequest) {
                return NextResponse.json({ success:false, message:"all fields are required"});
             }
           }
-          const { destinationId, date, ...updateFields } = body;
+          const { destinationId, month, year, ...updateFields } = body;
         await connectDB(); 
           //validate date input
         
-        const existingRecord = await DestinationWeatherData.findOne({ destinationId, date });
+        const existingRecord = await DestinationWeatherData.findOne({ destinationId, year, month});
 
         let updateData;
 
@@ -53,7 +53,7 @@ export async function PUT(req: NextRequest) {
 
                 return NextResponse.json({ success: true, message: 'Record with same date updated' });
         } else {
-            updateData = await DestinationWeatherData.findByIdAndUpdate(id, { destinationId, date, ...updateFields }, { new: true });
+            updateData = await DestinationWeatherData.findByIdAndUpdate(id, { destinationId, year, month, ...updateFields }, { new: true });
         }
 
         if (updateData) {

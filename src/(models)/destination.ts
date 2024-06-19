@@ -18,10 +18,14 @@ const destinationWeatherSchema : Schema<IWeatherData> = new mongoose.Schema({
         type: String,
         required: true,
     },
-    date: {
+    year: {
         type: String,
         required: true,
     },
+    month: {
+        type: String,
+        required: true,
+    }, 
     airTemperature: {
         type: String,
         required: true,

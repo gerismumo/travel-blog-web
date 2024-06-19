@@ -6,10 +6,13 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import Loader from '@/app/components/Loader';
+import { months } from '@/lib/months';
 
 
 const TemperatureForm: React.FC = () => {
   const [destination, setDestination] = useState<string>('');
+  const [year, setYear] = useState<string>('');
+  const [month, setMonth] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [temperature, setTemperature] = useState<string>("");
   const [humidity, setHumidity] = useState<string>('');
@@ -48,7 +51,8 @@ const TemperatureForm: React.FC = () => {
 
     const weatherData: IWeatherData = {
       destinationId: destination,
-      date: selectedDate,
+      month: month,
+      year: year,
       airTemperature: temperature,
       waterTemperature: waterTemperature,
       humidity,
@@ -64,12 +68,13 @@ const TemperatureForm: React.FC = () => {
     }
     
     try {
-      const response = await axios.post('/api/destination-weather',weatherData);
+      const response = await axios.post('/api/weather',weatherData);
       
       if(response.data.success) {
           toast.success(response.data.message);
         //reset all fieds values
-
+          setMonth('');
+          setYear('');
           setDestination('');
           setSelectedDate('');
           setTemperature('');
@@ -112,14 +117,38 @@ const TemperatureForm: React.FC = () => {
           </select>
         </div>
         <div className="flex flex-col">
-          <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
-            Date
+          <label htmlFor="yearSelect" className="text-[12px] font-[600]">
+            Select Year
           </label>
-          <input type="date" name="date" id="date"
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-          className='input'
-           />
+          <select
+            id="yearSelect"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+            className="input w-[100%]"
+          >
+            <option value="">select year</option>
+            {Array.from({ length: new Date().getFullYear() - 2000 + 1 }, (_, index) => (
+              <option key={2000 + index} value={2000 + index}>
+                {2000 + index}
+              </option>
+            )).reverse()}
+          </select>
+        </div>
+        <div className="flex flex-col">
+          <label htmlFor="monthSelect" className="text-[12px] font-[600]">
+            Select Month
+          </label>
+          <select
+            id="monthSelect"
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
+            className="input"
+          >
+            <option value="">Select Month</option>
+            {months.map((month) => (
+              <option key={month.id} value={month.id}>{month.name}</option>
+            ))}
+          </select>
         </div>
         <div className="flex flex-col">
           <label className="block text-gray-700 text-sm font-bold" htmlFor="temperature">

@@ -91,7 +91,8 @@ const HandleDelete = async(id : string) => {
 
     const weatherData: IWeatherData = {
       destinationId: currrentData.destinationId,
-      date: currrentData.date,
+      month: currrentData.month,
+      year: currrentData.year,
       airTemperature: currrentData.airTemperature,
       waterTemperature: currrentData.waterTemperature,
       humidity: currrentData.humidity,
@@ -134,14 +135,11 @@ const HandleDelete = async(id : string) => {
   };
   
    const filterByYear = (data: any[], year: number): any[] => {
-    return data.filter(item => new Date(item.date).getFullYear() === year);
+    return data.filter(item => parseInt(item.year) === year);
   };
   
-   const filterByMonth = (data: any[], year: number, month: number): any[] => {
-    return data.filter(item => {
-      const date = new Date(item.date);
-      return date.getFullYear() === year && date.getMonth() === month - 1;
-    });
+   const filterByMonth = (data: any[], month: number): any[] => {
+    return data.filter(item => parseInt(item.month) === month);
   };
 
   const handleFilter = () => {
@@ -155,8 +153,8 @@ const HandleDelete = async(id : string) => {
       tempData = filterByYear(tempData, year);
     }
 
-    if (year && month) {
-      tempData = filterByMonth(tempData, year, month);
+    if (month) {
+      tempData = filterByMonth(tempData, month);
     }
 
     setFilteredData(tempData);
@@ -183,7 +181,7 @@ const HandleDelete = async(id : string) => {
         <div className="flex flex-row items-center gap-[20px] p-4 border-[1px] border-[#ddd]  rounded-lg ">
           <div className="flex flex-col gap-[5px] w-[100%] ">
             <div className="flex flex-col">
-              <label htmlFor="" className="text-[12px] font-[600]">
+              <label htmlFor="" className="text-[14px] font-[600]">
                 Destination
               </label>
               <select name="destination" id="destination"
@@ -198,7 +196,7 @@ const HandleDelete = async(id : string) => {
               </select>
             </div>
             <div className="flex flex-col">
-              <label htmlFor="yearSelect" className="text-[12px] font-[600]">
+              <label htmlFor="yearSelect" className="text-[14px] font-[600]">
                 Select Year
               </label>
               <select
@@ -216,7 +214,7 @@ const HandleDelete = async(id : string) => {
               </select>
             </div>
             <div className="flex flex-col">
-              <label htmlFor="monthSelect" className="text-[12px] font-[600]">
+              <label htmlFor="monthSelect" className="text-[14px] font-[600]">
                 Select Month
               </label>
               <select
@@ -260,7 +258,8 @@ const HandleDelete = async(id : string) => {
             <thead>
               <tr>
                 <th className='table-cell'>Destination</th>
-                <th className='table-cell'>Date</th>
+                <th className='table-cell'>Year</th>
+                <th className='table-cell'>Month</th>
                 <th className='table-cell'>Air Temperature</th>
                 <th className='table-cell'>Water Temperature</th>
                 <th className='table-cell'>Humidity</th>
@@ -282,7 +281,8 @@ const HandleDelete = async(id : string) => {
                 <React.Fragment key={d._id}>
                   <tr>
                     <td className='table-cell '>{destinations.find(ob => ob._id === d.destinationId)?.name}</td>
-                    <td className='table-cell '>{d?.date}</td>
+                    <td className='table-cell '>{d?.year}</td>
+                    <td className='table-cell '>{months.find(m => m.id === parseInt(d?.month))?.name}</td>
                     <td className='table-cell '>{d?.airTemperature}</td>
                     <td className='table-cell '>{d?.waterTemperature}</td>
                     <td className='table-cell '>{d.humidity}</td>
@@ -309,7 +309,7 @@ const HandleDelete = async(id : string) => {
                                 <div className="flex flex-row justify-justify-around gap-[30px]">
                                   <div className="flex flex-col gap-[10px] w-[100%]">
                                     <div className="flex flex-col  w-[100%]">
-                                      <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                                      <label className="text-[14px] font-[600]" htmlFor="destination">
                                         Destination
                                       </label>
                                       <select name="destination" id="destination"
@@ -323,20 +323,44 @@ const HandleDelete = async(id : string) => {
                                         ))}
                                       </select>
                                     </div>
-                                    <div className="flex flex-col  w-[100%]">
-                                      <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
-                                        Date
+                                    <div className="flex flex-col">
+                                      <label htmlFor="yearSelect" className="text-[14px] font-[600]">
+                                        Select Year
                                       </label>
-                                      <input type="date" name="date" id="date"
-                                      value={currrentData?.date}
-                                      onChange={(e) => setCurrentData(currrentData ? { ...currrentData, date: e.target.value } : null)}
-                                      className='input'
-                                      />
+                                      <select
+                                        id="yearSelect"
+                                        value={currrentData?.year}
+                                        onChange={(e) => setCurrentData(currrentData ? {...currrentData, year: e.target.value}: null)}
+                                        className="input w-[100%]"
+                                      >
+                                        <option value="">select year</option>
+                                        {Array.from({ length: new Date().getFullYear() - 2000 + 1 }, (_, index) => (
+                                          <option key={2000 + index} value={2000 + index}>
+                                            {2000 + index}
+                                          </option>
+                                        )).reverse()}
+                                      </select>
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <label htmlFor="monthSelect" className="text-[14px] font-[600]">
+                                        Select Month
+                                      </label>
+                                      <select
+                                        id="monthSelect"
+                                        value={currrentData?.month}
+                                        onChange={(e) => setCurrentData(currrentData ? {...currrentData, month: e.target.value}: null)}
+                                        className="input"
+                                      >
+                                        <option value="">Select Month</option>
+                                        {months.map((month) => (
+                                          <option key={month.id} value={month.id}>{month.name}</option>
+                                        ))}
+                                      </select>
                                     </div>
                                   </div>
                                   <div className="flex flex-col gap-[10px]  w-[100%]">
                                     <div className="flex flex-col">
-                                      <label className="block text-gray-700 text-sm font-bold" htmlFor="temperature">
+                                      <label className="text-[14px] font-[600]" htmlFor="temperature">
                                         Air Temperature (°C)
                                       </label>
                                       <input
@@ -350,7 +374,7 @@ const HandleDelete = async(id : string) => {
                                       />
                                     </div>
                                     <div className="flex flex-col">
-                                      <label className="block text-gray-700 text-sm font-bold " htmlFor="waterTemperature">
+                                      <label className="text-[14px] font-[600]" htmlFor="waterTemperature">
                                       Water Temperature (°C)
                                       </label>
                                       <input
@@ -363,10 +387,8 @@ const HandleDelete = async(id : string) => {
                                         onChange={(e) => setCurrentData(currrentData ? {...currrentData, waterTemperature: e.target.value}: null)}
                                       />
                                     </div>
-                                  </div>
-                                  <div className="flex flex-col gap-[10px]  w-[100%] ">
                                     <div className="flex flex-col">
-                                      <label className="block text-gray-700 text-sm font-bold " htmlFor="humidity">
+                                      <label className="text-[14px] font-[600]" htmlFor="humidity">
                                         Humidity (%)
                                       </label>
                                       <input
@@ -379,8 +401,10 @@ const HandleDelete = async(id : string) => {
                                         onChange={(e) => setCurrentData(currrentData ? {...currrentData, humidity: e.target.value}: null)}
                                       />
                                     </div>
+                                  </div>
+                                  <div className="flex flex-col gap-[10px]  w-[100%] ">
                                     <div className="flex flex-col">
-                                      <label className="block text-gray-700 text-sm font-bold " htmlFor="sunnyHours">
+                                      <label className="text-[14px] font-[600]" htmlFor="sunnyHours">
                                       Condition
                                       </label>
                                       <select name="condition" id="condition"
@@ -401,24 +425,23 @@ const HandleDelete = async(id : string) => {
                                         <option value="Windy">Windy</option>
                                       </select>
                                     </div>
+                                    <div className="flex flex-col">
+                                      <label className="text-[14px] font-[600]" htmlFor="sunnyHours">
+                                      Sunny Hours
+                                      </label>
+                                      <input
+                                        className="input"
+                                        id="sunnyHours"
+                                        type="number"
+                                        min={0}
+                                        placeholder="sunny hours"
+                                        value={currrentData?.sunnyHours}
+                                        onChange={(e) => setCurrentData(currrentData ? {...currrentData, sunnyHours: e.target.value}: null)}
+                                      />
+                                    </div>
                                   </div>
                                 </div>
-                                <div className="flex flex-col">
-                                  <label className="block text-gray-700 text-sm font-bold " htmlFor="sunnyHours">
-                                  Sunny Hours
-                                  </label>
-                                  <input
-                                    className="input"
-                                    id="sunnyHours"
-                                    type="number"
-                                    min={0}
-                                    placeholder="sunny hours"
-                                    value={currrentData?.sunnyHours}
-                                    onChange={(e) => setCurrentData(currrentData ? {...currrentData, sunnyHours: e.target.value}: null)}
-                                  />
-                                </div>
                               </div>
-                              
                               <div className="flex flex-row w-[100%]">
                                 <button
                                   className="bg-lightDark hover:bg-dark text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

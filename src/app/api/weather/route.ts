@@ -8,7 +8,7 @@ export async function POST(req:NextRequest) {
     try{
         const body:IWeatherData = await req.json();
 
-        const {destinationId, date} = body;
+        const {destinationId, month, year} = body;
         for(const[key, value] of Object.entries(body)) {
             if(!value) {
                 return NextResponse.json({success: false, message: "kkall fileds are required"});
@@ -17,13 +17,10 @@ export async function POST(req:NextRequest) {
       
         await connectDB();
         //check if the date is set for that destination
-        const destinationWeather = await DestinationWeatherData.find({destinationId});  
-        if(destinationWeather.length > 0) {
-            for(const ob of destinationWeather)  {
-                if(ob.date === date) {
-                    return NextResponse.json({success: false, message: "date is already set for that destination"});
-                }
-            }
+        const destinationWeather = await DestinationWeatherData.findOne({destinationId, month, year});  
+       
+        if(destinationWeather) {
+            return NextResponse.json({success: false, message: "year and month are already set for that destination"});
         }
         
         const savedData = await DestinationWeatherData.create(body);

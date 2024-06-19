@@ -14,7 +14,8 @@ export interface IDestinationList {
 
 export interface IWeatherData {
     destinationId: string; 
-    date: string;
+    year: string;
+    month: string;
     airTemperature: string;
     waterTemperature: string;
     humidity: string;
@@ -25,7 +26,8 @@ export interface IWeatherData {
 export interface IWeatherDataList {
     _id: string;
     destinationId: string; 
-    date: string;
+    year: string;
+    month: string;
     airTemperature: string;
     waterTemperature: string;
     humidity: string;
