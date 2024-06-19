@@ -1,10 +1,23 @@
 
-import { IWeatherDataList } from '@/(types)/type';
+import { IWeatherDataList, IWeatherMonthDataList } from '@/(types)/type';
 import axios from 'axios';
 
 export const getWeatherData = async (): Promise<IWeatherDataList[]> => {
   try {
     const response = await axios.get('/api/weather');
+    if (response.data.success) {
+      return response.data.data;
+    } else {
+      throw new Error(response.data.message);
+    }
+  } catch (error) {
+    throw new Error("network error");
+  }
+};
+
+export const getWeatherMonthData = async (): Promise<IWeatherMonthDataList[]> => {
+  try {
+    const response = await axios.get('/api/weather/month');
     if (response.data.success) {
       return response.data.data;
     } else {

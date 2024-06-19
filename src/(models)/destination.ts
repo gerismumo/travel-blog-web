@@ -1,4 +1,4 @@
-import { IDestination, IDestinationContent, IDestinationMonthContent, IDestionationFaq, IDestionationMonthFaq, IWeatherData } from '@/(types)/type';
+import { IDestination, IDestinationContent, IDestinationMonthContent, IDestionationFaq, IDestionationMonthFaq, IWeatherData, IWeatherMonthData } from '@/(types)/type';
 import mongoose, {mongo, Schema} from 'mongoose';
 
 
@@ -48,9 +48,48 @@ const destinationWeatherSchema : Schema<IWeatherData> = new mongoose.Schema({
     }
 })
 
-
-
 export const DestinationWeatherData = mongoose.models.DestinationWeather || mongoose.model<IWeatherData>('DestinationWeather', destinationWeatherSchema);
+
+const destinationMonthWeatherSchema: Schema<IWeatherMonthData> = new mongoose.Schema({
+    destinationId: {
+        type: String,
+        required: true,
+    },
+    year: {
+        type: Number,
+        required: true,
+    },
+    month: {
+        type: Number,
+        required: true,
+    },
+    day: {
+        type: Number,
+        required: true,
+    },
+    airTemperature: {
+        type: String,
+        required: true,
+    },
+    waterTemperature: {
+        type: String,
+        required: true,
+    },
+    humidity: {
+        type: String,
+        required: true,
+    },
+    condition: {
+        type: String,
+        required: true,
+    },
+    sunnyHours: {
+        type: String,
+        required: true,
+    }
+})
+
+export const DestinationMonthWeatherData = mongoose.models.DestinationMonthWeather || mongoose.model<IWeatherMonthData>('DestinationMonthWeather', destinationMonthWeatherSchema);
 
 const destinationContentSchema: Schema<IDestinationContent> = new mongoose.Schema({
     destinationId: {
