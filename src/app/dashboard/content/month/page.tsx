@@ -12,7 +12,6 @@ import toast from 'react-hot-toast';
 const page = () => {
     const[destination, setDestination] = useState<string>("");
     const[weatherInfo, setWeatherInfo] = useState<string>("");
-    const[destinationMoreInfo, setDestinationMoreInfo] =useState<string>("");
     const[month, setMonth] = useState<string>('');
 
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
@@ -41,7 +40,7 @@ const page = () => {
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if(destination === "" ||  weatherInfo === "" || destinationMoreInfo === "" || month === "") {
+        if(destination === "" ||  weatherInfo === ""  || month === "") {
             return toast.error("all fields are required")
         }
 
@@ -49,7 +48,6 @@ const page = () => {
             destinationId: destination,
             month: month,
             weatherInfo: weatherInfo,
-            destinationInfo: destinationMoreInfo,
         }
 
         //submit data object to server
@@ -59,7 +57,6 @@ const page = () => {
                 toast.success(response.data.message);
                 setDestination('');
                 setWeatherInfo('');
-                setDestinationMoreInfo('');
                 setMonth('');
             }else {
                 toast.error(response.data.message);
@@ -117,18 +114,6 @@ const page = () => {
           <textarea name="weatherInfo" id="waetherInfo"
           value={weatherInfo}
           onChange={(e) => setWeatherInfo(e.target.value)}
-          className='input w-full'
-          >
-          </textarea>
-        </div>
-        <div className="flex flex-col">
-          <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
-            Destination Info
-          </label>
-          <textarea name="weatherInfo" id="waetherInfo"
-          placeholder=''
-          value={destinationMoreInfo}
-          onChange={(e) => setDestinationMoreInfo(e.target.value)}
           className='input w-full'
           >
           </textarea>

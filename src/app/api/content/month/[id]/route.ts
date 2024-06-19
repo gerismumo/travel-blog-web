@@ -26,9 +26,9 @@ export async function PUT(req: NextRequest) {
     try{
         const body = await req.json();
 
-        const {destinationId, month, weatherInfo, destinationInfo} = body;
+        const {destinationId, month, weatherInfo} = body;
 
-        if(destinationId === "" || month === "" || weatherInfo === "" || destinationInfo === "") {
+        if(destinationId === "" || month === "" || weatherInfo === "") {
             return NextResponse.json({success: false, message: "all fields are required"})
         }
         
@@ -40,7 +40,6 @@ export async function PUT(req: NextRequest) {
             updateData = await DestinationMonthContent.findByIdAndUpdate(id, 
                 {
                     weatherInfo: body.weatherInfo,
-                    destinationInfo: body.destinationInfo,
                 },
                 {new: true}
             )
@@ -48,7 +47,7 @@ export async function PUT(req: NextRequest) {
 
         }else {
             updateData = await DestinationMonthContent.findByIdAndUpdate(id, {
-                destinationId, month, weatherInfo, destinationInfo
+                destinationId, month, weatherInfo
             }, {new: true});
         }
 

@@ -81,10 +81,6 @@ const destinationMonthContentSchema: Schema<IDestinationMonthContent> = new mong
     weatherInfo: {
         type: String,
         required: true,
-    },
-    destinationInfo: {
-        type: String,
-        required: true,
     }
 })
 

@@ -87,7 +87,6 @@ const page = () => {
             destinationId: editObject.destinationId,
             month: editObject.month,
             weatherInfo: editObject.weatherInfo,
-            destinationInfo: editObject.destinationInfo,
         };
 
         //check empty fields
@@ -155,7 +154,6 @@ const page = () => {
                         <th className='table-cell'>Destination</th>
                         <th className='table-cell'>Month</th>
                         <th className='table-cell'>Weathe Info</th>
-                        <th className='table-cell'>Destination Info</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -173,7 +171,6 @@ const page = () => {
                                 <td className='table-cell'>{destinations.find(ob => ob._id === d.destinationId)?.name}</td>
                                 <td className='table-cell'>{months.find(ob => ob.id === parseInt(d.month))?.name}</td>
                                 <td className='table-cell'>{d.weatherInfo}</td>
-                                <td className='table-cell'>{d.destinationInfo}</td>
                                 <td className='table-cell'>
                                     <button
                                     onClick={() => handleEditOpen(d._id)}
@@ -212,18 +209,6 @@ const page = () => {
                                                 <textarea name="weatherInfo" id="waetherInfo"
                                                 value={editObject?.weatherInfo}
                                                 onChange={(e) => setEditObject(editObject ? {...editObject, weatherInfo: e.target.value}: null)}
-                                                className='input w-full'
-                                                >
-                                                </textarea>
-                                                </div>
-                                                <div className="flex flex-col">
-                                                <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
-                                                    Destination Info
-                                                </label>
-                                                <textarea name="weatherInfo" id="waetherInfo"
-                                                placeholder=''
-                                                value={editObject?.destinationInfo}
-                                                onChange={(e) => setEditObject(editObject ? {...editObject, destinationInfo: e.target.value}: null)}
                                                 className='input w-full'
                                                 >
                                                 </textarea>

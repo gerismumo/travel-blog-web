@@ -52,7 +52,6 @@ export interface IDestinationMonthContent {
   destinationId: string;
   month: string;
   weatherInfo: string;
-  destinationInfo: string;
 }
 
 export interface IDestinationMonthContentList {
@@ -60,7 +59,6 @@ export interface IDestinationMonthContentList {
   destinationId: string;
   month: string;
   weatherInfo: string;
-  destinationInfo: string;
 }
 
 export interface IDestionationFaq {
