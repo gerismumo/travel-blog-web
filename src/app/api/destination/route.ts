@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/utils/dbConnect';
-import { Destination } from '@/(models)/destination';
+import { Destination } from '@/(models)/models';
 import { IDestination, IDestinationList } from '@/(types)/type';
 
 export async function POST(req: NextRequest) {

@@ -1,5 +1,5 @@
 
-import { DestinationMonthFaq } from "@/(models)/destination";
+import { DestinationMonthFaq } from "@/(models)/models";
 import { IDestionationMonthFaq } from "@/(types)/type";
 import connectDB from "@/utils/dbConnect";
 import { NextRequest, NextResponse } from "next/server";

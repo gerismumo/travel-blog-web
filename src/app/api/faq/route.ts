@@ -1,4 +1,4 @@
-import { DestinationFaq } from "@/(models)/destination";
+import { DestinationFaq } from "@/(models)/models";
 import { IDestionationFaq } from "@/(types)/type";
 import connectDB from "@/utils/dbConnect";
 import { NextRequest, NextResponse } from "next/server";

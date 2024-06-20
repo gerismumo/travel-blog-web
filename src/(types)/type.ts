@@ -64,6 +64,7 @@ export interface IDestinationContent {
   destinationId: string;
   weatherInfo: string;
   destinationInfo: string;
+  image: string;
 }
 
 export interface IDestinationContentList {
@@ -71,6 +72,7 @@ export interface IDestinationContentList {
   destinationId: string;
   weatherInfo: string;
   destinationInfo: string;
+  image: string;
 }
 
 export interface IDestinationMonthContent {

@@ -103,10 +103,14 @@ const destinationContentSchema: Schema<IDestinationContent> = new mongoose.Schem
     destinationInfo: {
         type: String,
         required: true,
+    },
+    image: {
+        type: String,
+        required: true,
     }
 })
 
-export const DestinationContent = mongoose.models.DestinationContent || mongoose.model<IDestinationContent>('DestinationContent', destinationContentSchema)
+export const DestinationContent = mongoose.models.DestiInfo || mongoose.model<IDestinationContent>('DestiInfo', destinationContentSchema)
 
 const destinationMonthContentSchema: Schema<IDestinationMonthContent> = new mongoose.Schema({
     destinationId: {
@@ -123,7 +127,7 @@ const destinationMonthContentSchema: Schema<IDestinationMonthContent> = new mong
     }
 })
 
-export const DestinationMonthContent = mongoose.models.DestinationMonthContent || mongoose.model<IDestinationMonthContent>('DestinationMonthContent', destinationMonthContentSchema);
+export const DestinationMonthContent = mongoose.models.DestiMonInfo || mongoose.model<IDestinationMonthContent>('DestiMonInfo', destinationMonthContentSchema);
 
 const destinationFaqSchema: Schema<IDestionationFaq> = new mongoose.Schema({
     destinationId: {
@@ -140,7 +144,7 @@ const destinationFaqSchema: Schema<IDestionationFaq> = new mongoose.Schema({
     }
 })
 
-export const DestinationFaq = mongoose.models.DestinationFaq || mongoose.model<IDestionationFaq>('DestinationFaq', destinationFaqSchema);
+export const DestinationFaq = mongoose.models.DestiFaq || mongoose.model<IDestionationFaq>('DestiFaq', destinationFaqSchema);
 
 const destinationMonthFaqSchema: Schema<IDestionationMonthFaq> = new mongoose.Schema({
     destinationId: {
@@ -161,4 +165,4 @@ const destinationMonthFaqSchema: Schema<IDestionationMonthFaq> = new mongoose.Sc
     }
 })
 
-export const DestinationMonthFaq = mongoose.models.DestinationMonthFaq || mongoose.model<IDestionationMonthFaq>('DestinationMonthFaq', destinationMonthFaqSchema);
+export const DestinationMonthFaq = mongoose.models.DestiMonFaq || mongoose.model<IDestionationMonthFaq>('DestiMonFaq', destinationMonthFaqSchema);

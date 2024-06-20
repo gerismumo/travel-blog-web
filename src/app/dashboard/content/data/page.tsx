@@ -90,6 +90,7 @@ const page = () => {
             destinationId: editObject.destinationId,
             weatherInfo: editObject.weatherInfo,
             destinationInfo: editObject.destinationInfo,
+            image: editObject.image
         };
 
         //check empty fields
@@ -159,6 +160,7 @@ const page = () => {
                         <th className='table-cell'>Destination</th>
                         <th className='table-cell'>Weathe Info</th>
                         <th className='table-cell'>Destination Info</th>
+                        <th className='table-cell'>Image</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -196,6 +198,11 @@ const page = () => {
                                                 {viewMore[d._id] ? "View Less" : "View More"}
                                             </button>
                                         )}
+                                    </td>
+                                    <td className='table-cell'>
+                                        <img src={d.image} alt="" 
+                                        className='w-[70px] h-[70px] transition-transform duration-300 hover:absolute hover:z-10 hover:scale-125 hover:w-[150px] hover:h-[150px]'
+                                        />
                                     </td>
                                     <td className='table-cell'>
                                         <button
@@ -239,6 +246,16 @@ const page = () => {
                                                     className='input w-full'
                                                     >
                                                     </textarea>
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                                                            Image Url
+                                                        </label>
+                                                        <input type="url" name="imageUrl" id="imageUrl"
+                                                        value={editObject?.image}
+                                                        onChange={(e) => setEditObject(editObject ? {...editObject, image: e.target.value}: null)}
+                                                        className='input'
+                                                        />
                                                     </div>
                                                     <div className="flex flex-row w-[100%]">
                                                     <button

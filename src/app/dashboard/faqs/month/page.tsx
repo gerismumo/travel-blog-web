@@ -74,7 +74,7 @@ const page = () => {
       className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div className="flex flex-col">
           <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-            Destination
+            Destination <span className="text-red-500">*</span>
           </label>
           <select name="destination" id="destination"
           className='input w-full'
@@ -89,7 +89,7 @@ const page = () => {
         </div>
         <div className="flex flex-col">
           <label className="block text-gray-700 text-sm font-bold " htmlFor="month">
-            Month
+            Month <span className="text-red-500">*</span>
           </label>
           <select name="month" id="month"
           className='input w-full'
@@ -104,7 +104,7 @@ const page = () => {
         </div>
         <div className="flex flex-col">
           <label className="block text-gray-700 text-sm font-bold " htmlFor="question">
-            Question
+            Question <span className="text-red-500">*</span>
           </label>
           <textarea name="question" id="question"
           value={question}
@@ -115,7 +115,7 @@ const page = () => {
         </div>
         <div className="flex flex-col">
           <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
-            Answer
+            Answer <span className="text-red-500">*</span>
           </label>
           <textarea name="answer" id="answer"
           placeholder=''

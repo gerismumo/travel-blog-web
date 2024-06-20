@@ -1,4 +1,4 @@
-import { DestinationContent } from "@/(models)/destination";
+import { DestinationContent } from "@/(models)/models";
 import { IDestinationContent } from "@/(types)/type";
 import connectDB from "@/utils/dbConnect";
 import { NextRequest, NextResponse } from "next/server";
@@ -6,9 +6,9 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req:NextRequest) {
     try{
         const body:IDestinationContent = await req.json();
-        const {destinationId, weatherInfo, destinationInfo} = body;
+        const {destinationId, weatherInfo, destinationInfo, image} = body;
 
-        if(!destinationId ||!weatherInfo ||!destinationInfo) {
+        if(!destinationId ||!weatherInfo ||!destinationInfo || !image) {
             return NextResponse.json({ success: false, message: 'Fill all fields' });
         }
 
@@ -19,7 +19,7 @@ export async function POST(req:NextRequest) {
             return NextResponse.json({ success: false, message: 'record already exists' });
         }
 
-        const savedData = await DestinationContent.create({destinationId, weatherInfo, destinationInfo});
+        const savedData = await DestinationContent.create({destinationId, weatherInfo, destinationInfo, image});
         if(savedData) {
             return NextResponse.json({ success: true, message: 'Added successfully' });
         }else {

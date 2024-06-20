@@ -1,43 +1,39 @@
-import { DestinationFaq } from "@/(models)/destination";
+import { DestinationFaq } from "@/(models)/models";
 import { IDestionationFaq } from "@/(types)/type";
 import connectDB from "@/utils/dbConnect";
-import { NextRequest, NextResponse } from "next/server";
 
-export async function DELETE(req:NextRequest) {
-    const url = new URL(req.url);
-    const id = url.pathname.split('/').pop(); 
+
+export async function DELETE(req:Request, {params}: {params: {id: string}}) {
     try {
         await connectDB(); 
-        const deleteData = await DestinationFaq.findByIdAndDelete(id);
+        const deleteData = await DestinationFaq.findByIdAndDelete(params.id);
         if(deleteData) {
-            return NextResponse.json({success: true, message: "delete success"})
+            return Response.json({success: true, message: "delete success"})
         } else {
-            return NextResponse.json({success: false, message: "delete failed"})
+            return Response.json({success: false, message: "delete failed"})
         }
     } catch (error) {
-        return NextResponse.json({success: false, message: "delete failed"})
+        return Response.json({success: false, message: "delete failed"})
     }
 }
 
-export async function PUT(req:NextRequest) {
-    const url = new URL(req.url);
-    const id = url.pathname.split('/').pop(); 
+export async function PUT(req:Request, {params}: {params: {id: string}}) {
     try {
         const body:IDestionationFaq = await req.json();
         const {destinationId, question, answer} = body;
 
         if(destinationId === "" || answer === "" || question === "") {
-            return NextResponse.json({success: false, message: "all fields are required"})
+            return Response.json({success: false, message: "all fields are required"})
         }
 
         await connectDB(); 
-        const updateData = await DestinationFaq.findByIdAndUpdate(id, body);
+        const updateData = await DestinationFaq.findByIdAndUpdate(params.id, body);
         if(updateData) {
-            return NextResponse.json({success: true, message: "update success"})
+            return Response.json({success: true, message: "update success"})
         } else {
-            return NextResponse.json({success: false, message: "update failed"})
+            return Response.json({success: false, message: "update failed"})
         }
     } catch (error) {
-        return NextResponse.json({success: false, message: "update failed"})
+        return Response.json({success: false, message: "update failed"})
     }
 }

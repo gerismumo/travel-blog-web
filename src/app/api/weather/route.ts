@@ -1,4 +1,4 @@
-import { DestinationWeatherData } from "@/(models)/destination";
+import { DestinationWeatherData } from "@/(models)/models";
 import { IWeatherData } from "@/(types)/type";
 import connectDB from "@/utils/dbConnect";
 import { NextRequest, NextResponse } from "next/server";

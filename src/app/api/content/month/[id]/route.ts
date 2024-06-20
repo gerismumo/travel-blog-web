@@ -1,5 +1,5 @@
 
-import { DestinationMonthContent } from "@/(models)/destination";
+import { DestinationMonthContent } from "@/(models)/models";
 import connectDB from "@/utils/dbConnect";
 
 

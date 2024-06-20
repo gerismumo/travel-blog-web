@@ -11,7 +11,7 @@ const page = () => {
     const[destination, setDestination] = useState<string>("");
     const[weatherInfo, setWeatherInfo] = useState<string>("");
     const[destinationMoreInfo, setDestinationMoreInfo] =useState<string>("");
-
+    const[image, setImage] = useState<string>("");
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -38,7 +38,7 @@ const page = () => {
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if(destination === "" || weatherInfo === "" || destinationMoreInfo === "") {
+        if(destination === "" || weatherInfo === "" || destinationMoreInfo === "" || image ==="") {
             return toast.error("all fields are required")
         }
 
@@ -47,6 +47,7 @@ const page = () => {
             destinationId: destination,
             weatherInfo: weatherInfo,
             destinationInfo: destinationMoreInfo,
+            image: image,
         }
 
         //submit data object to server
@@ -57,6 +58,7 @@ const page = () => {
                 setDestination('');
                 setWeatherInfo('');
                 setDestinationMoreInfo('');
+                setImage('');
             }else {
                 toast.error(response.data.message);
             }
@@ -77,7 +79,7 @@ const page = () => {
       className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div className="flex flex-col">
           <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-            Destination
+            Destination <span className="text-red-500">*</span>
           </label>
           <select name="destination" id="destination"
           className='input w-full'
@@ -92,7 +94,7 @@ const page = () => {
         </div>
         <div className="flex flex-col">
           <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
-            Weather Info
+            Weather Info <span className="text-red-500">*</span>
           </label>
           <textarea name="weatherInfo" id="waetherInfo"
           value={weatherInfo}
@@ -103,7 +105,7 @@ const page = () => {
         </div>
         <div className="flex flex-col">
           <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
-            Destination Info
+            Destination Info <span className="text-red-500">*</span>
           </label>
           <textarea name="weatherInfo" id="waetherInfo"
           placeholder=''
@@ -112,6 +114,17 @@ const page = () => {
           className='input w-full'
           >
           </textarea>
+        </div>
+        <div className="flex flex-col">
+          <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+            Image Url <span className="text-red-500">*</span>
+          </label>
+          <input type="url" 
+          name="imageUrl" id="imageUrl"
+          value={image}
+          onChange={(e) => setImage(e.target.value)}
+          className='input'
+          />
         </div>
         <div className="flex flex-row w-[100%]">
           <button

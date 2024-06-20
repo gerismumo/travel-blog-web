@@ -75,7 +75,7 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   </Link>
               </div>
             )}
-            <button
+            {/* <button
             onClick={() => setOpenWeatherTabs(!openWeatherTabs)}
             className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
             >
@@ -120,7 +120,7 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   Month Data
                 </Link>
               </div>
-            )}
+            )} */}
             <button
             onClick={() => setOpenContentTabs(!openContentTabs)}
             className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
@@ -141,6 +141,14 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   />
                   Add Info
                 </Link>
+                <Link href="/dashboard/content/data"
+                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className=''
+                  />
+                  Data
+                </Link>
                 <Link href="/dashboard/content/month"
                 className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
@@ -149,21 +157,14 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   />
                   Add Month Info
                 </Link>
-                <Link href="/dashboard/content/data"
-                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >
-                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
-                  className=''
-                  />
-                  Info
-                </Link>
+                
                 <Link href="/dashboard/content/month-data"
                 className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
                   <FontAwesomeIcon icon={fontawesome.faAngleRight}
                   className=''
                   />
-                  Month Info
+                  Month Data
                 </Link>
               </div>
             )}
@@ -187,14 +188,6 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   />
                   Add FaQ
                 </Link>
-                <Link href="/dashboard/faqs/month"
-                className='flex flex-row items-center gap-[5px] pl-[50px]  text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >
-                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
-                  className=''
-                  />
-                  Add Monthly FaQ
-                </Link>
                 <Link href="/dashboard/faqs/data"
                 className='flex flex-row items-center gap-[5px] pl-[50px]  text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
@@ -203,13 +196,21 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   />
                   Data
                 </Link>
+                <Link href="/dashboard/faqs/month"
+                className='flex flex-row items-center gap-[5px] pl-[50px]  text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className=''
+                  />
+                  Add Monthly FaQ
+                </Link>
                 <Link href="/dashboard/faqs/month/data"
                 className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
                   <FontAwesomeIcon icon={fontawesome.faAngleRight}
                   className=''
                   />
-                  Months Data
+                  Monthly Data
                 </Link>
               </div>
             )}
