@@ -1,8 +1,8 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUser, faAngleRight, faAngleDown,faCircleInfo, faAngleUp, faHouse, faPlaneDeparture,faBolt } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faXmark, faBars, faTrashCan, faAngleRight, faAngleDown,faCircleInfo, faAngleUp, faHouse, faPlaneDeparture,faBolt } from '@fortawesome/free-solid-svg-icons';
 import {faCircleQuestion} from '@fortawesome/free-regular-svg-icons';
 
-library.add( faUser, faAngleRight,faAngleDown,faCircleInfo, faAngleUp, faHouse, faPlaneDeparture, faBolt, faCircleQuestion);
+library.add( faUser,faXmark, faBars, faTrashCan, faAngleRight,faAngleDown,faCircleInfo, faAngleUp, faHouse, faPlaneDeparture, faBolt, faCircleQuestion);
 
 
 export default{
@@ -14,7 +14,9 @@ export default{
     faBolt,
     faCircleInfo,
     faCircleQuestion,
-    faAngleRight
+    faAngleRight,
+    faTrashCan,
+    faBars,
+    faXmark
 }
-
 

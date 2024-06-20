@@ -1,8 +1,11 @@
 "use client"
 
+import fontawesome from '@/(icons)/fontawesome';
 import { IDestinationContentList, IDestinationList } from '@/(types)/type'
 import Loader from '@/app/components/Loader';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
+import { truncateText } from '@/utils/service';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
@@ -16,6 +19,7 @@ const page = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [loadingDestinations, setLoadingDestinations] = useState<boolean>(true);
     const [loadingContent, setLoadingContent] = useState<boolean>(true);
+    const [viewMore, setViewMore] = useState<{ [key: string]: boolean }>({});
 
     const fetchData = async () => {
         try {
@@ -126,6 +130,11 @@ const page = () => {
         );
     }, [searchQuery, contentList, destinations]);
 
+    const handleViewMore = (id: string) => {
+        setViewMore((prev) => ({ ...prev, [id]: !prev[id] }));
+        setOpenEdit(false);
+    };
+
     //loader
     if(loadingContent || loadingDestinations) {
         return (
@@ -161,68 +170,93 @@ const page = () => {
                                 </div>
                             </td>
                         </tr>
-                    ): filteredData.map((d) => (
-                        <React.Fragment key={d._id}>
-                            <tr>
-                                <td className='table-cell'>{destinations.find(ob => ob._id === d.destinationId)?.name}</td>
-                                <td className='table-cell'>{d.weatherInfo}</td>
-                                <td className='table-cell'>{d.destinationInfo}</td>
-                                <td className='table-cell'>
-                                    <button
-                                    onClick={() => handleEditOpen(d._id)}
-                                    >{openEdit && openEditId === d._id ? "Close" : "Edit"}</button>
-                                </td>
-                                <td className='table-cell'>
-                                    <button
-                                    onClick={() => deleteData(d._id)}
-                                    >Delete</button>
-                                </td>
-                            </tr>
-                            {openEdit && openEditId === d._id && (
+                    ): filteredData.map((d) => {
+                            const weatherInfo = truncateText(d.weatherInfo, 100);
+                            const destinationInfo = truncateText(d.destinationInfo, 100);
+                        return(
+                            <React.Fragment key={d._id}>
                                 <tr>
-                                    <td colSpan={5} className='table-cell'>
-                                        <div className="">
-                                            <form onSubmit={handleSubmitEdit} 
-                                                className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                                                <div className="flex flex-col">
-                                                <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
-                                                    Weather Info
-                                                </label>
-                                                <textarea name="weatherInfo" id="waetherInfo"
-                                                value={editObject?.weatherInfo}
-                                                onChange={(e) => setEditObject(editObject ? {...editObject, weatherInfo: e.target.value}: null)}
-                                                className='input w-full'
-                                                >
-                                                </textarea>
-                                                </div>
-                                                <div className="flex flex-col">
-                                                <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
-                                                    Destination Info
-                                                </label>
-                                                <textarea name="weatherInfo" id="waetherInfo"
-                                                placeholder=''
-                                                value={editObject?.destinationInfo}
-                                                onChange={(e) => setEditObject(editObject ? {...editObject, destinationInfo: e.target.value}: null)}
-                                                className='input w-full'
-                                                >
-                                                </textarea>
-                                                </div>
-                                                <div className="flex flex-row w-[100%]">
-                                                <button
-                                                    className="bg-lightDark hover:bg-[#3C4048] text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                                    type="submit"
-                                                >
-                                                    Submit
-                                                </button>
-                                                </div>
-                                            </form>
-                                        </div>
+                                    <td className='table-cell'>{destinations.find(ob => ob._id === d.destinationId)?.name}</td>
+                                    <td className='table-cell'>
+                                        {viewMore[d._id] ? d.weatherInfo : weatherInfo.text}
+                                        {weatherInfo.truncated && (
+                                            <button onClick={() => handleViewMore(d._id)}
+                                             className='bg-lightDark text-white px-[15px] py-[4px] rounded-[4px]'
+                                            >
+                                                {viewMore[d._id] ? "View Less" : "View More"}
+                                            </button>
+                                        )}
+                                    </td>
+                                    <td className='table-cell'>
+                                        {viewMore[d._id] ? d.destinationInfo : destinationInfo.text}
+                                        {destinationInfo.truncated && (
+                                            <button onClick={() => handleViewMore(d._id)}
+                                            className='bg-lightDark text-white px-[15px] py-[4px] rounded-[4px]'
+                                            >
+                                                {viewMore[d._id] ? "View Less" : "View More"}
+                                            </button>
+                                        )}
+                                    </td>
+                                    <td className='table-cell'>
+                                        <button
+                                        onClick={() => handleEditOpen(d._id)}
+                                        >{openEdit && openEditId === d._id ? "Close" : "Edit"}</button>
+                                    </td>
+                                    <td className='table-cell'>
+                                        <button
+                                        onClick={() => deleteData(d._id)}
+                                        className='text-[20px]'
+                                        >
+                                            <FontAwesomeIcon icon={fontawesome.faTrashCan}/>
+                                        </button>
                                     </td>
                                 </tr>
-                            )}
-                        </React.Fragment>
-                    ))} 
-                    
+                                {openEdit && openEditId === d._id && (
+                                    <tr>
+                                        <td colSpan={5} className='table-cell'>
+                                            <div className="">
+                                                <form onSubmit={handleSubmitEdit} 
+                                                    className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                                                    <div className="flex flex-col">
+                                                    <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                                                        Weather Info
+                                                    </label>
+                                                    <textarea name="weatherInfo" id="waetherInfo"
+                                                    value={editObject?.weatherInfo}
+                                                    onChange={(e) => setEditObject(editObject ? {...editObject, weatherInfo: e.target.value}: null)}
+                                                    className='input w-full'
+                                                    >
+                                                    </textarea>
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                    <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                                                        Destination Info
+                                                    </label>
+                                                    <textarea name="weatherInfo" id="waetherInfo"
+                                                    placeholder=''
+                                                    value={editObject?.destinationInfo}
+                                                    onChange={(e) => setEditObject(editObject ? {...editObject, destinationInfo: e.target.value}: null)}
+                                                    className='input w-full'
+                                                    >
+                                                    </textarea>
+                                                    </div>
+                                                    <div className="flex flex-row w-[100%]">
+                                                    <button
+                                                        className="bg-lightDark hover:bg-[#3C4048] text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                        type="submit"
+                                                    >
+                                                        Submit
+                                                    </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </React.Fragment>
+                        )
+                    })
+                    } 
                 </tbody>
             </table>
         </div>

@@ -31,10 +31,9 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
           />
           <button
           onClick={toggleSidebar}
+          className='text-[30px]'
           >
-            <img src="../images/cross.svg" alt=""
-            className='h-[25px] w-[25px]'
-             />
+            <FontAwesomeIcon icon={fontawesome.faXmark}/>
           </button>
         </div>
         <div className="flex flex-col gap-[10px]">
@@ -110,7 +109,7 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   <FontAwesomeIcon icon={fontawesome.faAngleRight}
                   className=''
                   />
-                  Add Month Data
+                  Add Month
                 </Link>
                 <Link href="/dashboard/weather/month/data"
                 className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
@@ -221,3 +220,4 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
 }
 
 export default SideBar
+

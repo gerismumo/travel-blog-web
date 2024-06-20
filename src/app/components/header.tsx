@@ -1,3 +1,5 @@
+import fontawesome from '@/(icons)/fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link'
 import React from 'react'
 
@@ -15,11 +17,9 @@ const Header: React.FC<HeaderProps> = ({data}) => {
       <nav className="flex flex-col  w-[100%] py-[15px]  px-[20px]  gap-[20px] shadow-sm">
         <div className="flex flex-row items-center justify-between ">
           <button onClick={toggleSidebar}
-            className='text-white'
+            className='text-white text-[22px]'
             >
-              <img src="../images/bars.svg" alt=""
-              className='h-[20px] w-[20px]'
-               />
+              <FontAwesomeIcon icon={fontawesome.faBars}/>
             </button>
             <div className="flex flex-row items-center gap-[30px]">
               <div className="flex flex-col items-center">
