@@ -133,7 +133,7 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
             </button>
             {openContentTabs && (
               <div className="flex flex-col gap-[10px]">
-                <Link href="/dashboard/content"
+                <Link href="/dashboard/add-info"
                 className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
                   <FontAwesomeIcon icon={fontawesome.faAngleRight}
@@ -141,7 +141,7 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   />
                   Add Info
                 </Link>
-                <Link href="/dashboard/content/data"
+                <Link href="/dashboard/info-data"
                 className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
                   <FontAwesomeIcon icon={fontawesome.faAngleRight}
@@ -149,7 +149,7 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   />
                   Data
                 </Link>
-                <Link href="/dashboard/content/month"
+                <Link href="/dashboard/add-mon-info"
                 className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
                   <FontAwesomeIcon icon={fontawesome.faAngleRight}
@@ -158,7 +158,7 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   Add Month Info
                 </Link>
                 
-                <Link href="/dashboard/content/month-data"
+                <Link href="/dashboard/mon-info"
                 className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
                   <FontAwesomeIcon icon={fontawesome.faAngleRight}
@@ -180,7 +180,7 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
             </button> 
             {openFaqTabs && (
               <div className="flex flex-col gap-[10px]">
-                <Link href="/dashboard/faqs"
+                <Link href="/dashboard/add-faqs"
                 className='flex flex-row items-center gap-[5px] pl-[50px]  text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
                   <FontAwesomeIcon icon={fontawesome.faAngleRight}
@@ -188,7 +188,7 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   />
                   Add FaQ
                 </Link>
-                <Link href="/dashboard/faqs/data"
+                <Link href="/dashboard/faqs"
                 className='flex flex-row items-center gap-[5px] pl-[50px]  text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
                   <FontAwesomeIcon icon={fontawesome.faAngleRight}
@@ -196,7 +196,7 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   />
                   Data
                 </Link>
-                <Link href="/dashboard/faqs/month"
+                <Link href="/dashboard/add-month-faqs"
                 className='flex flex-row items-center gap-[5px] pl-[50px]  text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
                   <FontAwesomeIcon icon={fontawesome.faAngleRight}
@@ -204,7 +204,7 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   />
                   Add Monthly FaQ
                 </Link>
-                <Link href="/dashboard/faqs/month/data"
+                <Link href="/dashboard/monthly-faqs"
                 className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
                   <FontAwesomeIcon icon={fontawesome.faAngleRight}
