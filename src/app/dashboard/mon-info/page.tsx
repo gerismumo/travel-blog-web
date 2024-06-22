@@ -11,7 +11,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 
-const page = () => {
+const page:React.FC = () => {
     const[contentList, setContentList] = useState<IDestinationMonthContentList[]>([]);
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [openEdit , setOpenEdit] = useState<boolean>(false);

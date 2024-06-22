@@ -19,7 +19,7 @@ interface SideBarProps {
 const SideBar: React.FC<SideBarProps> = ({ data }) => {
   const { isSidebarOpen, toggleSidebar } = data;
   const [openDestinationTabs, setOpenDestinationTabs] = useState<boolean>(false);
-  const [openWeatherTabs, setOpenWeatherTabs] = useState<boolean>(false);
+  const [openHolidaysTabs, setOpenHolidaysTabs] = useState<boolean>(false);
   const [openContentTabs, setOpenContentTabs] = useState<boolean>(false);
   const [openFaqTabs, setOpenFaqTabs] = useState<boolean>(false);
 
@@ -75,52 +75,6 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   </Link>
               </div>
             )}
-            {/* <button
-            onClick={() => setOpenWeatherTabs(!openWeatherTabs)}
-            className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
-            >
-              <FontAwesomeIcon icon={fontawesome.faBolt}
-              className=' text-lightRed '
-              />
-              <span>Weather</span>
-              {openWeatherTabs ? <FontAwesomeIcon icon={fontawesome.angleUp} />: <FontAwesomeIcon icon={fontawesome.angleDown} /> }
-            </button>
-            {openWeatherTabs && (
-              <div className="flex flex-col gap-[10px]">
-                <Link href="/dashboard/weather"
-                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >
-                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
-                  className='  '
-                  />
-                  Add
-                </Link>
-                <Link href="/dashboard/weather/data"
-                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >
-                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
-                  className=''
-                  />
-                  Data
-                </Link>
-                <Link href="/dashboard/weather/month"
-                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >
-                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
-                  className=''
-                  />
-                  Add Month
-                </Link>
-                <Link href="/dashboard/weather/month/data"
-                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >
-                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
-                  className=''
-                  />
-                  Month Data
-                </Link>
-              </div>
-            )} */}
             <button
             onClick={() => setOpenContentTabs(!openContentTabs)}
             className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
@@ -165,6 +119,28 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   className=''
                   />
                   Month Data
+                </Link>
+              </div>
+            )}
+            <button
+            onClick={() => setOpenHolidaysTabs(!openHolidaysTabs)}
+            className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
+            >
+              <FontAwesomeIcon icon={fontawesome.faCircleInfo}
+              className=' text-lightRed '
+              />
+              <span>Holidays</span>
+              {openContentTabs ? <FontAwesomeIcon icon={fontawesome.angleUp} />: <FontAwesomeIcon icon={fontawesome.angleDown} /> }
+            </button>
+            {openHolidaysTabs && (
+              <div className="flex flex-col gap-[10px]">
+                <Link href="/dashboard/add-holiday"
+                className='flex flex-row items-center gap-[5px] pl-[50px]  text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className=''
+                  />
+                  Add Holiday
                 </Link>
               </div>
             )}

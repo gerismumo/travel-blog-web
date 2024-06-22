@@ -9,7 +9,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
-const page = () => {
+const page:React.FC = () => {
   const[data, setData] = useState<IWeatherDataList[]>([])
   const[error, setError] = useState<string | null>(null)
   const[openEdit, setOpenEdit] = useState<Boolean>(false);

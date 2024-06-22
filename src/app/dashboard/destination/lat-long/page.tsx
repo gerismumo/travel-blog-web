@@ -15,7 +15,7 @@ import toast from 'react-hot-toast';
 //   distance: number;
 // }
 
-const Page = () => {
+const Page:React.FC  = () => {
   const [lat, setLat] = useState<string>('');
   const [lon, setLon] = useState<string>('');
   const [data, setData] = useState<any | null>(null);

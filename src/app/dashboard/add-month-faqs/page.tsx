@@ -8,7 +8,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 
-const page = () => {
+const page:React.FC  = () => {
     const[destination, setDestination] = useState<string>("");
     const[question, setQuestion] = useState<string>('');
     const[answer, setAnswer] = useState<string>('');

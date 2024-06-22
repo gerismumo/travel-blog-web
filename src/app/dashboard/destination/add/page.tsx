@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-hot-toast';
 
-const AddDestination = () => {
+const AddDestination:React.FC  = () => {
   const[destination, setDestination] = useState<string>('');
   const handleSubmit = async (e: any) => {
     e.preventDefault();

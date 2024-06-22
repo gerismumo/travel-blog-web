@@ -6,7 +6,7 @@ import { getDestinations } from '@/utils/(apis)/destinationApi';
 import toast from 'react-hot-toast';
 import Loader from '@/app/components/Loader';
 
-const Page = () => {
+const Page:React.FC  = () => {
 
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [error, setError] = useState<string | null>(null);
