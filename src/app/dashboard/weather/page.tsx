@@ -1,244 +1,56 @@
 "use client"
 
-import { IDestinationList, IWeatherData } from '@/(types)/type';
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { toast } from 'react-hot-toast';
-import { getDestinations } from '@/utils/(apis)/destinationApi';
-import Loader from '@/app/components/Loader';
-import { months } from '@/lib/months';
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 
 
-const TemperatureForm: React.FC = () => {
-  const [destination, setDestination] = useState<string>('');
-  const [year, setYear] = useState<string>('');
-  const [month, setMonth] = useState<string>('');
-  const [selectedDate, setSelectedDate] = useState<string>("");
-  const [temperature, setTemperature] = useState<string>("");
-  const [humidity, setHumidity] = useState<string>('');
-  const [waterTemperature, setWaterTemperature] = useState<string>('');
-  const [condition, setCondition] = useState<string>("");
-  const [sunnyHours, setSunnyHours] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
+const page = () => {
+    const[weatherData, setWeatherData] = useState<any[]>([])
 
-
-    const [destinations, setDestinations] = useState<IDestinationList[]>([]);
-    const [error, setError] = useState<string | null>(null);
-  
-    useEffect(() => {
-      const fetchData = async () => {
+    const FetchData = async() => {
         try {
-          const data = await getDestinations();
-          setDestinations(data);
-        } catch (error : any) {
-          setError(error.message);
-        }finally {
-          setLoading(false);
+            const response = await axios('/api/weather')
+            if(response.data.success) {
+                setWeatherData(response.data.data)
+            }else {
+                return toast.error(response.data.message)
+            }
+        }catch(error) {
+            return toast.error("network error")
         }
-      };
-  
-      fetchData();
-    }, []);
-
-    if(error) {
-        toast.error(error);
     }
+    useEffect(() => {
+        FetchData()
+    }, [])
 
- 
+    console.log(weatherData);
 
-  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const weatherData: IWeatherData = {
-      destinationId: destination,
-      month: month,
-      year: year,
-      airTemperature: temperature,
-      waterTemperature: waterTemperature,
-      humidity,
-      condition,
-      sunnyHours: sunnyHours,
-    };
-
-    for(const[key, value] of Object.entries(weatherData)) {
-      if(!value) {
-        toast.error("all fields are required");
-        return;
-      }
-    }
-    
-    try {
-      const response = await axios.post('/api/weather',weatherData);
-      
-      if(response.data.success) {
-          toast.success(response.data.message);
-        //reset all fieds values
-          setMonth('');
-          setYear('');
-          setDestination('');
-          setSelectedDate('');
-          setTemperature('');
-          setHumidity('');
-          setCondition('');
-          setWaterTemperature('');
-          setSunnyHours('');
-      }else {
-        toast.error(response.data.message);
-      }
-    }catch(error: any) {
-      toast.error(error.message);
-    }
-  };
-
-
-  if (loading) {
-    return (
-      <Loader/>
-    )
-  }
-    
   return (
-    <div className="max-w-xl mx-auto">
-      <form onSubmit={handleSubmit} 
-      className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <div className="flex flex-col">
-          <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-            Destination
-          </label>
-          <select name="destination" id="destination"
-          className='input w-full'
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-          >
-            <option value="">select destination</option>
-            {destinations.length > 0 && destinations.map((obj) => (
-              <option key={obj._id} value={obj._id}>{obj.name}</option>
-            ))}
-          </select>
+    <div className="flex flex-col">
+        <div className="">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Destination</th>
+                        <th>Date</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
         </div>
-        <div className="flex flex-col">
-          <label htmlFor="yearSelect" className="text-[12px] font-[600]">
-            Select Year
-          </label>
-          <select
-            id="yearSelect"
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
-            className="input w-[100%]"
-          >
-            <option value="">select year</option>
-            {Array.from({ length: new Date().getFullYear() - 2000 + 1 }, (_, index) => (
-              <option key={2000 + index} value={2000 + index}>
-                {2000 + index}
-              </option>
-            )).reverse()}
-          </select>
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="monthSelect" className="text-[12px] font-[600]">
-            Select Month
-          </label>
-          <select
-            id="monthSelect"
-            value={month}
-            onChange={(e) => setMonth(e.target.value)}
-            className="input"
-          >
-            <option value="">Select Month</option>
-            {months.map((month) => (
-              <option key={month.id} value={month.id}>{month.name}</option>
-            ))}
-          </select>
-        </div>
-        <div className="flex flex-col">
-          <label className="block text-gray-700 text-sm font-bold" htmlFor="temperature">
-            Air Temperature (°C)
-          </label>
-          <input
-            className="input"
-            id="temperature"
-            type="number"
-            placeholder="Enter temperature"
-            value={temperature}
-            min={0}
-            onChange={(e) => setTemperature(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="block text-gray-700 text-sm font-bold " htmlFor="waterTemperature">
-          Water Temperature (°C)
-          </label>
-          <input
-            className="input"
-            id="waterTemperature"
-            type="number"
-            placeholder="Enter water temperature"
-            value={waterTemperature}
-            min={0}
-            onChange={(e) => setWaterTemperature(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="block text-gray-700 text-sm font-bold " htmlFor="humidity">
-            Humidity (%)
-          </label>
-          <input
-            className="input"
-            id="humidity"
-            type="number"
-            placeholder="Enter humidity"
-            min={0}
-            value={humidity || ''}
-            onChange={(e) => setHumidity(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="block text-gray-700 text-sm font-bold " htmlFor="sunnyHours">
-          Condition
-          </label>
-          <select name="condition" id="condition"
-          value={condition}
-          onChange={(e) => setCondition(e.target.value)}
-          className='input'
-          >
-            <option value="">select condition</option>
-            <option value="Sunny">Sunny</option>
-            <option value="Cloudy">Cloudy</option>
-            <option value="Rainy">Rainy</option>
-            <option value="Snowy">Snowy</option>
-            <option value="Windy">Windy</option>
-            <option value="Foggy">Foggy</option>
-            <option value="Dry">Dry</option>
-            <option value="Hot">Hot</option>
-            <option value="Cold">Cold</option>
-            <option value="Windy">Windy</option>
-          </select>
-        </div>
-        <div className="flex flex-col">
-          <label className="block text-gray-700 text-sm font-bold " htmlFor="sunnyHours">
-          Sunny Hours
-          </label>
-          <input
-            className="input"
-            id="sunnyHours"
-            type="number"
-            placeholder="sunny hours"
-            min={0}
-            value={sunnyHours}
-            onChange={(e) => setSunnyHours(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-row w-[100%]">
-          <button
-            className="bg-lightDark hover:bg-dark text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-          >
-            Submit
-          </button>
-        </div>
-      </form>
     </div>
-  );
-};
+  )
+}
 
-export default TemperatureForm;
+export default page

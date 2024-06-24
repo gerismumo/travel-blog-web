@@ -22,6 +22,7 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
   const [openHolidaysTabs, setOpenHolidaysTabs] = useState<boolean>(false);
   const [openContentTabs, setOpenContentTabs] = useState<boolean>(false);
   const [openFaqTabs, setOpenFaqTabs] = useState<boolean>(false);
+  const [openWeatherTabs, setOpenWeatherTabs] = useState<boolean>(false)
 
   return (
     <div className={`fixed flex flex-col bg-slate-300 gap-[30px]   w-[250px] z-[999] px-[25px] py-[10px] overflow-auto h-[100%] ${isSidebarOpen ? '': 'hidden'}`}>
@@ -74,6 +75,26 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   Add
                   </Link>
               </div>
+            )}
+            <button
+            onClick={() => setOpenWeatherTabs(!openWeatherTabs)}
+            className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
+            >
+              <FontAwesomeIcon icon={fontawesome.faPlaneDeparture}
+              className=' text-lightRed '
+              />
+              <span>Weather</span>
+              {openDestinationTabs ? <FontAwesomeIcon icon={fontawesome.angleUp} />: <FontAwesomeIcon icon={fontawesome.angleDown} /> }
+            </button>
+            {openWeatherTabs && (
+              <Link href="/dashboard/weather"
+              className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
+              >
+                <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                className=''
+                />
+                Data
+              </Link>
             )}
             <button
             onClick={() => setOpenContentTabs(!openContentTabs)}

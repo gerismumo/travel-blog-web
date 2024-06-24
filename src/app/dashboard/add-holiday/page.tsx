@@ -20,6 +20,8 @@ const page:React.FC = () => {
     const [month, setMonth] = useState<string>("");
     const [heading, setHeading] = useState<string>("");
     const [selectedDestination, setSelectedDestination] = useState<string[]>([]);
+    const [Info, setInfo] = useState<string>("");
+    const [image, setImage] = useState<string>("");
 
 
     useEffect(() => {
@@ -44,7 +46,8 @@ const page:React.FC = () => {
         if (value) {
           setSelectedDestinations((prev) => {
             if (prev.some((dest) => dest.id === value)) {
-              return prev.filter((dest) => dest.id !== value);
+              toast.error('This destination is already selected.');
+              return prev;
             }
             return [...prev, { id: value, text: `Where to go on holiday in ${month && months.find(m => m.id ===parseInt(month))?.name}? ${value && destinations.find(d => d._id === value)?.name}` }]; 
           });
@@ -57,9 +60,9 @@ const page:React.FC = () => {
         );
       };
     
-      const removeDestination = (e: any,value: string) => {
+      const removeDestination = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
         e.preventDefault();
-        setSelectedDestination((prev) => prev.filter((dest) => dest !== value));
+        setSelectedDestinations((prev) => prev.filter((dest) => dest.id !== id));
       };
     
 
@@ -120,8 +123,26 @@ const page:React.FC = () => {
             </div>
             <div className="flex flex-col">
                 <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                    Heading <span className="text-red-500">*</span>
+                    Info <span className="text-red-500">*</span>
                 </label>
+                <textarea name="monthInfo" id="monthInfo"
+                value={Info}
+                onChange={(e) => setInfo(e.target.value)}
+                className='input'
+                >
+
+                </textarea>
+            </div>
+            <div className="flex flex-col">
+              <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                Image <span className="text-red-500">*</span>
+              </label>
+              <input type="url" name="image" id="image" 
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+              placeholder='image url'
+              className='input'
+              />
             </div>
             <div className="flex flex-col">
                 <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
@@ -131,7 +152,7 @@ const page:React.FC = () => {
                 className='input w-full'  
                     onChange={handleChangeDestinations}
                 >
-                    <option value="">select destination</option>
+                    <option value="">Destination contents</option>
                     {destinations.map((d) => (
                         <option key={d._id} value={d._id}>{d.name}</option>
                     ))}
@@ -164,7 +185,6 @@ const page:React.FC = () => {
                     })}
                 </ul>
             </div>
-            
         </form>
     </div>
   )

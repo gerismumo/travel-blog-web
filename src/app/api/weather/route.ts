@@ -1,45 +1,35 @@
-import { DestinationWeatherData } from "@/(models)/models";
-import { IWeatherData } from "@/(types)/type";
+import { Destination } from "@/(models)/models";
 import connectDB from "@/utils/dbConnect";
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 
-export async function POST(req:NextRequest) {
-    try{
-        const body:IWeatherData = await req.json();
+async function fetchWeatherData(stationID: number) {
+    const url = `https://d.meteostat.net/app/proxy/stations/daily?station=${stationID}&tz=Europe/Istanbul&start=2024-06-24&end=2024-06-26`
+    const response = await axios.get(url);
+    return response.data;
+  }
 
-        const {destinationId, month, year} = body;
-        for(const[key, value] of Object.entries(body)) {
-            if(!value) {
-                return NextResponse.json({success: false, message: "kkall fileds are required"});
-            }
-        }
-      
-        await connectDB();
-        //check if the date is set for that destination
-        const destinationWeather = await DestinationWeatherData.findOne({destinationId, month, year});  
-       
-        if(destinationWeather) {
-            return NextResponse.json({success: false, message: "year and month are already set for that destination"});
-        }
-        
-        const savedData = await DestinationWeatherData.create(body);
-        if(savedData) {
-            return NextResponse.json({success: true, message: "added successfully"});
-        }else {
-            return NextResponse.json({success: false, message: "something went wrong"});
-        }
-    }catch(error) {
-        return NextResponse.json({success: false, message: "server error"})
-    } 
-}
 
-export async function GET(req: NextRequest) {
-    try{
-        await connectDB();
-        const destinationWeather = await DestinationWeatherData.find();
-        return NextResponse.json({success: true, data: destinationWeather});
-    }catch(error) {
-        return NextResponse.json({success: false, message: "server error"})
+  export  async function GET(req:NextRequest) {
+    try {
+      await connectDB();
+      const destinations = await Destination.find({});
+  
+      const weatherData = await Promise.all(
+        destinations.map(async (destination) => {
+          const data = await fetchWeatherData(destination.stationID);
+          return { 
+            destinationId: destination._id, 
+            stationId: destination.stationID, 
+            data 
+          };
+        })
+      );
+  
+      return NextResponse.json({ success: true, data: weatherData });
+  
+    } catch (error: any) {
+        NextResponse.json({ success: false, message: 'Error fetching weather data'});
     }
-}
+  }

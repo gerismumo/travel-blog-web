@@ -2,13 +2,10 @@ import { IDestination, IDestinationContent, IDestinationMonthContent, IDestionat
 import mongoose, {mongo, Schema} from 'mongoose';
 
 
-
-
 const destinationSchema : Schema<IDestination> = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  }
+    name: { type: String, required: true },
+    countryCode: { type: String, required: true },
+    stationID: { type: String, required: true },
 });
 
 export const Destination = mongoose.models.Destination || mongoose.model<IDestination>('Destination', destinationSchema);

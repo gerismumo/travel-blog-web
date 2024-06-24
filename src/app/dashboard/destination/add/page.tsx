@@ -10,10 +10,10 @@ const AddDestination:React.FC  = () => {
     e.preventDefault();
 
 
-    if(destination === '') {
-      alert("fill all the required fields");
-      return;
-    }
+    // if(destination === '') {
+    //   alert("fill all the required fields");
+    //   return;
+    // }
 
     try {
       const response = await axios.post('/api/destination', {

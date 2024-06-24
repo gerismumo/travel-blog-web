@@ -21,6 +21,8 @@ const Page:React.FC  = () => {
   const [data, setData] = useState<any | null>(null);
   const [error, setError] = useState<string>('');
   const [destinations, setDestinations] = useState<IDestinationList[]>([]);
+  const [destination, setDestination] = useState<string>("");
+  const [stationId, setStationId] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(true);
   
     useEffect(() => {
@@ -40,8 +42,6 @@ const Page:React.FC  = () => {
 
 
 
-
-
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -57,6 +57,27 @@ const Page:React.FC  = () => {
     }
   }
 
+  const handleUpdateStationId = async(e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    if(!stationId || !destination) {
+      return toast.error("all fields are required");
+    }
+
+    try{
+      const response = await axios.put(`/api/destination/${destination}`, {stationId})
+      if(response.data.success) {
+        setStationId("");
+        return toast.success(response.data.message)
+      }else {
+        return toast.error(response.data.message);
+      }
+    }catch(error) {
+      toast.error("Network error");
+      return;
+    }
+  } 
+
   if (loading) {
     return (
       <Loader/>
@@ -67,7 +88,7 @@ const Page:React.FC  = () => {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Weather Data</h1>
       <div className="flex flex-row justify-around">
-        <form onSubmit={handleSearch} className='flex flex-col space-y-4'>
+        <form onSubmit={handleSearch} className='flex flex-col gap-[10px]'>
             <input
             type="text"
             placeholder="Latitude"
@@ -84,13 +105,18 @@ const Page:React.FC  = () => {
             />
             <button
             type='submit'
-            className='p-2 bg-blue-500 text-white rounded'
+             className='px-[25px] py-[6px] rounded-[4px] bg-lightDark hover:bg-darkBlue text-white'
             >Get Weather Data</button>
         </form>
-        <form action="">
+        <form 
+        onSubmit={handleUpdateStationId}
+        className='flex flex-col gap-[10px]'
+        >
             <div className="flex flex-col">
                 <label htmlFor="">Destinations</label>
                 <select name="destination" id="destination"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
                 className='input'
                 >
                     <option value="">select destination</option>
@@ -104,11 +130,14 @@ const Page:React.FC  = () => {
                 <input
                 type="text"
                 placeholder="Station Id"
+                value={stationId}
+                onChange={(e) =>  setStationId(e.target.value)}
                 className='input '
                 />
             </div>
             <button
             type='submit'
+            className='px-[25px] py-[6px] rounded-[4px] bg-lightDark hover:bg-darkBlue text-white'
             >Update</button>
         </form>
       </div>

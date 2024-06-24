@@ -4,12 +4,16 @@ export interface IMonth {
 };
 
 export interface IDestination{
-    name: string;
+  name: string;
+  countryCode: string;
+  stationID: string;
   }
 
 export interface IDestinationList {
     _id: string;
     name: string;
+    countryCode: string;
+    stationID: string;
   }
 
 export interface IWeatherData {
