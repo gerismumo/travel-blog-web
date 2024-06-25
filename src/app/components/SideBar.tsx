@@ -108,14 +108,6 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
             </button>
             {openContentTabs && (
               <div className="flex flex-col gap-[10px]">
-                <Link href="/dashboard/add-info"
-                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >
-                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
-                  className=''
-                  />
-                  Add Info
-                </Link>
                 <Link href="/dashboard/info-data"
                 className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
@@ -124,16 +116,7 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   />
                   Data
                 </Link>
-                <Link href="/dashboard/add-mon-info"
-                className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >
-                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
-                  className=''
-                  />
-                  Add Month Info
-                </Link>
-                
-                <Link href="/dashboard/mon-info"
+                <Link href="/dashboard/month-info"
                 className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
                   <FontAwesomeIcon icon={fontawesome.faAngleRight}

@@ -21,9 +21,9 @@ export async function DELETE(req:Request, {params}: {params: {id: string}}) {
 export async function PUT(req:Request, {params}: {params: {id: string}}) {
     try {
         const body:IDestionationMonthFaq = await req.json();
-        const {destinationId, question, month, answer} = body;
+        const {destination, question, month, answer} = body;
 
-        if(destinationId === "" || month === "" || answer === "" || question === "") {
+        if(destination === "" || month === "" || answer === "" || question === "") {
             return Response.json({success: false, message: "all fields are required"})
         }
 

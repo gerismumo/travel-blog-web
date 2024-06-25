@@ -1,13 +1,13 @@
 "use client"
 
-import { IDestinationList, IDestionationFaq } from '@/(types)/type';
+import { IDestinationList, IDestionationFaq, ISuccessFormProp } from '@/(types)/type';
 import Loader from '@/app/components/Loader';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 
-const page:React.FC  = () => {
+const AddForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
     const[destination, setDestination] = useState<string>("");
     const[question, setQuestion] = useState<string>('');
     const[answer, setAnswer] = useState<string>('');
@@ -37,7 +37,7 @@ const page:React.FC  = () => {
         }
 
         const data: IDestionationFaq = {
-            destinationId: destination,
+            destination: destination,
             question: question,
             answer: answer
         }
@@ -45,6 +45,7 @@ const page:React.FC  = () => {
         try{
             const response = await axios.post('/api/faq', data);
             if(response.data.success) {
+                onSuccess();
                 toast.success(response.data.message);
                 setDestination('');
                 setQuestion('');
@@ -65,7 +66,7 @@ const page:React.FC  = () => {
     }
 
   return (
-    <div className="max-w-xl mx-auto">
+    <div className="w-[100%]">
       <form onSubmit={handleSubmit} 
       className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div className="flex flex-col">
@@ -119,4 +120,4 @@ const page:React.FC  = () => {
   )
 }
 
-export default page
+export default AddForm;

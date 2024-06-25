@@ -105,20 +105,20 @@ export interface IDestinationMonthContentList {
 }
 
 export interface IDestionationFaq {
-  destinationId: string;
+  destination: string;
   question: string;
   answer: string;
 }
 
 export interface IDestionationFaqList {
   _id: string;
-  destinationId: string;
+  destination: string;
   question: string;
   answer: string;
 }
 
 export interface IDestionationMonthFaq {
-  destinationId: string;
+  destination: string;
   month: string;
   question: string;
   answer: string;
@@ -126,7 +126,7 @@ export interface IDestionationMonthFaq {
 
 export interface IDestionationMonthFaqList {
   _id: string;
-  destinationId: string;
+  destination: string;
   month: string;
   question: string;
   answer: string;

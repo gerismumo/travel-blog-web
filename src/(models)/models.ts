@@ -75,7 +75,7 @@ const destinationMonthContentSchema: Schema<IDestinationMonthContent> = new mong
 export const DestinationMonthContent = mongoose.models.DestiMonInfo || mongoose.model<IDestinationMonthContent>('DestiMonInfo', destinationMonthContentSchema);
 
 const destinationFaqSchema: Schema<IDestionationFaq> = new mongoose.Schema({
-    destinationId: {
+    destination: {
         type: String,
         required: true,
     },
@@ -92,7 +92,7 @@ const destinationFaqSchema: Schema<IDestionationFaq> = new mongoose.Schema({
 export const DestinationFaq = mongoose.models.DestiFaq || mongoose.model<IDestionationFaq>('DestiFaq', destinationFaqSchema);
 
 const destinationMonthFaqSchema: Schema<IDestionationMonthFaq> = new mongoose.Schema({
-    destinationId: {
+    destination: {
         type: String,
         required: true,
     },

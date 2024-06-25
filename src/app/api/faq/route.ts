@@ -7,9 +7,9 @@ export async function POST(req:NextRequest) {
     try {
         const body: IDestionationFaq = await req.json();
 
-        const {destinationId, question, answer} = body;
+        const {destination, question, answer} = body;
 
-        if(destinationId === "" || answer === "" || question === "") {
+        if(destination === "" || answer === "" || question === "") {
             return NextResponse.json({success: false, message: "all fields are required"})
         }
 

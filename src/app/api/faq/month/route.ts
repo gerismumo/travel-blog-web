@@ -8,11 +8,11 @@ export async function POST(req:NextRequest) {
     try {
         const body: IDestionationMonthFaq = await req.json();
 
-        const {destinationId, month, question, answer} = body;
+        const {destination, month, question, answer} = body;
 
         console.log('fqss',body)
 
-        if(destinationId === "" || month === "" || answer === "" || question === "") {
+        if(destination === "" || month === "" || answer === "" || question === "") {
             return NextResponse.json({success: false, message: "all fields are required"})
         }
 
