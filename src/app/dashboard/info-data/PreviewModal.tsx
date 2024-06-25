@@ -34,7 +34,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) =
       <div className="fixed inset-0 bg-gray-600 bg-opacity-50 transition-opacity " onClick={onClose}></div>
       <div className="bg-white max-w-full w-[800px] mx-5   rounded-[3px] shadow-xl overflow-auto z-[20] h-[85vh]">
         <div className="flex justify-between items-center px-6 py-4 bg-lightDark text-white">
-          <h2 className="text-lg font-semibold">{destinations?.find(d => d._id ===content?.destinationId)?.name}</h2>
+          <h2 className="text-lg font-semibold">{destinations?.find(d => d._id ===content?.destination)?.name}</h2>
           <button onClick={onClose} className="text-white hover:text-gray-300">
             <svg
               xmlns="http://www.w3.org/2000/svg"

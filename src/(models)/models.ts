@@ -10,86 +10,9 @@ const destinationSchema : Schema<IDestination> = new mongoose.Schema({
 
 export const Destination = mongoose.models.Destination || mongoose.model<IDestination>('Destination', destinationSchema);
 
-const destinationWeatherSchema : Schema<IWeatherData> = new mongoose.Schema({
-    destinationId: {
-        type: String,
-        required: true,
-    },
-    year: {
-        type: String,
-        required: true,
-    },
-    month: {
-        type: String,
-        required: true,
-    }, 
-    airTemperature: {
-        type: String,
-        required: true,
-    },
-    waterTemperature: {
-        type: String,
-        required: true,
-    },
-    humidity: {
-        type: String,
-        required: true,
-    },
-    condition: {
-        type: String,
-        required: true,
-    },
-    sunnyHours: {
-        type: String,
-        required: true,
-    }
-})
-
-export const DestinationWeatherData = mongoose.models.DestinationWeather || mongoose.model<IWeatherData>('DestinationWeather', destinationWeatherSchema);
-
-const destinationMonthWeatherSchema: Schema<IWeatherMonthData> = new mongoose.Schema({
-    destinationId: {
-        type: String,
-        required: true,
-    },
-    year: {
-        type: Number,
-        required: true,
-    },
-    month: {
-        type: Number,
-        required: true,
-    },
-    day: {
-        type: Number,
-        required: true,
-    },
-    airTemperature: {
-        type: String,
-        required: true,
-    },
-    waterTemperature: {
-        type: String,
-        required: true,
-    },
-    humidity: {
-        type: String,
-        required: true,
-    },
-    condition: {
-        type: String,
-        required: true,
-    },
-    sunnyHours: {
-        type: String,
-        required: true,
-    }
-})
-
-export const DestinationMonthWeatherData = mongoose.models.DestinationMonthWeather || mongoose.model<IWeatherMonthData>('DestinationMonthWeather', destinationMonthWeatherSchema);
 
 const destinationContentSchema: Schema<IDestinationContent> = new mongoose.Schema({
-    destinationId: {
+    destination: {
         type: String,
         required: true,
     },
@@ -104,7 +27,20 @@ const destinationContentSchema: Schema<IDestinationContent> = new mongoose.Schem
     image: {
         type: String,
         required: true,
+    },
+    metaTitle: {
+        type: String,
+        required: true,
+    },
+    metaDescription: {
+        type: String,
+        required: true,
+    },
+    metaKeyWords: {
+        type: String,
+        required: true,
     }
+
 })
 
 export const DestinationContent = mongoose.models.DestiInfo || mongoose.model<IDestinationContent>('DestiInfo', destinationContentSchema)

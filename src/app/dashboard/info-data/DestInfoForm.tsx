@@ -45,16 +45,19 @@ const DestInfoForm:React.FC<DestInfoFormProps>  = ({onSuccess}) => {
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if(destination === "" || weatherInfo === "" || destinationMoreInfo === "" || image ==="") {
+        if(destination === "" || weatherInfo === "" || destinationMoreInfo === "" || image ==="" || metaTitle === "" || metaDescription === "" || metaKeywords === "") {
             return toast.error("all fields are required")
         }
 
         //
         const data: IDestinationContent = {
-            destinationId: destination,
+            destination: destination,
             weatherInfo: weatherInfo,
             destinationInfo: destinationMoreInfo,
             image: image,
+            metaTitle: metaTitle,
+            metaDescription: metaDescription,
+            metaKeyWords: metaKeywords,
         }
 
         //submit data object to server
@@ -67,6 +70,9 @@ const DestInfoForm:React.FC<DestInfoFormProps>  = ({onSuccess}) => {
                 setWeatherInfo('');
                 setDestinationMoreInfo('');
                 setImage('');
+                setMetaTitle('');
+                setMetaDescription('');
+                setMetaKeywords('');
             }else {
                 toast.error(response.data.message);
             }

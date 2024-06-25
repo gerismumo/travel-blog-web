@@ -65,18 +65,24 @@ export interface IWeatherMonthDataList {
 }
 
 export interface IDestinationContent {
-  destinationId: string;
+  destination: string;
   weatherInfo: string;
   destinationInfo: string;
   image: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeyWords: string;
 }
 
 export interface IDestinationContentList {
   _id: string;
-  destinationId: string;
+  destination: string;
   weatherInfo: string;
   destinationInfo: string;
   image: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeyWords: string;
 }
 
 export interface IDestinationMonthContent {

@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import DestInfoForm from "./DestInfoForm";
 import ConfirmModal from "@/app/components/ConfirmModal";
-import PreviewModal from "./PreviewModal"; // Import the PreviewModal component
+import PreviewModal from "./PreviewModal"; 
 import { getDestinationsInfo } from "@/utils/(apis)/ContentApi";
 
 const Page: React.FC = () => {
@@ -27,8 +27,8 @@ const Page: React.FC = () => {
   const [openAddForm, setOpenAddForm] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false); // State for preview modal
-  const [previewContent, setPreviewContent] = useState<IDestinationContentList | null>(null); // State for preview content
+  const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false); 
+  const [previewContent, setPreviewContent] = useState<IDestinationContentList | null>(null); 
 
   const fetchData = async () => {
     try {
@@ -109,10 +109,13 @@ const Page: React.FC = () => {
 
     const data: IDestinationContentList = {
       _id: editObject._id,
-      destinationId: editObject.destinationId,
+      destination: editObject.destination,
       weatherInfo: editObject.weatherInfo,
       destinationInfo: editObject.destinationInfo,
       image: editObject.image,
+      metaTitle: editObject.metaTitle,
+      metaDescription: editObject.metaDescription,
+      metaKeyWords: editObject.metaKeyWords,
     };
 
     //check empty fields
@@ -149,7 +152,7 @@ const Page: React.FC = () => {
     setFilteredData(
       contentList.filter((item) =>
         destinations
-          .find((dest) => dest._id === item.destinationId)
+          .find((dest) => dest._id === item.destination)
           ?.name.toLowerCase()
           .includes(searchQuery.toLowerCase())
       )
@@ -199,16 +202,19 @@ const Page: React.FC = () => {
           <thead>
             <tr>
               <th className="table-cell">Destination</th>
+              <th className="table-cell">Image</th>
               <th className="table-cell">Weather Info</th>
               <th className="table-cell">Destination Info</th>
-              <th className="table-cell">Image</th>
+              <th className="table-cell">Meta Title</th>
+              <th className="table-cell">Meta Description</th>
+              <th className="table-cell">Meta KeyWords</th>
               <th className="table-cell">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredData.length === 0 ? (
               <tr>
-                <td colSpan={5} className="table-cell">
+                <td colSpan={8} className="table-cell">
                   <div className="flex flex-col justify-center items-center">
                     <p className="font-bold text-sm">No available data</p>
                   </div>
@@ -222,7 +228,14 @@ const Page: React.FC = () => {
                   <React.Fragment key={d._id}>
                     <tr>
                       <td className="table-cell">
-                        {destinations.find((ob) => ob._id === d.destinationId)?.name}
+                        {destinations.find((ob) => ob._id === d.destination)?.name}
+                      </td>
+                      <td className="table-cell">
+                        <img
+                          src={d.image}
+                          alt=""
+                          className="w-20 h-20 transition-transform duration-300 hover:scale-125 hover:z-10"
+                        />
                       </td>
                       <td className="table-cell">
                         {viewMore[d._id] ? d.weatherInfo : weatherInfo.text}
@@ -246,13 +259,9 @@ const Page: React.FC = () => {
                           </button>
                         )}
                       </td>
-                      <td className="table-cell">
-                        <img
-                          src={d.image}
-                          alt=""
-                          className="w-20 h-20 transition-transform duration-300 hover:scale-125 hover:z-10"
-                        />
-                      </td>
+                      <td className="table-cell">{d.metaTitle}</td>
+                      <td className="table-cell">{d.metaDescription}</td>
+                      <td className="table-cell">{d.metaKeyWords}</td>
                       <td className="table-cell">
                         <div className="flex flex-row justify-center gap-[30px]">
                          <button
@@ -285,7 +294,7 @@ const Page: React.FC = () => {
                     </tr>
                     {openEdit && openEditId === d._id && (
                       <tr>
-                        <td colSpan={5} className="table-cell">
+                        <td colSpan={8} className="table-cell">
                           <div>
                             <form
                               onSubmit={handleSubmitEdit}
@@ -296,7 +305,7 @@ const Page: React.FC = () => {
                                   className="block text-gray-700 text-sm font-bold"
                                   htmlFor="weatherInfo"
                                 >
-                                  Weather Info
+                                  Weather Info <span className="text-red-500">*</span>
                                 </label>
                                 <textarea
                                   name="weatherInfo"
@@ -317,7 +326,7 @@ const Page: React.FC = () => {
                                   className="block text-gray-700 text-sm font-bold"
                                   htmlFor="destinationInfo"
                                 >
-                                  Destination Info
+                                  Destination Info <span className="text-red-500">*</span>
                                 </label>
                                 <textarea
                                   name="destinationInfo"
@@ -341,7 +350,7 @@ const Page: React.FC = () => {
                                   className="block text-gray-700 text-sm font-bold"
                                   htmlFor="imageUrl"
                                 >
-                                  Image Url
+                                  Image Url <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                   type="url"
@@ -358,6 +367,60 @@ const Page: React.FC = () => {
                                   className="input"
                                 />
                               </div>
+                                <div className="flex flex-col">
+                                    <span className="block text-gray-700 text-sm font-bold ">SEO Data</span>
+                                </div>
+                                <div className="flex flex-col">
+                                    <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                                        Meta title <span className="text-red-500">*</span>
+                                    </label>
+                                    <input type="text"
+                                    name="metaTitle" id="metaTitle"
+                                    value={editObject?.metaTitle} 
+                                    onChange={(e) =>
+                                        setEditObject(
+                                          editObject
+                                            ? { ...editObject, metaTitle: e.target.value }
+                                            : null
+                                        )
+                                      }
+                                    className='input'
+                                    />
+                                </div>
+                                <div className="flex flex-col">
+                                    <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                                        Meta description <span className="text-red-500">*</span>
+                                    </label>
+                                    <textarea name="metaDescription" id="metaDescription"
+                                    value={editObject?.metaDescription}
+                                    onChange={(e) =>
+                                        setEditObject(
+                                          editObject
+                                            ? { ...editObject, metaDescription: e.target.value }
+                                            : null
+                                        )
+                                      }
+                                    className='input '
+                                    >
+                                    </textarea>
+                                </div>
+                                <div className="flex flex-col">
+                                    <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                                        Meta keywords <span className="text-red-500">*</span>
+                                    </label>
+                                    <textarea name="metaKeywords" id="metaKeywords"
+                                    value={editObject?.metaKeyWords}
+                                    onChange={(e) =>
+                                        setEditObject(
+                                          editObject
+                                            ? { ...editObject, metaKeyWords: e.target.value }
+                                            : null
+                                        )
+                                      }
+                                    className='input '
+                                    >
+                                    </textarea>
+                                </div>
                               <div className="flex flex-row w-full">
                                 <button
                                   className="bg-lightDark hover:bg-[#3C4048] text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
