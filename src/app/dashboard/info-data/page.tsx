@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import fontawesome from "@/(icons)/fontawesome";
 import { IDestinationContentList, IDestinationList } from "@/(types)/type";
@@ -11,17 +11,15 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import DestInfoForm from "./DestInfoForm";
 import ConfirmModal from "@/app/components/ConfirmModal";
+import PreviewModal from "./PreviewModal"; // Import the PreviewModal component
 import { getDestinationsInfo } from "@/utils/(apis)/ContentApi";
-
 
 const Page: React.FC = () => {
   const [contentList, setContentList] = useState<IDestinationContentList[]>([]);
   const [destinations, setDestinations] = useState<IDestinationList[]>([]);
   const [openEdit, setOpenEdit] = useState<boolean>(false);
   const [openEditId, setOpenEditId] = useState<string | null>(null);
-  const [editObject, setEditObject] = useState<IDestinationContentList | null>(
-    null
-  );
+  const [editObject, setEditObject] = useState<IDestinationContentList | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [loadingDestinations, setLoadingDestinations] = useState<boolean>(true);
   const [loadingContent, setLoadingContent] = useState<boolean>(true);
@@ -29,6 +27,8 @@ const Page: React.FC = () => {
   const [openAddForm, setOpenAddForm] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false); // State for preview modal
+  const [previewContent, setPreviewContent] = useState<IDestinationContentList | null>(null); // State for preview content
 
   const fetchData = async () => {
     try {
@@ -112,7 +112,7 @@ const Page: React.FC = () => {
       destinationId: editObject.destinationId,
       weatherInfo: editObject.weatherInfo,
       destinationInfo: editObject.destinationInfo,
-      image: editObject.image
+      image: editObject.image,
     };
 
     //check empty fields
@@ -143,9 +143,7 @@ const Page: React.FC = () => {
   };
 
   //search query
-  const [filteredData, setFilteredData] = useState<IDestinationContentList[]>(
-    []
-  );
+  const [filteredData, setFilteredData] = useState<IDestinationContentList[]>([]);
 
   useEffect(() => {
     setFilteredData(
@@ -161,6 +159,11 @@ const Page: React.FC = () => {
   const handleViewMore = (id: string) => {
     setViewMore((prev) => ({ ...prev, [id]: !prev[id] }));
     setOpenEdit(false);
+  };
+
+  const handlePreview = (content: IDestinationContentList) => {
+    setPreviewContent(content);
+    setShowPreviewModal(true);
   };
 
   //loader
@@ -179,16 +182,18 @@ const Page: React.FC = () => {
           className="input w-[400px]"
         />
         <button
-          onClick={() => {setOpenAddForm(!openAddForm); setOpenEdit(false)}}
+          onClick={() => {
+            setOpenAddForm(!openAddForm);
+            setOpenEdit(false);
+          }}
           className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded mt-2"
         >
           {openAddForm ? "Close Add Form" : "Add New Info"}
         </button>
       </div>
 
-      {openAddForm && (
-        <DestInfoForm onSuccess={fetchData}/>
-      )}
+      {openAddForm && <DestInfoForm onSuccess={fetchData} />}
+
       <div className="overflow-auto mt-5">
         <table className="border-collapse w-full">
           <thead>
@@ -217,8 +222,7 @@ const Page: React.FC = () => {
                   <React.Fragment key={d._id}>
                     <tr>
                       <td className="table-cell">
-                        {destinations.find((ob) => ob._id === d.destinationId)
-                          ?.name}
+                        {destinations.find((ob) => ob._id === d.destinationId)?.name}
                       </td>
                       <td className="table-cell">
                         {viewMore[d._id] ? d.weatherInfo : weatherInfo.text}
@@ -232,9 +236,7 @@ const Page: React.FC = () => {
                         )}
                       </td>
                       <td className="table-cell">
-                        {viewMore[d._id]
-                          ? d.destinationInfo
-                          : destinationInfo.text}
+                        {viewMore[d._id] ? d.destinationInfo : destinationInfo.text}
                         {destinationInfo.truncated && (
                           <button
                             onClick={() => handleViewMore(d._id)}
@@ -253,24 +255,31 @@ const Page: React.FC = () => {
                       </td>
                       <td className="table-cell">
                         <div className="flex flex-row justify-center gap-[30px]">
-                            <button
+                         <button
+                            onClick={() => handlePreview(d)} // Open preview modal on click
+                            className="bg-blue-500 text-white px-3 py-1 rounded-[2px]"
+                          >
+                            Preview
+                          </button>
+                          <button
                             onClick={() => handleEditOpen(d._id)}
                             className="bg-yellow-500 text-white px-3 py-1 rounded-[2px]"
-                            >
+                          >
                             {openEdit && openEditId === d._id ? "Close" : "Edit"}
-                            </button>
-                            <button
+                          </button>
+                          <button
                             onClick={() => handlePublish(d._id)}
                             className="bg-lightDark text-white px-3 py-1 rounded-[2px]"
-                            >
+                          >
                             Publish
-                            </button>
-                            <button
+                          </button>
+                          <button
                             onClick={() => handleDelete(d._id)} // Open modal on click
                             className="text-red-600 text-2xl"
-                            >
+                          >
                             <FontAwesomeIcon icon={fontawesome.faTrashCan} />
-                            </button>
+                          </button>
+                          
                         </div>
                       </td>
                     </tr>
@@ -296,10 +305,7 @@ const Page: React.FC = () => {
                                   onChange={(e) =>
                                     setEditObject(
                                       editObject
-                                        ? {
-                                            ...editObject,
-                                            weatherInfo: e.target.value
-                                          }
+                                        ? { ...editObject, weatherInfo: e.target.value }
                                         : null
                                     )
                                   }
@@ -322,7 +328,7 @@ const Page: React.FC = () => {
                                       editObject
                                         ? {
                                             ...editObject,
-                                            destinationInfo: e.target.value
+                                            destinationInfo: e.target.value,
                                           }
                                         : null
                                     )
@@ -372,7 +378,17 @@ const Page: React.FC = () => {
           </tbody>
         </table>
       </div>
-  {/* confirm delete */}
+
+      {/* Preview Modal */}
+      {showPreviewModal && previewContent && (
+        <PreviewModal
+          show={showPreviewModal} // Pass show prop
+          content={previewContent} // Pass content prop
+          onClose={() => setShowPreviewModal(false)} // Pass onClose prop
+        />
+      )}
+
+      {/* Confirm delete */}
       <ConfirmModal
         show={showDeleteModal}
         onClose={handleCancelDelete}

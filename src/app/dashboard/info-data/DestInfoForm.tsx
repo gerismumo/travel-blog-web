@@ -2,7 +2,6 @@
 
 import { IDestinationContent, IDestinationList } from '@/(types)/type';
 import Loader from '@/app/components/Loader';
-import { getDestinationsInfo } from '@/utils/(apis)/ContentApi';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
@@ -17,6 +16,9 @@ const DestInfoForm:React.FC<DestInfoFormProps>  = ({onSuccess}) => {
     const[weatherInfo, setWeatherInfo] = useState<string>("");
     const[destinationMoreInfo, setDestinationMoreInfo] =useState<string>("");
     const[image, setImage] = useState<string>("");
+    const [metaTitle, setMetaTitle] = useState<string>("");
+    const [metaDescription, setMetaDescription] = useState<string>("");
+    const [metaKeywords, setMetaKeywords] = useState<string>("");
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -131,6 +133,42 @@ const DestInfoForm:React.FC<DestInfoFormProps>  = ({onSuccess}) => {
           onChange={(e) => setImage(e.target.value)}
           className='input'
           />
+        </div>
+        <div className="flex flex-col">
+            <span className="block text-gray-700 text-sm font-bold ">SEO Data</span>
+        </div>
+        <div className="flex flex-col">
+            <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                Meta title <span className="text-red-500">*</span>
+            </label>
+            <input type="text"
+            name="metaTitle" id="metaTitle"
+            value={metaTitle} 
+            onChange={(e) => setMetaTitle(e.target.value)}
+            className='input'
+            />
+        </div>
+        <div className="flex flex-col">
+            <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                Meta description <span className="text-red-500">*</span>
+            </label>
+            <textarea name="metaDescription" id="metaDescription"
+            value={metaDescription}
+            onChange={(e) => setMetaDescription(e.target.value)}
+            className='input '
+            >
+            </textarea>
+        </div>
+        <div className="flex flex-col">
+            <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                Meta keywords <span className="text-red-500">*</span>
+            </label>
+            <textarea name="metaKeywords" id="metaKeywords"
+            value={metaKeywords}
+            onChange={(e) => setMetaKeywords(e.target.value)}
+            className='input '
+            >
+            </textarea>
         </div>
         <div className="flex flex-row w-[100%]">
           <button
