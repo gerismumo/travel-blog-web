@@ -86,16 +86,22 @@ export interface IDestinationContentList {
 }
 
 export interface IDestinationMonthContent {
-  destinationId: string;
+  destination: string;
   month: string;
   weatherInfo: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeyWords: string;
 }
 
 export interface IDestinationMonthContentList {
   _id: string;
-  destinationId: string;
+  destination: string;
   month: string;
   weatherInfo: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeyWords: string;
 }
 
 export interface IDestionationFaq {
@@ -124,4 +130,9 @@ export interface IDestionationMonthFaqList {
   month: string;
   question: string;
   answer: string;
+}
+
+
+export interface ISuccessFormProp {
+  onSuccess: () => void;
 }

@@ -4,12 +4,15 @@ import fontawesome from '@/(icons)/fontawesome';
 import { IDestinationList, IDestinationMonthContent, IDestinationMonthContentList } from '@/(types)/type'
 import Loader from '@/app/components/Loader';
 import { months } from '@/lib/months';
+import { getDestinationsMonthInfo } from '@/utils/(apis)/ContentApi';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import { truncateText } from '@/utils/service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
+import AddForm from './AddForm';
+import ConfirmModal from '@/app/components/ConfirmModal';
 
 const page:React.FC = () => {
     const[contentList, setContentList] = useState<IDestinationMonthContentList[]>([]);
@@ -21,22 +24,23 @@ const page:React.FC = () => {
     const [loadingDestination, setLoadingDestination] = useState<boolean>(true);
     const [loadingContent, setLoadingContent] = useState<boolean>(true);
     const [viewMore, setViewMore] = useState<{ [key: string]: boolean }>({});
+    const [openAddForm, setOpenAddForm] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false); 
+  const [previewContent, setPreviewContent] = useState<IDestinationMonthContent | null>(null); 
 
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('/api/content/month');
-            if (response.data.success) {
-                setContentList(response.data.data);
-            } else {
-                toast.error(response.data.message);
-            }
-        } catch (error) {
-            toast.error('network error');
-        }finally {
-            setLoadingContent(false);
+          const data = await getDestinationsMonthInfo();
+          setContentList(data);
+        } catch (error: any) {
+          toast.error(error);
+        } finally {
+          setLoadingContent(false);
         }
-    };
+      };
 
     useEffect(() => {
         fetchData();
@@ -72,6 +76,23 @@ const page:React.FC = () => {
         }
       };
 
+      const handleDelete = (id: string) => {
+        setShowDeleteModal(true);
+        setDeleteId(id);
+      };
+    
+      const handleConfirmDelete = async () => {
+        if (deleteId) {
+          await deleteData(deleteId);
+        }
+        setShowDeleteModal(false);
+      };
+    
+      const handleCancelDelete = () => {
+        setShowDeleteModal(false);
+        setDeleteId(null);
+      };
+
       //edit data
       const handleEditOpen = (id: string) => {
         setOpenEdit(!openEdit);
@@ -92,6 +113,9 @@ const page:React.FC = () => {
             destinationId: editObject.destinationId,
             month: editObject.month,
             weatherInfo: editObject.weatherInfo,
+            metaTitle: editObject.metaTitle,
+            metaDescription: editObject.metaDescription,
+            metaKeyWords: editObject.metaKeyWords
         };
 
         //check empty fields
@@ -119,6 +143,9 @@ const page:React.FC = () => {
           }
       }
 
+      const handlePublish = async (id: string) => {
+        //publish code here
+      };
       //search query
     const[filteredData, setFilteredData] = useState<IDestinationMonthContentList[]>([])
 
@@ -140,6 +167,11 @@ const page:React.FC = () => {
         setOpenEdit(false);
     };
 
+    const handlePreview = (content: IDestinationMonthContentList) => {
+        setPreviewContent(content);
+        setShowPreviewModal(true);
+      };
+
     //loader
     if(loadingDestination || loadingContent) {
         return (
@@ -149,21 +181,38 @@ const page:React.FC = () => {
 
   return (
     <div className="flex flex-col gap-[20px]">
-        <div className="flex flex-col w-[300px] justify-end">
-            <input type="text"
-            placeholder="Search destination or month..."
+        <div className="flex flex-row justify-between w-full items-end">
+            <input
+            type="text"
+            placeholder="Search destination..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="input"
-             />
+            className="input w-[400px]"
+            />
+            <button
+            onClick={() => {
+                setOpenAddForm(!openAddForm);
+                setOpenEdit(false);
+            }}
+            className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded mt-2"
+            >
+            {openAddForm ? "Close Add Form" : "Add New Info"}
+            </button>
         </div>
-        <div className="overflow-auto">
-            <table className='border-collapse'>
+
+        {openAddForm && <AddForm onSuccess={fetchData} />}
+
+        <div className="overflow-auto mt-5">
+            <table className='border-collapse w-full'>
                 <thead>
                     <tr>
                         <th className='table-cell'>Destination</th>
                         <th className='table-cell'>Month</th>
                         <th className='table-cell'>Weather Info</th>
+                        <th className="table-cell">Meta Title</th>
+                        <th className="table-cell">Meta Description</th>
+                        <th className="table-cell">Meta KeyWords</th>
+                        <th className="table-cell">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -192,17 +241,36 @@ const page:React.FC = () => {
                                             </button>
                                         )}
                                     </td>
-                                    <td className='table-cell'>
+                                    <td className="table-cell">{d.metaTitle}</td>
+                                    <td className="table-cell">{d.metaDescription}</td>
+                                    <td className="table-cell">{d.metaKeyWords}</td>
+                                    <td className="table-cell">
+                                    <div className="flex flex-row justify-center gap-[30px]">
                                         <button
-                                        onClick={() => handleEditOpen(d._id)}
-                                        >{openEdit && openEditId === d._id ? "Close" : "Edit"}</button>
-                                    </td>
-                                    <td className='table-cell'>
-                                        <button
-                                        onClick={() => deleteData(d._id)}
+                                            onClick={() => handlePreview(d)} 
+                                            className="bg-blue-500 text-white px-3 py-1 rounded-[2px]"
                                         >
-                                            <FontAwesomeIcon icon={fontawesome.faTrashCan}/>
+                                            Preview
                                         </button>
+                                        <button
+                                            onClick={() => handleEditOpen(d._id)}
+                                            className="bg-yellow-500 text-white px-3 py-1 rounded-[2px]"
+                                        >
+                                            {openEdit && openEditId === d._id ? "Close" : "Edit"}
+                                        </button>
+                                        <button
+                                            onClick={() => handlePublish(d._id)}
+                                            className="bg-lightDark text-white px-3 py-1 rounded-[2px]"
+                                        >
+                                            Publish
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(d._id)} // Open modal on click
+                                            className="text-red-600 text-2xl"
+                                        >
+                                            <FontAwesomeIcon icon={fontawesome.faTrashCan} />
+                                        </button>
+                                    </div>
                                     </td>
                                 </tr>
                                 {openEdit && openEditId === d._id && (
@@ -213,7 +281,7 @@ const page:React.FC = () => {
                                                     className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                                                     <div className="flex flex-col">
                                                     <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
-                                                        Weather Info
+                                                        Weather Info 
                                                     </label>
                                                     <select name="month" id="month"
                                                     value={editObject?.month}
@@ -227,7 +295,7 @@ const page:React.FC = () => {
                                                     </div>
                                                     <div className="flex flex-col">
                                                     <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
-                                                        Weather Info
+                                                        Weather Info <span className="text-red-500">*</span>
                                                     </label>
                                                     <textarea name="weatherInfo" id="waetherInfo"
                                                     value={editObject?.weatherInfo}
@@ -235,6 +303,60 @@ const page:React.FC = () => {
                                                     className='input w-full'
                                                     >
                                                     </textarea>
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <span className="block text-gray-700 text-sm font-bold ">SEO Data</span>
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                                                            Meta title <span className="text-red-500">*</span>
+                                                        </label>
+                                                        <input type="text"
+                                                        name="metaTitle" id="metaTitle"
+                                                        value={editObject?.metaTitle} 
+                                                        onChange={(e) =>
+                                                            setEditObject(
+                                                            editObject
+                                                                ? { ...editObject, metaTitle: e.target.value }
+                                                                : null
+                                                            )
+                                                        }
+                                                        className='input'
+                                                        />
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                                                            Meta description <span className="text-red-500">*</span>
+                                                        </label>
+                                                        <textarea name="metaDescription" id="metaDescription"
+                                                        value={editObject?.metaDescription}
+                                                        onChange={(e) =>
+                                                            setEditObject(
+                                                            editObject
+                                                                ? { ...editObject, metaDescription: e.target.value }
+                                                                : null
+                                                            )
+                                                        }
+                                                        className='input '
+                                                        >
+                                                        </textarea>
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                                                            Meta keywords <span className="text-red-500">*</span>
+                                                        </label>
+                                                        <textarea name="metaKeywords" id="metaKeywords"
+                                                        value={editObject?.metaKeyWords}
+                                                        onChange={(e) =>
+                                                            setEditObject(
+                                                            editObject
+                                                                ? { ...editObject, metaKeyWords: e.target.value }
+                                                                : null
+                                                            )
+                                                        }
+                                                        className='input '
+                                                        >
+                                                        </textarea>
                                                     </div>
                                                     <div className="flex flex-row w-[100%]">
                                                     <button
@@ -257,6 +379,12 @@ const page:React.FC = () => {
                 </tbody>
             </table>
         </div>
+        <ConfirmModal
+        show={showDeleteModal}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        message="Are you sure you want to delete this content?"
+      />
     </div>
   )
 }

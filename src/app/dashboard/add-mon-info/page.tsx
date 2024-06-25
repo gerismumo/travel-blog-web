@@ -13,7 +13,9 @@ const page:React.FC  = () => {
     const[destination, setDestination] = useState<string>("");
     const[weatherInfo, setWeatherInfo] = useState<string>("");
     const[month, setMonth] = useState<string>('');
-
+    const [metaTitle, setMetaTitle] = useState<string>("");
+    const [metaDescription, setMetaDescription] = useState<string>("");
+    const [metaKeywords, setMetaKeywords] = useState<string>("");
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -40,7 +42,7 @@ const page:React.FC  = () => {
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if(destination === "" ||  weatherInfo === ""  || month === "") {
+        if(destination === "" ||  weatherInfo === ""  || month === "" ||  metaTitle === "" || metaDescription === "" || metaKeywords === "") {
             return toast.error("all fields are required")
         }
 
@@ -48,6 +50,9 @@ const page:React.FC  = () => {
             destinationId: destination,
             month: month,
             weatherInfo: weatherInfo,
+            metaTitle: metaTitle,
+            metaDescription: metaDescription,
+            metaKeyWords: metaKeywords,
         }
 
         //submit data object to server
@@ -117,6 +122,42 @@ const page:React.FC  = () => {
           className='input w-full'
           >
           </textarea>
+        </div>
+        <div className="flex flex-col">
+            <span className="block text-gray-700 text-sm font-bold ">SEO Data</span>
+        </div>
+        <div className="flex flex-col">
+            <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                Meta title <span className="text-red-500">*</span>
+            </label>
+            <input type="text"
+            name="metaTitle" id="metaTitle"
+            value={metaTitle} 
+            onChange={(e) => setMetaTitle(e.target.value)}
+            className='input'
+            />
+        </div>
+        <div className="flex flex-col">
+            <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                Meta description <span className="text-red-500">*</span>
+            </label>
+            <textarea name="metaDescription" id="metaDescription"
+            value={metaDescription}
+            onChange={(e) => setMetaDescription(e.target.value)}
+            className='input '
+            >
+            </textarea>
+        </div>
+        <div className="flex flex-col">
+            <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                Meta keywords <span className="text-red-500">*</span>
+            </label>
+            <textarea name="metaKeywords" id="metaKeywords"
+            value={metaKeywords}
+            onChange={(e) => setMetaKeywords(e.target.value)}
+            className='input '
+            >
+            </textarea>
         </div>
         <div className="flex flex-row w-[100%]">
           <button

@@ -6,9 +6,9 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req:NextRequest) {
     try {
         const body:IDestinationMonthContent = await req.json();
-        const {destinationId, month, weatherInfo} = body;
+        const {destinationId, month, weatherInfo, metaTitle, metaDescription,metaKeyWords} = body;
 
-        if(!destinationId ||!month ||!weatherInfo) {
+        if(!destinationId ||!month ||!weatherInfo || !metaTitle || !metaDescription || !metaKeyWords) {
             return NextResponse.json({success: false, message: "all fields are required"})
         }
 

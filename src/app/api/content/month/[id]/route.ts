@@ -23,9 +23,9 @@ export async function PUT(req: Request, {params}: {params: {id: string}}) {
     try{
         const body = await req.json();
 
-        const {destinationId, month, weatherInfo} = body;
+        const {destinationId, month, weatherInfo, metaTitle, metaDescription,metaKeyWords} = body;
 
-        if(destinationId === "" || month === "" || weatherInfo === "") {
+        if(destinationId === "" || month === "" || weatherInfo === "" || metaTitle ==="" || metaDescription === "" || metaKeyWords === "") {
             return Response.json({success: false, message: "all fields are required"})
         }
         
@@ -37,6 +37,9 @@ export async function PUT(req: Request, {params}: {params: {id: string}}) {
             updateData = await DestinationMonthContent.findByIdAndUpdate(params.id, 
                 {
                     weatherInfo: body.weatherInfo,
+                    metaTitle: body.metaTitle,
+                    metaDescription: body.metaDescription,
+                    metaKeyWords: body.metaKeyWords
                 },
                 {new: true}
             )
@@ -44,7 +47,7 @@ export async function PUT(req: Request, {params}: {params: {id: string}}) {
 
         }else {
             updateData = await DestinationMonthContent.findByIdAndUpdate(params.id, {
-                destinationId, month, weatherInfo
+                destinationId, month, weatherInfo, metaTitle, metaDescription,metaKeyWords
             }, {new: true});
         }
 
