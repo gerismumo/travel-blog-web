@@ -11,8 +11,8 @@ const Page = () => {
     const [weatherData, setWeatherData] = useState<any[]>([]);
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [startDate, setStartDate] = useState<string>(new Date().toISOString().split('T')[0]); // default to today
-    const [endDate, setEndDate] = useState<string>(new Date().toISOString().split('T')[0]); // default to today
+    const [startDate, setStartDate] = useState<string>(new Date().toISOString().split('T')[0]);
+    const [endDate, setEndDate] = useState<string>(new Date().toISOString().split('T')[0]); 
     const [selectedDestination, setSelectedDestination] = useState<string>("");
 
     useEffect(() => {
@@ -155,7 +155,7 @@ const Page = () => {
                         ) : (
                             weatherData.map((d) => (
                                 <React.Fragment key={d.destination}>
-                                    {d.data.data.map((t: any, index: any) => (
+                                    {(d.data.data !== null || d.data.data !== undefined) && d.data?.data?.map((t: any, index: any) => (
                                         <tr key={`${d.destination}-${index}`} className="border border-gray-300 md:border-none block md:table-row">
                                             {index === 0 ? (
                                                 <td rowSpan={d.data.data.length} className="p-2 md:border md:border-gray-300 block md:table-cell">
