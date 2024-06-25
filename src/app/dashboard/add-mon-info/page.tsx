@@ -47,7 +47,7 @@ const page:React.FC  = () => {
         }
 
         const data: IDestinationMonthContent = {
-            destinationId: destination,
+            destination: destination,
             month: month,
             weatherInfo: weatherInfo,
             metaTitle: metaTitle,

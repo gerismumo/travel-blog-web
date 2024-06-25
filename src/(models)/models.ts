@@ -46,7 +46,7 @@ const destinationContentSchema: Schema<IDestinationContent> = new mongoose.Schem
 export const DestinationContent = mongoose.models.DestiInfo || mongoose.model<IDestinationContent>('DestiInfo', destinationContentSchema)
 
 const destinationMonthContentSchema: Schema<IDestinationMonthContent> = new mongoose.Schema({
-    destinationId: {
+    destination: {
         type: String,
         required: true,
     },

@@ -47,7 +47,7 @@ const AddForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
         }
 
         const data: IDestinationMonthContent = {
-            destinationId: destination,
+            destination: destination,
             month: month,
             weatherInfo: weatherInfo,
             metaTitle: metaTitle,

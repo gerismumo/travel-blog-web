@@ -13,6 +13,7 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import AddForm from './AddForm';
 import ConfirmModal from '@/app/components/ConfirmModal';
+import PreviewModal from './PreviewModal';
 
 const page:React.FC = () => {
     const[contentList, setContentList] = useState<IDestinationMonthContentList[]>([]);
@@ -28,7 +29,7 @@ const page:React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false); 
-  const [previewContent, setPreviewContent] = useState<IDestinationMonthContent | null>(null); 
+  const [previewContent, setPreviewContent] = useState<IDestinationMonthContentList | null>(null); 
 
 
     const fetchData = async () => {
@@ -110,7 +111,7 @@ const page:React.FC = () => {
 
         const data: IDestinationMonthContentList = {
             _id: editObject._id,
-            destinationId: editObject.destinationId,
+            destination: editObject.destination,
             month: editObject.month,
             weatherInfo: editObject.weatherInfo,
             metaTitle: editObject.metaTitle,
@@ -152,7 +153,7 @@ const page:React.FC = () => {
     useEffect(() => {
         setFilteredData(
             contentList.filter((item) =>
-                destinations.find((dest) => dest._id === item.destinationId)?.name
+                destinations.find((dest) => dest._id === item.destination)?.name
                     .toLowerCase()
                     .includes(searchQuery.toLowerCase()) ||
                 months.find((m) => m.id === parseInt(item.month))?.name
@@ -218,7 +219,7 @@ const page:React.FC = () => {
                 <tbody>
                     {filteredData.length === 0 ? (
                         <tr>
-                            <td colSpan={4} className='table-cell' >
+                            <td colSpan={7} className='table-cell' >
                                 <div className="flex flex-col justify-center items-center">
                                     <p className='font-[800] text-[13px] '>no available data</p>
                                 </div>
@@ -229,7 +230,7 @@ const page:React.FC = () => {
                         return(
                             <React.Fragment key={d._id}>
                                 <tr>
-                                    <td className='table-cell'>{destinations.find(ob => ob._id === d.destinationId)?.name}</td>
+                                    <td className='table-cell'>{destinations.find(ob => ob._id === d.destination)?.name}</td>
                                     <td className='table-cell'>{months.find(ob => ob.id === parseInt(d.month))?.name}</td>
                                     <td className='table-cell'>
                                         {viewMore[d._id] ? d.weatherInfo : weatherInfo.text}
@@ -275,7 +276,7 @@ const page:React.FC = () => {
                                 </tr>
                                 {openEdit && openEditId === d._id && (
                                     <tr>
-                                        <td colSpan={5} className='table-cell'>
+                                        <td colSpan={7} className='table-cell'>
                                             <div className="">
                                                 <form onSubmit={handleSubmitEdit} 
                                                     className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -379,6 +380,15 @@ const page:React.FC = () => {
                 </tbody>
             </table>
         </div>
+        {/* Preview Modal */}
+      {showPreviewModal && previewContent && (
+        <PreviewModal
+          show={showPreviewModal} 
+          content={previewContent}
+          onClose={() => setShowPreviewModal(false)} // Pass onClose prop
+        />
+      )}
+
         <ConfirmModal
         show={showDeleteModal}
         onClose={handleCancelDelete}

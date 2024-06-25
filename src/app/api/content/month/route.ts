@@ -6,15 +6,15 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req:NextRequest) {
     try {
         const body:IDestinationMonthContent = await req.json();
-        const {destinationId, month, weatherInfo, metaTitle, metaDescription,metaKeyWords} = body;
+        const {destination, month, weatherInfo, metaTitle, metaDescription,metaKeyWords} = body;
 
-        if(!destinationId ||!month ||!weatherInfo || !metaTitle || !metaDescription || !metaKeyWords) {
+        if(!destination ||!month ||!weatherInfo || !metaTitle || !metaDescription || !metaKeyWords) {
             return NextResponse.json({success: false, message: "all fields are required"})
         }
 
         await connectDB();
 
-        const existingRecord = await DestinationMonthContent.findOne({destinationId, month});
+        const existingRecord = await DestinationMonthContent.findOne({destination, month});
         
         if(existingRecord) {
             return NextResponse.json({success: false, message: "record already exists"});
