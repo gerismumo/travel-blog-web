@@ -10,6 +10,7 @@ import AddForm from './AddForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fontawesome from '@/(icons)/fontawesome';
 import ConfirmModal from '@/app/components/ConfirmModal';
+import PreviewModal from './PreviewModal';
 
 const page:React.FC  = () => {
     const[contentList, setContentList] = useState<IDestionationFaqList[]>([]);
@@ -204,7 +205,7 @@ const page:React.FC  = () => {
                 <tbody>
                     {filteredData.length === 0 ? (
                         <tr>
-                            <td colSpan={3} className='table-cell' >
+                            <td colSpan={4} className='table-cell' >
                                 <div className="flex flex-col justify-center items-center">
                                     <p className='font-[800] text-[13px] '>no available data</p>
                                 </div>
@@ -241,7 +242,7 @@ const page:React.FC  = () => {
                             </tr>
                             {openEdit && openEditId === d._id && (
                                 <tr>
-                                    <td colSpan={5} className='table-cell'>
+                                    <td colSpan={4} className='table-cell'>
                                         <div className="">
                                             <form onSubmit={handleSubmitEdit} 
                                                 className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -302,6 +303,14 @@ const page:React.FC  = () => {
                 </tbody>
             </table>
         </div>
+       {/* Preview Modal */}
+       {showPreviewModal && previewContent && (
+        <PreviewModal
+          show={showPreviewModal} // Pass show prop
+          content={previewContent} // Pass content prop
+          onClose={() => setShowPreviewModal(false)} // Pass onClose prop
+        />
+      )}
         {/* Confirm delete */}
       <ConfirmModal
         show={showDeleteModal}
