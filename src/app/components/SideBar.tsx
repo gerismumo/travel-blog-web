@@ -80,7 +80,7 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
             onClick={() => setOpenWeatherTabs(!openWeatherTabs)}
             className=' flex flex-row gap-[10px] items-center text-nowrap  bg-lightGrey px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
             >
-              <FontAwesomeIcon icon={fontawesome.faPlaneDeparture}
+              <FontAwesomeIcon icon={fontawesome.faBolt}
               className=' text-lightRed '
               />
               <span>Weather</span>
@@ -160,14 +160,6 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
             </button> 
             {openFaqTabs && (
               <div className="flex flex-col gap-[10px]">
-                <Link href="/dashboard/add-faqs"
-                className='flex flex-row items-center gap-[5px] pl-[50px]  text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >
-                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
-                  className=''
-                  />
-                  Add FaQ
-                </Link>
                 <Link href="/dashboard/faqs"
                 className='flex flex-row items-center gap-[5px] pl-[50px]  text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
                 >
@@ -175,14 +167,6 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   className=''
                   />
                   Data
-                </Link>
-                <Link href="/dashboard/add-month-faqs"
-                className='flex flex-row items-center gap-[5px] pl-[50px]  text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'
-                >
-                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
-                  className=''
-                  />
-                  Add Monthly FaQ
                 </Link>
                 <Link href="/dashboard/monthly-faqs"
                 className='flex flex-row items-center gap-[5px] pl-[50px] text-nowrap  bg-lightGrey px-[30px] py-[10px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400]'

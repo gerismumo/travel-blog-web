@@ -136,3 +136,16 @@ export interface IDestionationMonthFaqList {
 export interface ISuccessFormProp {
   onSuccess: () => void;
 }
+export interface ISelectedDestination {
+  destination: string;
+  text: string;
+};
+
+export interface IHolidayBlog {
+  category: string;
+  month: string | null;
+  heading: string;
+  info: string;
+  image: string;
+  content: ISelectedDestination[]
+}

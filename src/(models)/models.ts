@@ -1,4 +1,4 @@
-import { IDestination, IDestinationContent, IDestinationMonthContent, IDestionationFaq, IDestionationMonthFaq, IWeatherData, IWeatherMonthData } from '@/(types)/type';
+import { IDestination, IDestinationContent, IDestinationMonthContent, IDestionationFaq, IDestionationMonthFaq, IHolidayBlog, IWeatherData, IWeatherMonthData } from '@/(types)/type';
 import mongoose, {mongo, Schema} from 'mongoose';
 
 
@@ -111,3 +111,21 @@ const destinationMonthFaqSchema: Schema<IDestionationMonthFaq> = new mongoose.Sc
 })
 
 export const DestinationMonthFaq = mongoose.models.DestiMonFaq || mongoose.model<IDestionationMonthFaq>('DestiMonFaq', destinationMonthFaqSchema);
+
+//blogs
+
+const SelectedDestinationSchema: Schema = new Schema({
+    destination: { type: String, required: true },
+    text: { type: String, required: true },
+});
+
+const HolidayBlogSchema: Schema = new Schema({
+    category: { type: String, required: true },
+    month: { type: String, default: null },
+    heading: { type: String, required: true },
+    info: { type: String, required: true },
+    image: { type: String, required: true },
+    content: { type: [SelectedDestinationSchema], required: true },
+});
+
+export const HolidayBlog = mongoose.models.HolidayBlog || mongoose.model<IHolidayBlog>('HolidayBlog', HolidayBlogSchema);
