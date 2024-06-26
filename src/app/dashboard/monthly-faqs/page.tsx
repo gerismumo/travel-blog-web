@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fontawesome from '@/(icons)/fontawesome';
 import ConfirmModal from '@/app/components/ConfirmModal';
 import PreviewModal from './PreviewModal';
+import Loading from './loading';
 
 const page:React.FC = () => {
     const[contentList, setContentList] = useState<IDestionationMonthFaqList[]>([]);
@@ -167,7 +168,7 @@ const page:React.FC = () => {
     //loader
     if(loadingContent || loadingDestination) {
         return (
-            <Loader/>
+            <Loading/>
         )
     }
 

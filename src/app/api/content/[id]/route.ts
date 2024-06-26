@@ -40,3 +40,11 @@ export async function PUT(req:Request, {params}: {params: {id: string}}) {
         return Response.json({success: false, message: "server error"})
     }
 }
+
+export async function GET(req: Request,{params}: {params: {id: string}}){
+    try{
+
+    }catch(error) {
+        return Response.json({success: false, message: "server error"})
+    }
+}

@@ -16,6 +16,8 @@ export async function POST(req:NextRequest) {
 
         await connectDB();
 
+       
+
         const savedData = await DestinationMonthFaq.create(body);
         if(savedData) {
             return NextResponse.json({success: true, message: "added successfully"})
