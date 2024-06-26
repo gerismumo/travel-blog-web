@@ -22,10 +22,10 @@ const page:React.FC  = () => {
     const [loadingDestination, setLoadingDestination] = useState<boolean>(true);
     const [loadingContent, setLoadingContent] = useState<boolean>(true);
     const [openAddForm, setOpenAddForm] = useState<boolean>(false);
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false); 
-  const [previewContent, setPreviewContent] = useState<IDestionationFaqList | null>(null);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false); 
+    const [previewContent, setPreviewContent] = useState<IDestionationFaqList | null>(null);
 
     const fetchData = async () => {
         try {
@@ -168,28 +168,28 @@ const page:React.FC  = () => {
   return (
     <div className="flex flex-col gap-[20px]">
         <div className="flex flex-row justify-between w-full items-end">
-        <input
-          type="text"
-          placeholder="Search destination..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="input w-[400px]"
-        />
-        <div className="flex flex-row items-center gap-[30px]">
-            <button
-            onClick={() => {
-                setOpenAddForm(!openAddForm);
-                setOpenEdit(false);
-            }}
-            className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded mt-2"
-            >
-            {openAddForm ? "Close Add Form" : "Add New Info"}
-            </button>
-            <button
-            className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded mt-2"
-            >Publish</button>
+          <input
+            type="text"
+            placeholder="Search destination..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="input w-[400px]"
+          />
+          <div className="flex flex-row items-center gap-[30px]">
+              <button
+              onClick={() => {
+                  setOpenAddForm(!openAddForm);
+                  setOpenEdit(false);
+              }}
+              className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded mt-2"
+              >
+              {openAddForm ? "Close Add Form" : "Add New Info"}
+              </button>
+              <button
+              className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded mt-2"
+              >Publish</button>
+          </div>
         </div>
-      </div>
       {openAddForm && <AddForm onSuccess={fetchData} />}
 
         <div className="overflow-auto">

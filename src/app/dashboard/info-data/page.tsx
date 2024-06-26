@@ -184,15 +184,22 @@ const Page: React.FC = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="input w-[400px]"
         />
-        <button
-          onClick={() => {
-            setOpenAddForm(!openAddForm);
-            setOpenEdit(false);
-          }}
-          className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded mt-2"
-        >
-          {openAddForm ? "Close Add Form" : "Add New Info"}
-        </button>
+        <div className="flex flex-row justify-center items-center gap-[30px]">
+          <button
+            onClick={() => {
+              setOpenAddForm(!openAddForm);
+              setOpenEdit(false);
+            }}
+            className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded"
+          >
+            {openAddForm ? "Close Add Form" : "Add New Info"}
+          </button>
+          <button
+            className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded"
+          >
+            Publish
+          </button>
+        </div>
       </div>
 
       {openAddForm && <DestInfoForm onSuccess={fetchData} />}
@@ -275,12 +282,6 @@ const Page: React.FC = () => {
                             className="bg-yellow-500 text-white px-3 py-1 rounded-[2px]"
                           >
                             {openEdit && openEditId === d._id ? "Close" : "Edit"}
-                          </button>
-                          <button
-                            onClick={() => handlePublish(d._id)}
-                            className="bg-lightDark text-white px-3 py-1 rounded-[2px]"
-                          >
-                            Publish
                           </button>
                           <button
                             onClick={() => handleDelete(d._id)} // Open modal on click
