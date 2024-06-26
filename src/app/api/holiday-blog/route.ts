@@ -23,3 +23,13 @@ export async function POST(req:Request) {
         return Response.json({ success: false, message: 'server error' });
     }
 }
+
+export async function GET(req:Request) {
+    try{
+        await connectDB();
+        const holidayBlogs = await HolidayBlog.find();
+        return Response.json({ success: true, data: holidayBlogs });
+    }catch(error) {
+        return Response.json({ success: false, message:'server error' });
+    }
+}

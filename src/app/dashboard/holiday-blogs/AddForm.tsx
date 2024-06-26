@@ -8,8 +8,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 
-
-
 const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -110,7 +108,7 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
       }
 
   return (
-    <div className="max-w-xl mx-auto">
+    <div className="w-[100%]">
         <form 
         onSubmit={handleSubmit}
         className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"

@@ -149,3 +149,13 @@ export interface IHolidayBlog {
   image: string;
   content: ISelectedDestination[]
 }
+
+export interface IHolidayBlogList {
+  _id: string;
+  category: string;
+  month: string | null;
+  heading: string;
+  info: string;
+  image: string;
+  content: ISelectedDestination[]
+}
