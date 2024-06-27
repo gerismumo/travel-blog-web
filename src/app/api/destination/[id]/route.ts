@@ -6,13 +6,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req:Request, {params}: {params: {id: string}}) {
 
-   
     try {
         const body = await req.json();
         const {stationId} =body;
         if(!stationId) {
             return Response.json({success: false, message: "all fields are required"})
         }
+
         if(!params.id) {
             return Response.json({success: false, message: "error occurred"})
         }
@@ -78,7 +78,8 @@ export async function GET(req: NextRequest, {params}: {params: {id: string}}) {
             data: { destinationContent, destinationFaq, monthContent, monthFaq, weatherData}
           });
 
-    }catch(error) {
+    }catch(error: any) {
+        console.log(error);
         return NextResponse.json({success:false, message: "server error"});
     }
 }

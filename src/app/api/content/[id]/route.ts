@@ -1,5 +1,6 @@
 import { DestinationContent } from "@/(models)/models";
 import connectDB from "@/utils/dbConnect";
+import { NextResponse } from "next/server";
 
 
 export async function DELETE(req:Request, {params}: {params: {id: string}}) {
@@ -43,8 +44,16 @@ export async function PUT(req:Request, {params}: {params: {id: string}}) {
 
 export async function GET(req: Request,{params}: {params: {id: string}}){
     try{
+        const id = params.id;
+        if (!id) {
+            return NextResponse.json({ success: false, message: 'Invalid destination ID' });
+        }
 
+        await connectDB();
+        const data = await DestinationContent.find({destination: id})
+
+        return NextResponse.json({success: true, data:data })
     }catch(error) {
-        return Response.json({success: false, message: "server error"})
+        return NextResponse.json({success: false, message: "server error"})
     }
 }
