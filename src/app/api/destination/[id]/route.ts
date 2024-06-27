@@ -4,6 +4,7 @@ import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
+
 export async function PUT(req:Request, {params}: {params: {id: string}}) {
 
     try {
@@ -39,7 +40,7 @@ async function fetchWeatherData(stationID: string, startDate: string, endDate: s
     return response.data;
 }
 
-export async function GET(req: NextRequest, {params}: {params: {id: string}}) {
+export async function GET(req: Request, {params}: {params: {id: string}}) {
     
     const id = params.id;
     if (!id || typeof id !== 'string') {
@@ -50,7 +51,6 @@ export async function GET(req: NextRequest, {params}: {params: {id: string}}) {
     const startDate = searchParams.get('startDate');
     const endDate = searchParams.get('endDate');;
 
-  console.log(startDate, endDate)
 
     try {
         await connectDB;
@@ -83,3 +83,6 @@ export async function GET(req: NextRequest, {params}: {params: {id: string}}) {
         return NextResponse.json({success:false, message: "server error"});
     }
 }
+
+
+
