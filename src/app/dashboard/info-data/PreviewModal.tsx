@@ -52,15 +52,26 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) =
             <img src={content?.image} alt="" className="w-full h-auto max-h-96 object-cover" />
           </div>
           <div className="mt-4">
-            <div className="flex flex-col gap-[5px]">
+            <div className="flex flex-col ">
                 <h2 className="font-[600] text-dark">Weather Content</h2>
                 <p className="text-gray-700 text-sm mb-4">{content?.weatherInfo}</p>
             </div>
-            <div className="flex flex-col gap-[5px]">
+            <div className="flex flex-col ">
                 <h2 className="font-[600] text-dark">Destination Content</h2>
                 <p className="text-gray-700 text-sm mb-4">{content?.destinationInfo}</p>
             </div>
-           
+            <div className="flex flex-col">
+                <h2 className="font-[600] text-dark">Meta Title</h2>
+                <p className="text-gray-700 text-sm mb-4">{content?.metaTitle}</p>
+            </div>
+            <div className="flex flex-col">
+                <h2 className="font-[600] text-dark">Meta Description</h2>
+                <p className="text-gray-700 text-sm mb-4">{content?.metaDescription}</p>
+            </div>
+            <div className="flex flex-col ">
+                <h2 className="font-[600] text-dark">Meta Keywords</h2>
+                <p className="text-gray-700 text-sm mb-4">{content?.metaKeyWords}</p>
+            </div>
           </div>
         </div>
       </div>

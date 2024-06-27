@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fontawesome from '@/(icons)/fontawesome';
 import ConfirmModal from '@/app/components/ConfirmModal';
 import PreviewModal from './PreviewModal';
+import { TruncateContent } from '@/utils/service';
 
 const page:React.FC  = () => {
     const[contentList, setContentList] = useState<IDestionationFaqList[]>([]);
@@ -215,8 +216,8 @@ const page:React.FC  = () => {
                         <React.Fragment key={d._id}>
                             <tr>
                                 <td className='table-cell'>{destinations.find(ob => ob._id === d.destination)?.name}</td>
-                                <td className='table-cell'>{d.question}</td>
-                                <td className='table-cell'>{d.answer}</td>
+                                <td className='table-cell'>{TruncateContent(d.question, 40)}</td>
+                                <td className='table-cell'>{TruncateContent(d.answer, 40)}</td>
                                 <td className='table-cell'>
                                     <div className="flex flex-row justify-center gap-[30px]">
                                         <button

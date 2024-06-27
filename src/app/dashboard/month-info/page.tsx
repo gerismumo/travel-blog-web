@@ -6,7 +6,7 @@ import Loader from '@/app/components/Loader';
 import { months } from '@/lib/months';
 import { getDestinationsMonthInfo } from '@/utils/(apis)/ContentApi';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
-import { truncateText } from '@/utils/service';
+import { TruncateContent, truncateText } from '@/utils/service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
@@ -233,25 +233,17 @@ const page:React.FC = () => {
                             </td>
                         </tr>
                     ): filteredData.map((d) => {
-                        const weatherInfo = truncateText(d.weatherInfo, 100);
                         return(
                             <React.Fragment key={d._id}>
                                 <tr>
                                     <td className='table-cell'>{destinations.find(ob => ob._id === d.destination)?.name}</td>
                                     <td className='table-cell'>{months.find(ob => ob.id === parseInt(d.month))?.name}</td>
                                     <td className='table-cell'>
-                                        {viewMore[d._id] ? d.weatherInfo : weatherInfo.text}
-                                        {weatherInfo.truncated && (
-                                            <button onClick={() => handleViewMore(d._id)}
-                                                className='bg-lightDark text-white px-[15px] py-[4px] rounded-[4px]'
-                                            >
-                                                {viewMore[d._id] ? "View Less" : "View More"}
-                                            </button>
-                                        )}
+                                      {TruncateContent(d.weatherInfo, 30)}
                                     </td>
-                                    <td className="table-cell">{d.metaTitle}</td>
-                                    <td className="table-cell">{d.metaDescription}</td>
-                                    <td className="table-cell">{d.metaKeyWords}</td>
+                                    <td className="table-cell">{TruncateContent(d.metaTitle, 30)}</td>
+                                    <td className="table-cell">{TruncateContent(d.metaDescription, 30)}</td>
+                                    <td className="table-cell">{TruncateContent(d.metaKeyWords, 30)}</td>
                                     <td className="table-cell">
                                     <div className="flex flex-row justify-center gap-[30px]">
                                         <button

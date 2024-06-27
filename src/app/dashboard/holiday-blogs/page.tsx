@@ -11,6 +11,7 @@ import fontawesome from '@/(icons)/fontawesome';
 import ConfirmModal from '@/app/components/ConfirmModal';
 import PreviewModal from './PreviewModal';
 import Loader from '@/app/components/Loader';
+import { TruncateContent } from '@/utils/service';
 
 const page = () => {
   const [contentList, setContentList] = useState<IHolidayBlogList[]>([]);
@@ -259,14 +260,18 @@ const page = () => {
             <tbody>
               {contentList.length === 0 ? (
                 <tr>
-                  <td colSpan={6}>no available data</td>
+                  <td colSpan={6} className='table-cell'>
+                    <div className="flex flex-row justify-center items-center">
+                      no available data
+                    </div>
+                  </td>
                 </tr>
               ): contentList.map((d) => (
                 <React.Fragment key={d._id}>
                   <tr>
                     <td className='table-cell'>{d.category} {d.month !== null && `- ${months.find(m => m.id ===parseInt(d.month as string))?.name}`}</td>
-                    <td className='table-cell'>{d.heading}</td>
-                    <td className='table-cell'>{d.info}</td>
+                    <td className='table-cell'>{TruncateContent(d.heading, 30)}</td>
+                    <td className='table-cell'>{TruncateContent(d.info, 30)}</td>
                     <td className='table-cell'>
                       <img src={d.image} alt="" 
                       className='h-[70px] w-[70px]'
@@ -277,7 +282,7 @@ const page = () => {
                     >
                       <button
                       onClick={() => handleViewContents(d._id)}
-                      className='px-[20px] py-[6px] rounded-[2px] text-white bg-lightDark hover:bg-dark'
+                      className='px-[20px] py-[6px] rounded-[2px] text-nowrap text-white bg-lightDark hover:bg-dark'
                       >{openViewContents && openContentId === d._id ? "Close" : "View Content"}</button>
                     </td>
                     <td className='table-cell'>

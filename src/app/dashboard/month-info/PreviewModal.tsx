@@ -49,23 +49,23 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) =
         </div>
         <div className="p-6 overflow-y-auto">
           <div className="mt-4">
-            <div className="flex flex-col gap-[5px]">
+            <div className="flex flex-col ">
                 <h2 className="font-[600] text-dark">Weather Content</h2>
                 <p className="text-gray-700 text-sm mb-4">{content?.weatherInfo}</p>
             </div>
-            <div className="flex flex-col gap-[5px]">
+            <div className="flex flex-col ">
                 <h2 className="font-[600] text-dark">Meta Title</h2>
                 <p className="text-gray-700 text-sm mb-4">{content?.metaTitle}</p>
             </div>
-            <div className="flex flex-col gap-[5px]">
+            <div className="flex flex-col ">
                 <h2 className="font-[600] text-dark">Meta Title</h2>
                 <p className="text-gray-700 text-sm mb-4">{content?.metaTitle}</p>
             </div>
-            <div className="flex flex-col gap-[5px]">
+            <div className="flex flex-col ">
                 <h2 className="font-[600] text-dark">Meta Description</h2>
                 <p className="text-gray-700 text-sm mb-4">{content?.metaDescription}</p>
             </div>
-            <div className="flex flex-col gap-[5px]">
+            <div className="flex flex-col ">
                 <h2 className="font-[600] text-dark">Meta Keywords</h2>
                 <p className="text-gray-700 text-sm mb-4">{content?.metaKeyWords}</p>
             </div>

@@ -13,6 +13,7 @@ import fontawesome from '@/(icons)/fontawesome';
 import ConfirmModal from '@/app/components/ConfirmModal';
 import PreviewModal from './PreviewModal';
 import Loading from './loading';
+import { TruncateContent } from '@/utils/service';
 
 const page:React.FC = () => {
     const[contentList, setContentList] = useState<IDestionationMonthFaqList[]>([]);
@@ -223,8 +224,8 @@ const page:React.FC = () => {
                             <tr>
                                 <td className='table-cell'>{destinations?.find(ob => ob._id === d.destination)?.name}</td>
                                 <td className='table-cell'>{months.find(m => m.id === parseInt(d.month))?.name}</td>
-                                <td className='table-cell'>{d.question}</td>
-                                <td className='table-cell'>{d.answer}</td>
+                                <td className='table-cell'>{TruncateContent(d.question, 30)}</td>
+                                <td className='table-cell'>{TruncateContent(d.answer, 30)}</td>
                                 <td className='table-cell'>
                                 <div className="flex flex-row justify-center gap-[30px]">
                                         <button

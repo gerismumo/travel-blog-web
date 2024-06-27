@@ -4,7 +4,7 @@ import fontawesome from "@/(icons)/fontawesome";
 import { IDestinationContentList, IDestinationList } from "@/(types)/type";
 import Loader from "@/app/components/Loader";
 import { getDestinations } from "@/utils/(apis)/destinationApi";
-import { truncateText } from "@/utils/service";
+import { TruncateContent, truncateText } from "@/utils/service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -23,7 +23,6 @@ const Page: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [loadingDestinations, setLoadingDestinations] = useState<boolean>(true);
   const [loadingContent, setLoadingContent] = useState<boolean>(true);
-  const [viewMore, setViewMore] = useState<{ [key: string]: boolean }>({});
   const [openAddForm, setOpenAddForm] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -159,10 +158,7 @@ const Page: React.FC = () => {
     );
   }, [searchQuery, contentList, destinations]);
 
-  const handleViewMore = (id: string) => {
-    setViewMore((prev) => ({ ...prev, [id]: !prev[id] }));
-    setOpenEdit(false);
-  };
+ 
 
   const handlePreview = (content: IDestinationContentList) => {
     setPreviewContent(content);
@@ -229,8 +225,6 @@ const Page: React.FC = () => {
               </tr>
             ) : (
               filteredData.map((d) => {
-                const weatherInfo = truncateText(d.weatherInfo, 100);
-                const destinationInfo = truncateText(d.destinationInfo, 100);
                 return (
                   <React.Fragment key={d._id}>
                     <tr>
@@ -241,30 +235,14 @@ const Page: React.FC = () => {
                         <img
                           src={d.image}
                           alt=""
-                          className="w-20 h-20 transition-transform duration-300 hover:scale-125 hover:z-10"
+                          className="w-[50px] h-[50px] transition-transform duration-300 hover:scale-125 hover:z-10"
                         />
                       </td>
                       <td className="table-cell">
-                        {viewMore[d._id] ? d.weatherInfo : weatherInfo.text}
-                        {weatherInfo.truncated && (
-                          <button
-                            onClick={() => handleViewMore(d._id)}
-                            className="bg-lightDark text-white px-3 py-1 rounded ml-2"
-                          >
-                            {viewMore[d._id] ? "View Less" : "View More"}
-                          </button>
-                        )}
+                        {TruncateContent(d.weatherInfo, 20)}
                       </td>
                       <td className="table-cell">
-                        {viewMore[d._id] ? d.destinationInfo : destinationInfo.text}
-                        {destinationInfo.truncated && (
-                          <button
-                            onClick={() => handleViewMore(d._id)}
-                            className="bg-lightDark text-white px-3 py-1 rounded ml-2"
-                          >
-                            {viewMore[d._id] ? "View Less" : "View More"}
-                          </button>
-                        )}
+                        {TruncateContent(d.destinationInfo, 20)}
                       </td>
                       <td className="table-cell">{d.metaTitle}</td>
                       <td className="table-cell">{d.metaDescription}</td>
