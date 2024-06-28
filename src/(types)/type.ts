@@ -143,3 +143,11 @@ export interface INews {
   info: string;
   subNews: ISubNews[];
 }
+
+export interface INewsList {
+  _id: string;
+  heading: string;
+  image: string;
+  info: string;
+  subNews: ISubNews[];
+}

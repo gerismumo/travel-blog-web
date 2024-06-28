@@ -26,10 +26,10 @@ const page:React.FC = () => {
     const [loadingContent, setLoadingContent] = useState<boolean>(true);
     const [viewMore, setViewMore] = useState<{ [key: string]: boolean }>({});
     const [openAddForm, setOpenAddForm] = useState<boolean>(false);
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false); 
-  const [previewContent, setPreviewContent] = useState<IDestinationMonthContentList | null>(null); 
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false); 
+    const [previewContent, setPreviewContent] = useState<IDestinationMonthContentList | null>(null); 
 
 
     const fetchData = async () => {
@@ -163,10 +163,7 @@ const page:React.FC = () => {
         );
     }, [searchQuery, contentList, destinations]);
 
-    const handleViewMore = (id: string) => {
-        setViewMore((prev) => ({ ...prev, [id]: !prev[id] }));
-        setOpenEdit(false);
-    };
+    
 
     const handlePreview = (content: IDestinationMonthContentList) => {
         setPreviewContent(content);

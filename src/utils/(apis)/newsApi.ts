@@ -1,7 +1,7 @@
-import { INews } from "@/(types)/type";
+import { INews, INewsList } from "@/(types)/type";
 import axios from "axios";
 
-export const getNews = async (): Promise<INews[]> => {
+export const getNews = async (): Promise<INewsList[]> => {
     try {
       const response = await axios.get('/api/news');
       if (response.data.success) {
