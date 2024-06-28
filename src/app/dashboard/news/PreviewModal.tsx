@@ -13,22 +13,6 @@ interface PreviewModalProps {
 const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) => {
   if (!show) return null;
 
-  const [destinations, setDestinations] = useState<IDestinationList[]>([]);
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getDestinations();
-        setDestinations(data);
-      } catch (error: any) {
-        toast.error(error.message);
-      } 
-    };
-
-    fetchData();
-  }, [setDestinations]);
-
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 overflow-y-auto ">
       <div className="fixed inset-0 bg-gray-600 bg-opacity-50 transition-opacity " onClick={onClose}></div>
@@ -74,7 +58,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) =
                   <img src={s.subImage} alt="" className="w-full h-auto max-h-96 object-cover" />
                 </div>
                 <div className="flex flex-col ">
-                  <h2 className="font-[600] text-dark">Text</h2>
+                  <h2 className="font-[600] text-dark">Info</h2>
                   <p className="text-gray-700 text-sm mb-4">{s.subText}</p>
                 </div>
               </div>

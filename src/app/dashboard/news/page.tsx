@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import AddForm from './AddForm'
-import { INewsList } from '@/(types)/type';
+import { INewsList, ISubNews } from '@/(types)/type';
 import { getNews } from '@/utils/(apis)/newsApi';
 import toast from 'react-hot-toast';
 import axios from 'axios';
@@ -86,6 +86,47 @@ const page = () => {
     setPreviewContent(content);
     setShowPreviewModal(true);
   };
+
+  
+
+  const handleSubNewsChange = (index: number, field: keyof ISubNews, value: string) => {
+    if (!editObject) return;
+    const updatedSubNews = [...editObject.subNews];
+    updatedSubNews[index][field] = value;
+    setEditObject({ ...editObject, subNews: updatedSubNews });
+  };
+
+  //submit edit
+  const handleSubmitEdit = async(e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if(editObject === null) {
+      toast.error("no available data");
+      return;
+    }
+
+    const data: INewsList = {
+      _id: editObject._id,
+      heading: editObject.heading,
+      info: editObject.info,
+      image: editObject.image,
+      subNews: editObject.subNews
+    }
+
+    try {
+      const response = await axios.put(`/api/news/${editObject._id}`, data);
+        if (response.data.success) {
+          toast.success(response.data.message);
+          fetchData();
+        } else {
+          toast.error(response.data.message);
+        }
+    } catch (error) {
+      toast.error('network error');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   if(loading) {
     return (
@@ -171,6 +212,113 @@ const page = () => {
                   </div>
                 </td>
               </tr>
+              {openEdit && openEditId === d._id && (
+                <tr>
+                  <td colSpan={4} className='table-cell'>
+                    <div className="">
+                      <form onSubmit={handleSubmitEdit}
+                      className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" 
+                      >
+                        <div className="flex flex-col">
+                          <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                              Heading <span className="text-red-500">*</span>
+                          </label>
+                          <textarea name="weatherInfo" id="waetherInfo"
+                          value={editObject?.heading}
+                          onChange={(e) => setEditObject(editObject ? {...editObject, heading: e.target.value}: null)}
+                          className='input w-full'
+                          >
+                          </textarea>
+                        </div>
+                        <div className="flex flex-col">
+                          <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                              Image 
+                          </label>
+                          <input type="text"
+                          name="metaTitle" id="metaTitle"
+                          value={editObject?.image} 
+                          onChange={(e) =>
+                              setEditObject(
+                              editObject
+                                  ? { ...editObject,image: e.target.value }
+                                  : null
+                              )
+                          }
+                          className='input'
+                          />
+                        </div>
+                        <div className="flex flex-col">
+                          <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                              Info <span className="text-red-500">*</span>
+                          </label>
+                          <textarea name="weatherInfo" id="waetherInfo"
+                          value={editObject?.info}
+                          onChange={(e) => setEditObject(editObject ? {...editObject, info: e.target.value}: null)}
+                          className='input w-full'
+                          >
+                          </textarea>
+                        </div>
+                        {editObject && editObject?.subNews.length > 0 && (
+                          <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                              Sub news 
+                          </label>
+                        )}
+                        <div className="flex flex-col">
+                          {editObject?.subNews.map((s,index) => (
+                            <div key={index} className="">
+                            <div className="flex flex-col">
+                              <label className="block text-gray-700 text-sm font-bold" htmlFor={`subHeading-${index}`}>
+                                Sub Heading
+                              </label>
+                              <textarea
+                                name={`subHeading-${index}`}
+                                id={`subHeading-${index}`}
+                                value={s.subHeading}
+                                onChange={(e) => handleSubNewsChange(index, 'subHeading', e.target.value)}
+                                className="input w-full"
+                              />
+                            </div>
+                            <div className="flex flex-col">
+                              <label className="block text-gray-700 text-sm font-bold" htmlFor={`subImage-${index}`}>
+                                Sub Image
+                              </label>
+                              <input
+                                type="text"
+                                name={`subImage-${index}`}
+                                id={`subImage-${index}`}
+                                value={s.subImage}
+                                onChange={(e) => handleSubNewsChange(index, 'subImage', e.target.value)}
+                                className="input"
+                              />
+                            </div>
+                            <div className="flex flex-col">
+                              <label className="block text-gray-700 text-sm font-bold" htmlFor={`subText-${index}`}>
+                                Sub Text
+                              </label>
+                              <textarea
+                                name={`subText-${index}`}
+                                id={`subText-${index}`}
+                                value={s.subText}
+                                onChange={(e) => handleSubNewsChange(index, 'subText', e.target.value)}
+                                className="input w-full"
+                              />
+                            </div>
+                          </div>
+                          ))}
+                        </div>
+                        <div className="flex flex-row w-[100%]">
+                          <button
+                              className="bg-lightDark hover:bg-[#3C4048] text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                              type="submit"
+                          >
+                              Submit
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              )}
             </React.Fragment>
           ))}
         </tbody>
