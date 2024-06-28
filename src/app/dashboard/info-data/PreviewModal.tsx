@@ -53,10 +53,6 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) =
           </div>
           <div className="mt-4">
             <div className="flex flex-col ">
-                <h2 className="font-[600] text-dark">Category</h2>
-                <p className="text-gray-700 text-sm mb-4">{content?.category}</p>
-            </div>
-            <div className="flex flex-col ">
                 <h2 className="font-[600] text-dark">Weather Content</h2>
                 <p className="text-gray-700 text-sm mb-4">{content?.weatherInfo}</p>
             </div>

@@ -23,7 +23,6 @@ export interface IDestinationList {
 
 export interface IDestinationContent {
   destination: string;
-  category: string;
   weatherInfo: string;
   destinationInfo: string;
   image: string;
@@ -35,7 +34,6 @@ export interface IDestinationContent {
 export interface IDestinationContentList {
   _id: string;
   destination: string;
-  category: string;
   weatherInfo: string;
   destinationInfo: string;
   image: string;
@@ -121,11 +119,13 @@ export interface IHolidayBlogList {
 
 export interface IWeatherBlog {
   destination: string,
-  heading: string
+  heading: string,
+  image: string,
 }
 
 export interface IWeatherBlogList {
   _id: string,
   destination: string,
-  heading: string
+  heading: string,
+  image: string,
 }

@@ -1,15 +1,16 @@
 "use client"
 
-import { IDestinationList, IWeatherBlog } from '@/(types)/type';
+import { IDestinationList, ISuccessFormProp, IWeatherBlog } from '@/(types)/type';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 
-const AddForm = () => {
+const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
     const[destination, setDestination] = useState<string>("");
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [heading, setHeading] = useState<string>("");
+    const [image, setImage] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -30,19 +31,24 @@ const AddForm = () => {
       const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if(destination === "" || heading === "") {
+        if(destination === "" || heading === "" || image === "") {
             return toast.error("all fields are required")
         }
 
         //
         const data:IWeatherBlog = {
             destination: destination,
-            heading: heading
+            heading: heading,
+            image: image
         }
 
         try {
             const response = await axios.post('/api/weather-blog', data);
             if(response.data.success) {
+                onSuccess();
+                setDestination("");
+                setHeading("");
+                setImage("");
                 return toast.success(response.data.message);
             }else {
                 return toast.error(response.data.message);
@@ -80,6 +86,16 @@ const AddForm = () => {
                 name="heading" id="heading"
                 value={heading}
                 onChange={(e) => setHeading(e.target.value)}
+                className='input'
+                />
+            </div>
+            <div className="flex flex-col">
+                <label className="block text-gray-700 text-sm font-bold " htmlFor="heading">
+                Image <span className="text-red-500">*</span>
+                </label>
+                <input type="url" name="image" id="image" 
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
                 className='input'
                 />
             </div>

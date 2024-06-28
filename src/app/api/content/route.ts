@@ -6,9 +6,9 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req:NextRequest) {
     try{
         const body:IDestinationContent = await req.json();
-        const {destination, weatherInfo, destinationInfo, image, metaTitle, metaDescription,metaKeyWords, category} = body;
+        const {destination, weatherInfo, destinationInfo, image, metaTitle, metaDescription,metaKeyWords} = body;
 
-        if(!destination || !category ||!weatherInfo ||!destinationInfo || !image || !metaTitle || !metaDescription || !metaKeyWords) {
+        if(!destination ||!weatherInfo ||!destinationInfo || !image || !metaTitle || !metaDescription || !metaKeyWords) {
             return NextResponse.json({ success: false, message: 'Fill all fields' });
         }
 
@@ -19,7 +19,7 @@ export async function POST(req:NextRequest) {
             return NextResponse.json({ success: false, message: 'record already exists' });
         }
 
-        const savedData = await DestinationContent.create({destination, category, weatherInfo, destinationInfo, image, metaTitle, metaDescription,metaKeyWords});
+        const savedData = await DestinationContent.create({destination, weatherInfo, destinationInfo, image, metaTitle, metaDescription,metaKeyWords});
         if(savedData) {
             return NextResponse.json({ success: true, message: 'Added successfully' });
         }else {
