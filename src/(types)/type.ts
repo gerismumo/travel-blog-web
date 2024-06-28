@@ -129,3 +129,17 @@ export interface IWeatherBlogList {
   heading: string,
   image: string,
 }
+
+
+export interface ISubNews {
+  subHeading: string;
+  subImage: string;
+  subText: string;
+}
+
+export interface INews {
+  heading: string;
+  image: string;
+  info: string;
+  subNews: ISubNews[];
+}
