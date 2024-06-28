@@ -58,10 +58,6 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) =
                 <p className="text-gray-700 text-sm mb-4">{content?.metaTitle}</p>
             </div>
             <div className="flex flex-col ">
-                <h2 className="font-[600] text-dark">Meta Title</h2>
-                <p className="text-gray-700 text-sm mb-4">{content?.metaTitle}</p>
-            </div>
-            <div className="flex flex-col ">
                 <h2 className="font-[600] text-dark">Meta Description</h2>
                 <p className="text-gray-700 text-sm mb-4">{content?.metaDescription}</p>
             </div>

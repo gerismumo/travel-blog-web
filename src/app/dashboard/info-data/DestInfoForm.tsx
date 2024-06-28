@@ -2,6 +2,7 @@
 
 import { IDestinationContent, IDestinationList, ISuccessFormProp } from '@/(types)/type';
 import Loader from '@/app/components/Loader';
+import { destiationCategory } from '@/lib/destiCategory';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
@@ -14,6 +15,7 @@ const DestInfoForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
     const[weatherInfo, setWeatherInfo] = useState<string>("");
     const[destinationMoreInfo, setDestinationMoreInfo] =useState<string>("");
     const[image, setImage] = useState<string>("");
+    const [destiCategory, setDestiCategory] = useState<string>("");
     const [metaTitle, setMetaTitle] = useState<string>("");
     const [metaDescription, setMetaDescription] = useState<string>("");
     const [metaKeywords, setMetaKeywords] = useState<string>("");
@@ -43,13 +45,14 @@ const DestInfoForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if(destination === "" || weatherInfo === "" || destinationMoreInfo === "" || image ==="" || metaTitle === "" || metaDescription === "" || metaKeywords === "") {
+        if(destination === "" || weatherInfo === "" || destinationMoreInfo === "" || image ==="" || metaTitle === "" || metaDescription === "" || metaKeywords === ""|| destiCategory === "") {
             return toast.error("all fields are required")
         }
 
         //
         const data: IDestinationContent = {
             destination: destination,
+            category: destiCategory,
             weatherInfo: weatherInfo,
             destinationInfo: destinationMoreInfo,
             image: image,
@@ -71,6 +74,7 @@ const DestInfoForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
                 setMetaTitle('');
                 setMetaDescription('');
                 setMetaKeywords('');
+                setDestiCategory('');
             }else {
                 toast.error(response.data.message);
             }
@@ -101,6 +105,19 @@ const DestInfoForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
             <option value="">select destination</option>
             {destinations.map((d) => (
                 <option key={d._id} value={d._id}>{d.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="flex flex-col">
+          <label htmlFor="">Category</label>
+          <select name="category" id="category"
+          value={destiCategory}
+          onChange={(e) => setDestiCategory(e.target.value)}
+          className='input'
+          >
+            <option value="">select category</option>
+            {destiationCategory.map((c,index) => (
+              <option key={index} value={c.name}>{c.name}</option>
             ))}
           </select>
         </div>

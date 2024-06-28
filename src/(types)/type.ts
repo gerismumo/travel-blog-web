@@ -3,6 +3,10 @@ export interface IMonth {
   id: number;
 };
 
+export interface IDestinationCategory{
+  name:string;
+}
+
 export interface IDestination{
   name: string;
   countryCode: string;
@@ -16,56 +20,10 @@ export interface IDestinationList {
     stationID: string;
   }
 
-export interface IWeatherData {
-    destinationId: string; 
-    year: string;
-    month: string;
-    airTemperature: string;
-    waterTemperature: string;
-    humidity: string;
-    condition: string;
-    sunnyHours: string;
-}
-
-export interface IWeatherDataList {
-    _id: string;
-    destinationId: string; 
-    year: string;
-    month: string;
-    airTemperature: string;
-    waterTemperature: string;
-    humidity: string;
-    condition: string;
-    sunnyHours: string;
-}
-
-export interface IWeatherMonthData {
-  destinationId: string;
-  year: number;
-  month: number;
-  day: number;
-  airTemperature: string;
-  waterTemperature: string;
-  humidity: string;
-  condition: string;
-  sunnyHours: string;
-}
-
-export interface IWeatherMonthDataList {
-  _id: string;
-  destinationId: string;
-  year: number;
-  month: number;
-  day: number;
-  airTemperature: string;
-  waterTemperature: string;
-  humidity: string;
-  condition: string;
-  sunnyHours: string;
-}
 
 export interface IDestinationContent {
   destination: string;
+  category: string;
   weatherInfo: string;
   destinationInfo: string;
   image: string;
@@ -77,6 +35,7 @@ export interface IDestinationContent {
 export interface IDestinationContentList {
   _id: string;
   destination: string;
+  category: string;
   weatherInfo: string;
   destinationInfo: string;
   image: string;
@@ -158,4 +117,15 @@ export interface IHolidayBlogList {
   info: string;
   image: string;
   content: ISelectedDestination[]
+}
+
+export interface IWeatherBlog {
+  destination: string,
+  heading: string
+}
+
+export interface IWeatherBlogList {
+  _id: string,
+  destination: string,
+  heading: string
 }

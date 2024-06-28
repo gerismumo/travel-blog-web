@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import {  IDestinationList, IHolidayBlogList } from "@/(types)/type";
 import { getDestinations } from "@/utils/(apis)/destinationApi";
 import toast from "react-hot-toast";
+import { months } from "@/lib/months";
 
 interface PreviewModalProps {
   show: boolean;
@@ -49,14 +50,14 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, data, onClose }) => {
         </div>
         <div className="p-6 overflow-y-auto">
           <div className="mt-4">
-            <div className="flex flex-row items-center gap-[5px]">
+            <div className="flex flex-row items-center gap-[5px] mb-4">
                 <h2 className="font-[600] text-dark">Category:</h2>
                 <p className="text-gray-700 text-sm ">{data?.category}</p>
             </div>
             {data?.month !== null && (
-                <div className="flex flex-col gap-[5px]">
-                    <h2 className="font-[600] text-dark">Month</h2>
-                    <p className="text-gray-700 text-sm mb-4">{data?.month}</p>
+                <div className="flex flex-row items-center gap-[5px] mb-4">
+                    <h2 className="font-[600] text-dark">Month:</h2>
+                    <p className="text-gray-700 text-sm ">{data?.month !== null && months.find(m => m.id === parseInt(data?.month as string))?.name}</p>
                 </div>
             )}
             
@@ -68,7 +69,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, data, onClose }) => {
                 <h2 className="font-[600] text-dark">Info</h2>
                 <p className="text-gray-700 text-sm mb-4">{data?.info}</p>
             </div>
-            <div className="flex justify-center">
+            <div className="flex justify-center mb-4">
                 <img src={data?.image} alt="" className="w-full h-auto max-h-96 object-cover" />
             </div>
             <div className="flex flex-col gap-[5px] px-[10px]">

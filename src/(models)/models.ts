@@ -1,4 +1,4 @@
-import { IDestination, IDestinationContent, IDestinationMonthContent, IDestionationFaq, IDestionationMonthFaq, IHolidayBlog, IWeatherData, IWeatherMonthData } from '@/(types)/type';
+import { IDestination, IDestinationContent, IDestinationMonthContent, IDestionationFaq, IDestionationMonthFaq, IHolidayBlog } from '@/(types)/type';
 import mongoose, {mongo, Schema} from 'mongoose';
 
 
@@ -13,6 +13,10 @@ export const Destination = mongoose.models.Destination || mongoose.model<IDestin
 
 const destinationContentSchema: Schema<IDestinationContent> = new mongoose.Schema({
     destination: {
+        type: String,
+        required: true,
+    },
+    category: {
         type: String,
         required: true,
     },

@@ -25,6 +25,7 @@ export async function PUT(req:Request, {params}: {params: {id: string}}) {
 
         const updatedData = await DestinationContent.findByIdAndUpdate(params.id, {
             weatherInfo: body.weatherInfo,
+            category: body.category,
             destinationInfo: body.destinationInfo,
             image: body.image,
             metaTitle: body.metaTitle,

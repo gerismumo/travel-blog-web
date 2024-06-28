@@ -13,6 +13,7 @@ import DestInfoForm from "./DestInfoForm";
 import ConfirmModal from "@/app/components/ConfirmModal";
 import PreviewModal from "./PreviewModal"; 
 import { getDestinationsInfo } from "@/utils/(apis)/ContentApi";
+import { destiationCategory } from "@/lib/destiCategory";
 
 const Page: React.FC = () => {
   const [contentList, setContentList] = useState<IDestinationContentList[]>([]);
@@ -108,6 +109,7 @@ const Page: React.FC = () => {
 
     const data: IDestinationContentList = {
       _id: editObject._id,
+      category: editObject.category,
       destination: editObject.destination,
       weatherInfo: editObject.weatherInfo,
       destinationInfo: editObject.destinationInfo,
@@ -206,6 +208,7 @@ const Page: React.FC = () => {
             <tr>
               <th className="table-cell">Destination</th>
               <th className="table-cell">Image</th>
+              <th className="table-cell">Category</th>
               <th className="table-cell">Weather Info</th>
               <th className="table-cell">Destination Info</th>
               <th className="table-cell">Meta Title</th>
@@ -217,7 +220,7 @@ const Page: React.FC = () => {
           <tbody>
             {filteredData.length === 0 ? (
               <tr>
-                <td colSpan={8} className="table-cell">
+                <td colSpan={9} className="table-cell">
                   <div className="flex flex-col justify-center items-center">
                     <p className="font-bold text-sm">No available data</p>
                   </div>
@@ -237,6 +240,9 @@ const Page: React.FC = () => {
                           alt=""
                           className="w-[50px] h-[50px] transition-transform duration-300 hover:scale-125 hover:z-10"
                         />
+                      </td>
+                      <td className="table-cell">
+                        {d.category}
                       </td>
                       <td className="table-cell">
                         {TruncateContent(d.weatherInfo, 20)}
@@ -273,12 +279,39 @@ const Page: React.FC = () => {
                     </tr>
                     {openEdit && openEditId === d._id && (
                       <tr>
-                        <td colSpan={8} className="table-cell">
+                        <td colSpan={9} className="table-cell">
                           <div>
                             <form
                               onSubmit={handleSubmitEdit}
                               className="flex flex-col gap-4 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
                             >
+                              <div className="flex flex-col">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold"
+                                    htmlFor="weatherInfo"
+                                  >
+                                    Category <span className="text-red-500">*</span>
+                                </label>
+                                <select name="category" id="category"
+                                value={editObject?.category}
+                                onChange={(e) =>
+                                  setEditObject(
+                                    editObject
+                                      ? { ...editObject, category: e.target.value }
+                                      : null
+                                  )
+                                }
+                                className="input"
+                                >
+                                   <option value="">Select Category</option>
+                                   {destiationCategory.map((c, index) => (
+                                     <option key={index} value={c.name}>
+                                       {c.name}
+                                     </option>
+                                   ))}
+ 
+                                </select>
+                              </div>
                               <div className="flex flex-col">
                                 <label
                                   className="block text-gray-700 text-sm font-bold"
