@@ -11,6 +11,9 @@ const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
   const [heading, setHeading] = useState<string>("");
   const [image, setImage] = useState<string>("");
   const [info, setInfo] = useState<string>("");
+  const [metaTitle, setMetaTitle] = useState<string>("");
+  const [metaDescription, setMetaDescription] = useState<string>("");
+  const [metaKeywords, setMetaKeywords] = useState<string>("");
   const [subNews, setSubNews] = useState<ISubNews[]>([
     { subHeading: '', subImage: '', subText: '' },
   ]);
@@ -47,6 +50,9 @@ const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
       heading,
       image,
       info,
+      metaTitle: metaTitle,
+      metaDescription: metaDescription,
+      metaKeyWords: metaKeywords,
       subNews: subNews.map((sub) => ({
         subHeading: sub.subHeading,
         subImage: sub.subImage,
@@ -62,6 +68,9 @@ const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
         setHeading('');
         setImage('');
         setInfo('');
+        setMetaTitle('');
+        setMetaDescription('');
+        setMetaKeywords('');
         setSubNews([
           { subHeading: '', subImage: '', subText: '' },
         ]);
@@ -81,13 +90,12 @@ const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
       >
         <div className="flex flex-col">
           <label className="block text-sm font-medium text-gray-700">Heading</label>
-          <input
-            type="text"
-            className="input"
-            value={heading}
-            onChange={(e) => setHeading(e.target.value)}
-            required
-          />
+          <textarea name="heading" id="heading"
+          value={heading}
+          onChange={(e) => setHeading(e.target.value)}
+          placeholder='heading...'
+          className='input'
+          ></textarea>
         </div>
 
         <div className="flex flex-col">
@@ -110,7 +118,30 @@ const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
             required
           />
         </div>
-
+        <div className="flex flex-col">
+          <label className="block text-sm font-medium text-gray-700">Meta Title</label>
+          <textarea name="metatitle" id="metaTitle"
+          value={metaTitle}
+          onChange={(e) => setMetaTitle(e.target.value)}
+          className='input'
+          ></textarea>
+        </div>
+        <div className="flex flex-col">
+          <label className="block text-sm font-medium text-gray-700">Meta Description</label>
+          <textarea name="metaDescription" id="metaDescription"
+          value={metaDescription}
+          onChange={(e) => setMetaDescription(e.target.value)}
+          className='input'
+          ></textarea>
+        </div>
+        <div className="flex flex-col">
+          <label className="block text-sm font-medium text-gray-700">Meta Keywords</label>
+          <textarea name="metaDescription" id="metaDescription"
+          value={metaKeywords}
+          onChange={(e) => setMetaKeywords(e.target.value)}
+          className='input'
+          ></textarea>
+        </div>
         {subNews.map((sub, index) => (
           <div key={index} className="flex flex-col border-t border-gray-200 pt-4 relative mb-[20px]">
             <h2 className="text-xl font-semibold">Sub News {index + 1}</h2>

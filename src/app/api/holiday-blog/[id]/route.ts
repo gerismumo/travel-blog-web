@@ -1,4 +1,5 @@
 import { HolidayBlog } from "@/(models)/models";
+import { IHolidayBlogList } from "@/(types)/type";
 import connectDB from "@/utils/dbConnect";
 
 export async function DELETE(req: Request, {params}: {params: {id: string}}) {
@@ -17,8 +18,8 @@ export async function DELETE(req: Request, {params}: {params: {id: string}}) {
 
 export async function PUT(req: Request, {params}: {params: {id: string}}) {
     try {
-        const body = await req.json();
-        const {heading , info, image, content} = body;
+        const body:IHolidayBlogList = await req.json();
+        const {heading , info, image, content, metaDescription, metaTitle, metaKeyWords} = body;
 
         if(!heading ||!info ||!image ||content.length === 0) {
             return Response.json({success: false, message: "all fields are required"})
@@ -28,6 +29,9 @@ export async function PUT(req: Request, {params}: {params: {id: string}}) {
             heading:heading,
             info:info,
             image:image,
+            metaTitle: metaTitle,
+            metaDescription: metaDescription,
+            metaKeyWords: metaKeyWords,
             content:content
         }, {new: true});
 

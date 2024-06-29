@@ -4,14 +4,26 @@ import connectDB from "@/utils/dbConnect";
 
 export async function POST(req:Request) {
     try {
-        const body = await req.json();
+        const body:IHolidayBlog = await req.json();
+
+        const {category, month, heading, info, image, metaTitle, metaDescription, metaKeyWords, content} =body;
         await connectDB();
 
-        if (!body.category || !body.heading || !body.info || !body.image || body.content.length === 0) {
+        if (!category || !heading || !info || !image || content.length === 0) {
             return Response.json({success: false, message: 'All fields are required.' });
         }
 
-        const newHolidayBlog = await HolidayBlog.create(body);
+        const newHolidayBlog = await HolidayBlog.create({
+            category: category,
+            month: month,
+            hading: heading,
+            info: info,
+            image: image,
+            metaTitle: metaTitle,
+            metaDescription: metaDescription,
+            metaKeyWords: metaKeyWords,
+            content: content
+        });
 
         if(newHolidayBlog) {
             return Response.json({ success: true, message: 'Holiday blog added successfully.' });

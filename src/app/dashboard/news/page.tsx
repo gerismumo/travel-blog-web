@@ -110,6 +110,9 @@ const page = () => {
       heading: editObject.heading,
       info: editObject.info,
       image: editObject.image,
+      metaTitle: editObject.metaTitle,
+      metaDescription: editObject.metaDescription,
+      metaKeyWords: editObject.metaKeyWords,
       subNews: editObject.subNews
     }
 
@@ -169,12 +172,15 @@ const page = () => {
               <th className='table-cell'>Heading</th>
               <th className='table-cell'>Image</th>
               <th className="table-cell">Info</th>
+              <th className="table-cell">Meta Title</th>
+              <th className="table-cell">Meta Description</th>
+              <th className="table-cell">Meta Keywords</th>
               <th className="table-cell">Actions</th>
           </tr>
         </thead>
         <tbody>
           {contentList.length === 0 ? (
-            <td colSpan={4} className='table-cell' >
+            <td colSpan={7} className='table-cell' >
               <div className="flex flex-col justify-center items-center">
                   <p className='font-[800] text-[13px] '>no available data</p>
               </div>
@@ -188,7 +194,10 @@ const page = () => {
                   className='w-[50px] h-[50px] '
                    />
                 </td>
-                <td className="table-cell">{TruncateContent(d.info, 40)}</td>
+                <td className="table-cell">{d.info && TruncateContent(d.info, 40)}</td>
+                <td className="table-cell">{d.metaTitle && TruncateContent(d.metaTitle, 40)}</td>
+                <td className="table-cell">{d.metaDescription && TruncateContent(d.metaDescription, 40)}</td>
+                <td className="table-cell">{d.metaKeyWords && TruncateContent(d.metaKeyWords, 40)}</td>
                 <td className="table-cell">
                   <div className="flex flex-row justify-center gap-[30px] items-center">
                     <button
@@ -214,7 +223,7 @@ const page = () => {
               </tr>
               {openEdit && openEditId === d._id && (
                 <tr>
-                  <td colSpan={4} className='table-cell'>
+                  <td colSpan={7} className='table-cell'>
                     <div className="">
                       <form onSubmit={handleSubmitEdit}
                       className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" 
@@ -254,6 +263,39 @@ const page = () => {
                           <textarea name="weatherInfo" id="waetherInfo"
                           value={editObject?.info}
                           onChange={(e) => setEditObject(editObject ? {...editObject, info: e.target.value}: null)}
+                          className='input w-full'
+                          >
+                          </textarea>
+                        </div>
+                        <div className="flex flex-col">
+                          <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                              Meta Title
+                          </label>
+                          <textarea name="weatherInfo" id="waetherInfo"
+                          value={editObject?.metaTitle}
+                          onChange={(e) => setEditObject(editObject ? {...editObject, metaTitle: e.target.value}: null)}
+                          className='input w-full'
+                          >
+                          </textarea>
+                        </div>
+                        <div className="flex flex-col">
+                          <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                              Meta Description
+                          </label>
+                          <textarea name="weatherInfo" id="waetherInfo"
+                          value={editObject?.metaDescription}
+                          onChange={(e) => setEditObject(editObject ? {...editObject, metaDescription: e.target.value}: null)}
+                          className='input w-full'
+                          >
+                          </textarea>
+                        </div>
+                        <div className="flex flex-col">
+                          <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                              Meta Keywords
+                          </label>
+                          <textarea name="weatherInfo" id="waetherInfo"
+                          value={editObject?.metaKeyWords}
+                          onChange={(e) => setEditObject(editObject ? {...editObject, metaKeyWords: e.target.value}: null)}
                           className='input w-full'
                           >
                           </textarea>

@@ -44,6 +44,24 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) =
                 <h2 className="font-[600] text-dark">Info</h2>
                 <p className="text-gray-700 text-sm mb-4">{content?.info}</p>
             </div>
+            {content?.metaTitle && (
+              <div className="flex flex-col ">
+                <h2 className="font-[600] text-dark">Meta Title</h2>
+                <p className="text-gray-700 text-sm mb-4">{content?.metaTitle}</p>
+            </div>
+            )}
+            {content?.metaDescription && (
+              <div className="flex flex-col ">
+                <h2 className="font-[600] text-dark">Meta Description</h2>
+                <p className="text-gray-700 text-sm mb-4">{content?.metaDescription}</p>
+            </div>
+            )}
+            {content?.metaKeyWords && (
+              <div className="flex flex-col ">
+                <h2 className="font-[600] text-dark">Meta Keywords</h2>
+                <p className="text-gray-700 text-sm mb-4">{content?.metaKeyWords}</p>
+            </div>
+            )}
             <div className="flex flex-col ">
                 <h2 className="font-[600] text-dark">Sub News</h2>
             </div>

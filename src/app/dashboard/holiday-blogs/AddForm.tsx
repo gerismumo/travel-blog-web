@@ -14,6 +14,9 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
     const [holidayCategory, setHolidayCategory] = useState<string>("");
     const [month, setMonth] = useState<string>("");
     const [heading, setHeading] = useState<string>("");
+    const [metaTitle, setMetaTitle] = useState<string>("");
+    const [metaDescription, setMetaDescription] = useState<string>("");
+    const [metaKeywords, setMetaKeywords] = useState<string>("");
     const [selectedDestinations, setSelectedDestinations] = useState<ISelectedDestination[]>([]);
     const [Info, setInfo] = useState<string>("");
     const [image, setImage] = useState<string>("");
@@ -74,6 +77,9 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
           heading: heading,
           info: Info,
           image: image,
+          metaTitle: metaTitle,
+          metaDescription: metaDescription,
+          metaKeyWords: metaKeywords,
           content: selectedDestinations
       };
 
@@ -89,6 +95,9 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
           setHeading('');
           setInfo('');
           setImage('');
+          setMetaDescription('');
+          setMetaTitle('');
+          setMetaKeywords('');
           setSelectedDestinations([]);
         }else {
           toast.error(response.data.message);
@@ -193,7 +202,9 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
                 </select>
             </div>
             <div className="flex flex-col">
-                <h2 className="block text-gray-700 text-sm font-bold " >Selected Destinations:</h2>
+              {selectedDestinations.length > 0 && (
+                 <h2 className="block text-gray-700 text-sm font-bold " >Selected Destinations:</h2>
+              )}
                 <ul>
                     {selectedDestinations.map((selectedDest) => {
                         const destination = destinations.find((d) => d._id === selectedDest.destination);
@@ -218,6 +229,42 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
                         );
                     })}
                 </ul>
+            </div>
+            <div className="flex flex-col">
+                <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                    Meta Title
+                </label>
+                <textarea name="monthInfo" id="monthInfo"
+                value={metaTitle}
+                onChange={(e) => setMetaTitle(e.target.value)}
+                className='input'
+                >
+
+                </textarea>
+            </div>
+            <div className="flex flex-col">
+                <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                    Meta Description
+                </label>
+                <textarea name="monthInfo" id="monthInfo"
+                value={metaDescription}
+                onChange={(e) => setMetaDescription(e.target.value)}
+                className='input'
+                >
+
+                </textarea>
+            </div>
+            <div className="flex flex-col">
+                <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                    Meta Keywords
+                </label>
+                <textarea name="monthInfo" id="monthInfo"
+                value={metaKeywords}
+                onChange={(e) => setMetaKeywords(e.target.value)}
+                className='input'
+                >
+
+                </textarea>
             </div>
             <div className="flex flex-row w-[100%]">
               <button

@@ -24,7 +24,7 @@ export async function DELETE(req:Request, {params}: {params: {id: string}}) {
 export async function PUT(req:Request, {params}: {params: {id: string}}) { 
     try{
         const body:INewsList = await req.json();
-        const {heading, info, image, subNews} =body;
+        const {heading, info, image, metaTitle, metaDescription, metaKeyWords, subNews} =body;
 
         if(!heading) {
             return Response.json({success: false, message: "all fields are required"})
@@ -35,6 +35,9 @@ export async function PUT(req:Request, {params}: {params: {id: string}}) {
             heading: heading,
             info: info,
             image: image,
+            metaTitle: metaTitle,
+            metaDescription: metaDescription,
+            metaKeyWords: metaKeyWords,
             subNews: subNews
         }, {new: true});
         

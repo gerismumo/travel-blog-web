@@ -125,6 +125,9 @@ const HolidayBlogSchema: Schema = new Schema({
     heading: { type: String, required: true },
     info: { type: String, required: true },
     image: { type: String, required: true },
+    metaTitle: { type: String, required: true},
+    metaDescription: { type: String, required: true},
+    metaKeyWords: { type: String, required: true},
     content: { type: [SelectedDestinationSchema], required: true },
 });
 
@@ -148,6 +151,9 @@ const SubNewsSchema: Schema = new Schema({
     heading: { type: String, required: true },
     image: { type: String, required: true },
     info: { type: String, required: true },
+    metaTitle: { type: String, required: true},
+    metaDescription: { type: String, required: true},
+    metaKeyWords: { type: String, required: true},
     subNews: { type: [SubNewsSchema], required: true },
   });
 

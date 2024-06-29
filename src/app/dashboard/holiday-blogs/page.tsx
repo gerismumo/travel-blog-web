@@ -184,6 +184,9 @@ const page = () => {
       heading: editObject.heading,
       info: editObject.info,
       image: editObject?.image,
+      metaTitle: editObject?.metaTitle,
+      metaDescription: editObject?.metaDescription,
+      metaKeyWords: editObject?.metaKeyWords,
       content: editObject?.content
     }
 
@@ -252,15 +255,17 @@ const page = () => {
                 <th className='table-cell'>Category</th>
                 <th className='table-cell'>Heading</th>
                 <th className='table-cell'>Info</th>
+                <th className='table-cell'>Meta Title</th>
+                <th className='table-cell'>Meta Description</th>
+                <th className='table-cell'>Meta keywords</th>
                 <th className='table-cell'>Image</th>
-                <th className='table-cell'>Content</th>
                 <th className='table-cell'>Actions</th>
               </tr>
             </thead>
             <tbody>
               {contentList.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className='table-cell'>
+                  <td colSpan={9} className='table-cell'>
                     <div className="flex flex-row justify-center items-center">
                       no available data
                     </div>
@@ -270,20 +275,15 @@ const page = () => {
                 <React.Fragment key={d._id}>
                   <tr>
                     <td className='table-cell'>{d.category} {d.month !== null && `- ${months.find(m => m.id ===parseInt(d.month as string))?.name}`}</td>
-                    <td className='table-cell'>{TruncateContent(d.heading, 30)}</td>
-                    <td className='table-cell'>{TruncateContent(d.info, 30)}</td>
+                    <td className='table-cell'>{d.heading && TruncateContent(d.heading, 30)}</td>
+                    <td className='table-cell'>{d.info && TruncateContent(d.info, 30)}</td>
+                    <td className='table-cell'>{d.metaTitle && TruncateContent(d.metaTitle, 30)}</td>
+                    <td className='table-cell'>{d.metaDescription && TruncateContent(d.metaDescription, 30)}</td>
+                    <td className='table-cell'>{d.metaTitle && TruncateContent(d.metaTitle, 30)}</td>
                     <td className='table-cell'>
                       <img src={d.image} alt="" 
                       className='h-[70px] w-[70px]'
                       />
-                    </td>
-                    <td
-                    className='table-cell'
-                    >
-                      <button
-                      onClick={() => handleViewContents(d._id)}
-                      className='px-[20px] py-[6px] rounded-[2px] text-nowrap text-white bg-lightDark hover:bg-dark'
-                      >{openViewContents && openContentId === d._id ? "Close" : "View Content"}</button>
                     </td>
                     <td className='table-cell'>
                     <div className="flex flex-row justify-center gap-[30px]">
@@ -308,7 +308,7 @@ const page = () => {
                   </div>
                     </td>
                   </tr>
-                  {openViewContents && openContentId === d._id && (
+                  {/* {openViewContents && openContentId === d._id && (
                     <tr>
                       <td colSpan={6} className='table-cell'>
                         <div className="flex flex-col gap-[10px] w-[100%] p-[30px]">
@@ -321,7 +321,7 @@ const page = () => {
                         </div>
                       </td>
                     </tr>
-                  )}
+                  )} */}
                   {openEdit && openEditId === d._id && (
                     <tr>
                       <td colSpan={6}>
@@ -365,12 +365,12 @@ const page = () => {
                                   <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
                                       Heading <span className="text-red-500">*</span>
                                   </label>
-                                  <input type="text" name="heading" id="heading"
-                                      value={editObject?.heading}
-                                      onChange={(e) => setEditObject(editObject ? {...editObject, heading: e.target.value}: null)}
-                                      placeholder='heading...'
-                                      className='input'
-                                  />
+                                  <textarea name="" id=""
+                                  value={editObject?.heading}
+                                   onChange={(e) => setEditObject(editObject ? {...editObject, heading: e.target.value}: null)}
+                                   placeholder='heading...'
+                                   className='input'
+                                  ></textarea>
                               </div>
                               <div className="flex flex-col">
                                   <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
@@ -397,7 +397,39 @@ const page = () => {
                               </div>
                               <div className="flex flex-col">
                                   <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                                      Add Destinations <span className="text-red-500">*</span>
+                                      Meta Title
+                                  </label>
+                                  <textarea name="" id=""
+                                  value={editObject?.metaTitle}
+                                   onChange={(e) => setEditObject(editObject ? {...editObject, metaTitle: e.target.value}: null)}
+                                  
+                                   className='input'
+                                  ></textarea>
+                              </div>
+                              <div className="flex flex-col">
+                                  <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                                     Meta Description
+                                  </label>
+                                  <textarea name="" id=""
+                                  value={editObject?.metaDescription}
+                                   onChange={(e) => setEditObject(editObject ? {...editObject, metaDescription: e.target.value}: null)}
+                                 
+                                   className='input'
+                                  ></textarea>
+                              </div>
+                              <div className="flex flex-col">
+                                  <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                                      Meta Keywords
+                                  </label>
+                                  <textarea name="" id=""
+                                  value={editObject?.metaKeyWords}
+                                   onChange={(e) => setEditObject(editObject ? {...editObject, metaKeyWords: e.target.value}: null)}
+                                   className='input'
+                                  ></textarea>
+                              </div>
+                              <div className="flex flex-col">
+                                  <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                                      Add Destinations
                                   </label>
                                   <select name="destination" id="destination"
                                   className='input w-full'  

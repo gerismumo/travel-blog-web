@@ -104,6 +104,9 @@ export interface IHolidayBlog {
   heading: string;
   info: string;
   image: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeyWords: string;
   content: ISelectedDestination[]
 }
 
@@ -114,20 +117,23 @@ export interface IHolidayBlogList {
   heading: string;
   info: string;
   image: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeyWords: string;
   content: ISelectedDestination[]
 }
 
 export interface IWeatherBlog {
-  destination: string,
-  heading: string,
-  image: string,
+  destination: string;
+  heading: string;
+  image: string;
 }
 
 export interface IWeatherBlogList {
-  _id: string,
-  destination: string,
-  heading: string,
-  image: string,
+  _id: string;
+  destination: string;
+  heading: string;
+  image: string;
 }
 
 
@@ -141,6 +147,9 @@ export interface INews {
   heading: string;
   image: string;
   info: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeyWords: string;
   subNews: ISubNews[];
 }
 
@@ -149,5 +158,8 @@ export interface INewsList {
   heading: string;
   image: string;
   info: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeyWords: string;
   subNews: ISubNews[];
 }
