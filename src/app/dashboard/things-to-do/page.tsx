@@ -10,6 +10,8 @@ import fontawesome from '@/(icons)/fontawesome';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Loader from '@/app/components/Loader';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
+import PreviewModal from './PreviewModal';
+import ConfirmModal from '@/app/components/ConfirmModal';
 
 const Page:React.FC = () => {
   const[contentList, setContentList] = useState<IThingsToDoList[]>([]);
@@ -378,6 +380,21 @@ const Page:React.FC = () => {
                 </tbody>
             </table>
         </div>
+        {/* Preview Modal */}
+      {showPreviewModal && previewContent && (
+        <PreviewModal
+          show={showPreviewModal} 
+          content={previewContent} 
+          onClose={() => setShowPreviewModal(false)} 
+        />
+      )}
+        {/* Confirm delete */}
+      <ConfirmModal
+        show={showDeleteModal}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        message="Are you sure you want to delete this content?"
+      />
     </div>
   )
 }

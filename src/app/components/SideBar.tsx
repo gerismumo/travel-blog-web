@@ -22,7 +22,8 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
   const [openHolidaysTabs, setOpenHolidaysTabs] = useState<boolean>(false);
   const [openContentTabs, setOpenContentTabs] = useState<boolean>(false);
   const [openFaqTabs, setOpenFaqTabs] = useState<boolean>(false);
-  const [openWeatherTabs, setOpenWeatherTabs] = useState<boolean>(false)
+  const [openWeatherTabs, setOpenWeatherTabs] = useState<boolean>(false);
+  const [openThingsTodo, setOpenThingsTodo] = useState<boolean>(false);
 
   return (
     <div className={`fixed flex flex-col bg-slate-100 gap-[30px]   w-[250px] z-[999] px-[25px] py-[10px] overflow-auto h-[100%] ${isSidebarOpen ? '': 'hidden'}`}>
@@ -182,6 +183,28 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   className=''
                   />
                   Blogs
+                </Link>
+              </div>
+            )}
+            <button
+            onClick={() => setOpenThingsTodo(!openThingsTodo)}
+            className=' flex flex-row gap-[10px] items-center text-nowrap  bg-white px-[30px]  py-[10px] rounded-[5px] text-grey hover:text-[#000] text-[16px] font-[400]'
+            >
+              {/* <FontAwesomeIcon icon={fontawesome.faCircleInfo}
+              className=' text-grey '
+              /> */}
+              <span>Things to do</span>
+              {openThingsTodo ? <FontAwesomeIcon icon={fontawesome.angleUp} />: <FontAwesomeIcon icon={fontawesome.angleDown} /> }
+            </button>
+            {openThingsTodo && (
+              <div className="flex flex-col gap-[10px]">
+                <Link href="/dashboard/things-to-do"
+                className='flex flex-row items-center gap-[5px] pl-[50px]  text-nowrap  px-[30px] py-[3px] rounded-[5px] text-grey hover:text-[#000]  text-[16px] font-[400] '
+                >
+                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                  className=''
+                  />
+                  Data
                 </Link>
               </div>
             )}
