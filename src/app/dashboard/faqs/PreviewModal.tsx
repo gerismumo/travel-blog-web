@@ -11,10 +11,7 @@ interface PreviewModalProps {
 }
 
 const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) => {
-  if (!show) return null;
-
   const [destinations, setDestinations] = useState<IDestinationList[]>([]);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,6 +25,9 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) =
 
     fetchData();
   }, [setDestinations]);
+
+
+  if (!show) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 overflow-y-auto ">

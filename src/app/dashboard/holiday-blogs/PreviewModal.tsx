@@ -1,8 +1,6 @@
 "use client"
-import React, { useEffect, useState } from "react";
-import {  IDestinationList, IHolidayBlogList } from "@/(types)/type";
-import { getDestinations } from "@/utils/(apis)/destinationApi";
-import toast from "react-hot-toast";
+import React from "react";
+import { IHolidayBlogList } from "@/(types)/type";
 import { months } from "@/lib/months";
 
 interface PreviewModalProps {
@@ -12,23 +10,9 @@ interface PreviewModalProps {
 }
 
 const PreviewModal: React.FC<PreviewModalProps> = ({ show, data, onClose }) => {
+ 
+
   if (!show) return null;
-
-  const [destinations, setDestinations] = useState<IDestinationList[]>([]);
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getDestinations();
-        setDestinations(data);
-      } catch (error: any) {
-        toast.error(error.message);
-      } 
-    };
-
-    fetchData();
-  }, [setDestinations]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 overflow-y-auto ">
