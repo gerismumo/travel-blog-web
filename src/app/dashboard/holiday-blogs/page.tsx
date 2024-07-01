@@ -324,7 +324,7 @@ const page = () => {
                   )} */}
                   {openEdit && openEditId === d._id && (
                     <tr>
-                      <td colSpan={6}>
+                      <td colSpan={8}>
                         <div className="flex flex-col">
                         <form 
                           onSubmit={handleSubmit}

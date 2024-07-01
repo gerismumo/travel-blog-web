@@ -5,8 +5,8 @@ config.autoAddCss = false;
 
 export default function() {
   return (
-    <main>
+    <div>
       <h1>Weather Dashboard</h1>
-    </main>
+    </div>
   );
 }

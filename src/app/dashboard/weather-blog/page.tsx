@@ -1,9 +1,9 @@
 "use client";
 
+import React, { useEffect, useState } from 'react'
 import { IDestinationList, IWeatherBlogList } from '@/(types)/type';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import AddForm from './AddForm';
 import { getWeatherBlogCards } from '@/utils/(apis)/weatherApi';
