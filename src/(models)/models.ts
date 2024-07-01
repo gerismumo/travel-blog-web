@@ -1,4 +1,4 @@
-import { IDestination, IDestinationContent, IDestinationMonthContent, IDestionationFaq, IDestionationMonthFaq, IHolidayBlog, INews, IWeatherBlog } from '@/(types)/type';
+import { IDestination, IDestinationContent, IDestinationMonthContent, IDestionationFaq, IDestionationMonthFaq, IHolidayBlog, INews, IThingsToDo, IWeatherBlog } from '@/(types)/type';
 import mongoose, {mongo, Schema} from 'mongoose';
 
 
@@ -158,3 +158,22 @@ const SubNewsSchema: Schema = new Schema({
   });
 
   export const NewsBlog = mongoose.models.NewsBlog || mongoose.model<INews>("NewsBlog", NewsBlogSchema);
+
+  const placesToVisit: Schema = new Schema({
+    heading: {type: "string", required: true},
+    description: {type: "string", required: true},
+    image: {type: "string", required: true}
+  })
+
+  const ThingsToDoSchema: Schema = new Schema({
+    destination: {type: "string", required: true},
+    overviewHeading: {type: "string", required: true},
+    overviewDescription: {type: "string", required: true},
+    image: {type: "string", required: true},
+    metaTitle: { type: String, required: true},
+    metaDescription: { type: String, required: true},
+    metaKeyWords: { type: String, required: true},
+    placesToVisit: {type: [placesToVisit], required: true}
+  })
+
+  export const ThingsToDo = mongoose.models.ThingsToDo|| mongoose.model<IThingsToDo>("ThingsToDo", ThingsToDoSchema);

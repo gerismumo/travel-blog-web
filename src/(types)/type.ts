@@ -163,3 +163,33 @@ export interface INewsList {
   metaKeyWords: string;
   subNews: ISubNews[];
 }
+
+export interface IPlaceToVisit {
+  heading: string;
+  description: string;
+  image: string;
+}
+
+export interface IThingsToDo {
+  destination: string;
+  overviewHeading: string;
+  overviewDescription: string;
+  image: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeyWords: string;
+  placesToVisit: IPlaceToVisit[];
+}
+
+export interface IThingsToDoList {
+  _id: string;
+  destination: string;
+  overviewHeading: string;
+  overviewDescription: string;
+  image: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeyWords: string;
+  placesToVisit: IPlaceToVisit[];
+}
+
