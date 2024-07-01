@@ -13,7 +13,7 @@ import Loading from './loading';
 import PreviewModal from './PreviewModal';
 import ConfirmModal from '@/app/components/ConfirmModal';
 
-const page = () => {
+const Page = () => {
   const[contentList, setContentList] = useState<INewsList[]>([]);
   const [openEdit , setOpenEdit] = useState<boolean>(false);
   const [openEditId, setOpenEditId] = useState<string | null>(null);
@@ -385,4 +385,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

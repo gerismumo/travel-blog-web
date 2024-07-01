@@ -14,7 +14,7 @@ import ConfirmModal from '@/app/components/ConfirmModal';
 import PreviewModal from './PreviewModal';
 import Loading from './loading';
 
-const page = () => {
+const Page = () => {
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [openEdit , setOpenEdit] = useState<boolean>(false);
     const [openEditId, setOpenEditId] = useState<string | null>(null);
@@ -305,4 +305,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

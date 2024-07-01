@@ -13,7 +13,7 @@ import PreviewModal from './PreviewModal';
 import Loader from '@/app/components/Loader';
 import { TruncateContent } from '@/utils/service';
 
-const page = () => {
+const Page = () => {
   const [contentList, setContentList] = useState<IHolidayBlogList[]>([]);
   const [openAddForm, setOpenAddForm] = useState<boolean>(false);
   const [openViewContents, setOpenViewContents] = useState<boolean>(false);
@@ -505,4 +505,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

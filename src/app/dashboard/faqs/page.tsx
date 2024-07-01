@@ -13,7 +13,7 @@ import ConfirmModal from '@/app/components/ConfirmModal';
 import PreviewModal from './PreviewModal';
 import { TruncateContent } from '@/utils/service';
 
-const page:React.FC  = () => {
+const Page:React.FC  = () => {
     const[contentList, setContentList] = useState<IDestionationFaqList[]>([]);
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [openEdit , setOpenEdit] = useState<boolean>(false);
@@ -323,4 +323,4 @@ const page:React.FC  = () => {
   )
 }
 
-export default page
+export default Page

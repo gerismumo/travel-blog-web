@@ -15,7 +15,7 @@ import PreviewModal from './PreviewModal';
 import Loading from './loading';
 import { TruncateContent } from '@/utils/service';
 
-const page:React.FC = () => {
+const Page:React.FC = () => {
     const[contentList, setContentList] = useState<IDestionationMonthFaqList[]>([]);
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [openEdit , setOpenEdit] = useState<boolean>(false);
@@ -342,4 +342,4 @@ const page:React.FC = () => {
   )
 }
 
-export default page
+export default Page

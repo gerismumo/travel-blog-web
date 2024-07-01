@@ -15,7 +15,7 @@ import AddForm from './AddForm';
 import ConfirmModal from '@/app/components/ConfirmModal';
 import PreviewModal from './PreviewModal';
 
-const page:React.FC = () => {
+const Page:React.FC = () => {
     const[contentList, setContentList] = useState<IDestinationMonthContentList[]>([]);
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [openEdit , setOpenEdit] = useState<boolean>(false);
@@ -389,4 +389,4 @@ const page:React.FC = () => {
   )
 }
 
-export default page
+export default Page
