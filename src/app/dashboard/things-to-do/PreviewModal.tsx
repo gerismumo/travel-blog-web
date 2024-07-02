@@ -81,8 +81,8 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) =
             {content.placesToVisit.length > 0 && (
                <h2 className="font-[600] text-dark">Places to visit</h2> 
             )}
-            {content.placesToVisit.map((p) => (
-                <div className="flex flex-col">
+            {content.placesToVisit.map((p, index) => (
+                <div key={index} className="flex flex-col">
                     <div className="flex flex-col ">
                         <h2 className="font-[600] text-dark">Heading</h2>
                         <p className="text-gray-700 text-sm mb-4">{p.heading}</p>
