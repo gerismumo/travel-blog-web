@@ -1,6 +1,10 @@
 import { DestinationContent } from "@/(models)/models";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
 import { NextResponse } from "next/server";
+
+
+
 
 
 export async function DELETE(req:Request, {params}: {params: {id: string}}) {
@@ -21,6 +25,12 @@ export async function DELETE(req:Request, {params}: {params: {id: string}}) {
 export async function PUT(req:Request, {params}: {params: {id: string}}) { 
     try{
         const body = await req.json();
+        console.log('destination',body.destination)
+        const exists = cache.has(body.destination);
+        console.log('cache data',exists)
+
+       
+
         await connectDB();
 
         const updatedData = await DestinationContent.findByIdAndUpdate(params.id, {
@@ -46,12 +56,22 @@ export async function PUT(req:Request, {params}: {params: {id: string}}) {
 export async function GET(req: Request,{params}: {params: {id: string}}){
     try{
         const id = params.id;
+        //cache data
+        const cachedData = cache.get(id);
+        if(cachedData) {
+            console.log('cache hit')
+            return NextResponse.json({success: true, data: cachedData});
+        }
+
         if (!id) {
             return NextResponse.json({ success: false, message: 'Invalid destination ID' });
         }
 
         await connectDB();
         const data = await DestinationContent.find({destination: id})
+        console.log('cahe exists');
+        //set cache
+        cache.set(id, data);
 
         return NextResponse.json({success: true, data:data })
     }catch(error) {

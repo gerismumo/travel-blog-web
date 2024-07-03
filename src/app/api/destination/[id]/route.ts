@@ -1,13 +1,23 @@
 import { Destination, DestinationContent, DestinationFaq, DestinationMonthContent, DestinationMonthFaq } from "@/(models)/models";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect"
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
 
+
+
 export async function PUT(req:Request, {params}: {params: {id: string}}) {
 
     try {
+        //check if cache exits
+        const exists = cache.has(params.id);
+
+        if(exists) {
+           console.log("already exists")
+        }
+
         const body = await req.json();
         const {stationId} =body;
         if(!stationId) {
@@ -43,6 +53,8 @@ async function fetchWeatherData(stationID: string, startDate: string, endDate: s
 export async function GET(req: Request, {params}: {params: {id: string}}) {
     
     const id = params.id;
+  
+
     if (!id || typeof id !== 'string') {
         return NextResponse.json({ success: false, message: 'Invalid destination ID' });
     }
@@ -53,6 +65,12 @@ export async function GET(req: Request, {params}: {params: {id: string}}) {
 
 
     try {
+        const cachedData = cache.get(id);
+
+        if(cachedData) {
+            return NextResponse.json({success: true, data: cachedData})
+        }
+
         await connectDB;
 
         const destination = await Destination.findById(id);
@@ -73,13 +91,17 @@ export async function GET(req: Request, {params}: {params: {id: string}}) {
         if (startDate && endDate) {
             weatherData = await fetchWeatherData(destination.stationID, startDate as string, endDate as string);
         }
+
+        const data ={ destinationContent, destinationFaq, monthContent, monthFaq, weatherData};
+        cache.set(id, data);
+
         return NextResponse.json({
             success: true,
-            data: { destinationContent, destinationFaq, monthContent, monthFaq, weatherData}
+            data:data
           });
 
     }catch(error: any) {
-        console.log(error);
+        console.log(error.message);
         return NextResponse.json({success:false, message: "server error"});
     }
 }
