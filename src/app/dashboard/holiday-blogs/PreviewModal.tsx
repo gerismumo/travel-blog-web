@@ -34,6 +34,10 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, data, onClose }) => {
         </div>
         <div className="p-6 overflow-y-auto">
           <div className="mt-4">
+            <div className="flex flex-col justify-center mb-4">
+                <h2 className="font-[600] text-dark">Cover Image</h2>
+                <img src={data?.coverImage} alt="" className="w-full h-auto max-h-96 object-cover" />
+            </div>
             <div className="flex flex-row items-center gap-[5px] mb-4">
                 <h2 className="font-[600] text-dark">Category:</h2>
                 <p className="text-gray-700 text-sm ">{data?.category}</p>

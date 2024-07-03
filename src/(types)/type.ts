@@ -103,6 +103,7 @@ export interface IHolidayBlog {
   month: string | null;
   heading: string;
   info: string;
+  coverImage: string;
   image: string;
   metaTitle: string;
   metaDescription: string;
@@ -116,6 +117,7 @@ export interface IHolidayBlogList {
   month: string | null;
   heading: string;
   info: string;
+  coverImage: string;
   image: string;
   metaTitle: string;
   metaDescription: string;

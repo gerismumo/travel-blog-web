@@ -19,15 +19,16 @@ export async function DELETE(req: Request, {params}: {params: {id: string}}) {
 export async function PUT(req: Request, {params}: {params: {id: string}}) {
     try {
         const body:IHolidayBlogList = await req.json();
-        const {heading , info, image, content, metaDescription, metaTitle, metaKeyWords} = body;
+        const {heading , info, coverImage, image, content, metaDescription, metaTitle, metaKeyWords} = body;
 
-        if(!heading ||!info ||!image ||content.length === 0) {
+        if(!heading ||!info || !coverImage ||!image ||content.length === 0) {
             return Response.json({success: false, message: "all fields are required"})
         }
         await connectDB();
         const updateData = await HolidayBlog.findByIdAndUpdate(params.id, {
             heading:heading,
             info:info,
+            coverImage:coverImage,
             image:image,
             metaTitle: metaTitle,
             metaDescription: metaDescription,

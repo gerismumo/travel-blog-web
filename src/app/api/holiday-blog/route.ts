@@ -6,18 +6,19 @@ export async function POST(req:Request) {
     try {
         const body:IHolidayBlog = await req.json();
 
-        const {category, month, heading, info, image, metaTitle, metaDescription, metaKeyWords, content} =body;
+        const {category, month, heading, info, coverImage, image, metaTitle, metaDescription, metaKeyWords, content} =body;
         await connectDB();
 
-        if (!category || !heading || !info || !image || content.length === 0) {
+        if (!category || !heading || !info || !coverImage || !image || content.length === 0) {
             return Response.json({success: false, message: 'All fields are required.' });
         }
 
         const newHolidayBlog = await HolidayBlog.create({
             category: category,
             month: month,
-            hading: heading,
+            heading: heading,
             info: info,
+            coverImage: coverImage,
             image: image,
             metaTitle: metaTitle,
             metaDescription: metaDescription,
@@ -30,8 +31,7 @@ export async function POST(req:Request) {
         }else {
             return Response.json({ success: false, message: 'Something went wrong.' });
         }
-    } catch (error) {
-        console.log(error);
+    } catch (error: any) {
         return Response.json({ success: false, message: 'server error' });
     }
 }

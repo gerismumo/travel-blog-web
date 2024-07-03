@@ -20,6 +20,7 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
     const [selectedDestinations, setSelectedDestinations] = useState<ISelectedDestination[]>([]);
     const [Info, setInfo] = useState<string>("");
     const [image, setImage] = useState<string>("");
+    const [coverImage, setCoverImage] = useState<string>("");
 
 
     useEffect(() => {
@@ -67,7 +68,7 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
       const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if(!holidayCategory || holidayCategory === "month" && !month || !heading || !Info || !image || selectedDestinations.length === 0) {
+        if(!holidayCategory || holidayCategory === "month" && !month || !heading || !Info || !coverImage || !image || selectedDestinations.length === 0) {
           return toast.error("fill required fields");
         }
 
@@ -76,6 +77,7 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
           month: holidayCategory === "month" ? month : null,
           heading: heading,
           info: Info,
+          coverImage: coverImage,
           image: image,
           metaTitle: metaTitle,
           metaDescription: metaDescription,
@@ -94,6 +96,7 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
           setMonth('');
           setHeading('');
           setInfo('');
+          setCoverImage('');
           setImage('');
           setMetaDescription('');
           setMetaTitle('');
@@ -175,6 +178,17 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
                 >
 
                 </textarea>
+            </div>
+            <div className="flex flex-col">
+              <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                Cover Image <span className="text-red-500">*</span>
+              </label>
+              <input type="url" name="image" id="image" 
+              value={coverImage}
+              onChange={(e) => setCoverImage(e.target.value)}
+              placeholder='image url'
+              className='input'
+              />
             </div>
             <div className="flex flex-col">
               <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">

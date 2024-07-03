@@ -124,6 +124,7 @@ const HolidayBlogSchema: Schema = new Schema({
     month: { type: String, default: null },
     heading: { type: String, required: true },
     info: { type: String, required: true },
+    coverImage: { type:String, required: true },
     image: { type: String, required: true },
     metaTitle: { type: String, required: true},
     metaDescription: { type: String, required: true},

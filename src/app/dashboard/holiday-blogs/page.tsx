@@ -183,6 +183,7 @@ const Page = () => {
       month: editObject.month,
       heading: editObject.heading,
       info: editObject.info,
+      coverImage: editObject.coverImage,
       image: editObject?.image,
       metaTitle: editObject?.metaTitle,
       metaDescription: editObject?.metaDescription,
@@ -258,6 +259,7 @@ const Page = () => {
                 <th className='table-cell'>Meta Title</th>
                 <th className='table-cell'>Meta Description</th>
                 <th className='table-cell'>Meta keywords</th>
+                <th className='table-cell'>Cover Image</th>
                 <th className='table-cell'>Image</th>
                 <th className='table-cell'>Actions</th>
               </tr>
@@ -280,6 +282,11 @@ const Page = () => {
                     <td className='table-cell'>{d.metaTitle && TruncateContent(d.metaTitle, 30)}</td>
                     <td className='table-cell'>{d.metaDescription && TruncateContent(d.metaDescription, 30)}</td>
                     <td className='table-cell'>{d.metaTitle && TruncateContent(d.metaTitle, 30)}</td>
+                    <td className='table-cell'>
+                      <img src={d.coverImage} alt="" 
+                      className='h-[70px] w-[70px]'
+                      />
+                    </td>
                     <td className='table-cell'>
                       <img src={d.image} alt="" 
                       className='h-[70px] w-[70px]'
@@ -383,6 +390,17 @@ const Page = () => {
                                   >
 
                                   </textarea>
+                              </div>
+                              <div className="flex flex-col">
+                                <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                                  Cover Image <span className="text-red-500">*</span>
+                                </label>
+                                <input type="url" name="image" id="image" 
+                                value={editObject?.coverImage}
+                                onChange={(e) => setEditObject(editObject ? {...editObject, coverImage: e.target.value}: null)}
+                                placeholder='image url'
+                                className='input'
+                                />
                               </div>
                               <div className="flex flex-col">
                                 <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">

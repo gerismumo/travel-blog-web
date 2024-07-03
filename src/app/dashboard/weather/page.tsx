@@ -6,14 +6,17 @@ import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import Loading from './loading';
 
 const Page = () => {
     const [weatherData, setWeatherData] = useState<any[]>([]);
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
     const [startDate, setStartDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [endDate, setEndDate] = useState<string>(new Date().toISOString().split('T')[0]); 
     const [selectedDestination, setSelectedDestination] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(true);
+    const [loadingData, setLoadingData] = useState<boolean>(true);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -46,6 +49,8 @@ const Page = () => {
             }
         } catch (error) {
             toast.error("Network error");
+        }finally{
+            setLoadingData(false);
         }
     };
 
@@ -65,8 +70,10 @@ const Page = () => {
         fetchData(new Date().toISOString().split('T')[0], new Date().toISOString().split('T')[0], "");
     }
 
-    if (loading) {
-        return <Loader />;
+    if (loading || loadingData) {
+        return (
+            <Loading/>
+        )
     }
 
     return (
