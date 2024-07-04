@@ -28,7 +28,7 @@ body {
 }
 
 .input {
-  @apply border-[1px] border-grey py-[6px] px-[4px] rounded-[3px] outline-none focus:border-lightOrange ;
+  @apply border-[1px] border-grey py-[6px] px-[4px] rounded-[3px] outline-none focus:outline-none focus:border-none focus:ring-1 focus:ring-lightRed ;
 }
 
 .table-cell {
