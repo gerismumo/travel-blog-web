@@ -1,5 +1,6 @@
 import { ThingsToDo } from "@/(models)/models";
 import { IThingsToDo } from "@/(types)/type";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,6 +14,7 @@ export async function POST(req:Request) {
             return Response.json({ success: false, message: 'All fields are required' });
         }
         //save data
+        cache.del("ttd");
         await connectDB();
 
         const existingData = await ThingsToDo.findOne({ destination:destination});
@@ -37,8 +39,13 @@ export async function POST(req:Request) {
 
 export async function GET() {
     try {
+        const cachedData = cache.get("ttd");
+        if(cachedData) {
+            return Response.json({ success: true, data: cachedData });
+        }
         await connectDB();
         const thingsToDos = await ThingsToDo.find();
+        cache.set("ttd", thingsToDos)
         return Response.json({ success: true, data: thingsToDos });
     }catch(error: any) {
         return Response.json({ success: false, message:"server error" });

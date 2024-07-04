@@ -1,6 +1,8 @@
 import { NewsBlog } from "@/(models)/models";
 import { INews } from "@/(types)/type";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
+
 
 export async function POST(req: Request) {
     try {
@@ -10,7 +12,7 @@ export async function POST(req: Request) {
         if(!heading || !info ) {
             return Response.json({ success: false, message: 'all fields are required' });
         }
-
+        cache.del("news");
         await connectDB();
         const newNews = await NewsBlog.create({heading, image, info, metaTitle, metaDescription, metaKeyWords, subNews});
 
@@ -27,9 +29,14 @@ export async function POST(req: Request) {
 
 export async function GET() {
     try {
+        const cachedData = cache.get("news");
+        if(cachedData) {
+            return Response.json({ success: true, data: cachedData });
+        }
         await connectDB();
         const data = await NewsBlog.find();
-        
+
+        cache.set("news", data);
         return Response.json({success: true, data: data})
     }catch(error) {
         return Response.json({ success: false, message: 'Server error' });

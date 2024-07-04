@@ -4,11 +4,10 @@ import connectDB from "@/utils/dbConnect";
 import { NextResponse } from "next/server";
 
 
-
-
-
 export async function DELETE(req:Request, {params}: {params: {id: string}}) {
     try {
+        cache.flushAll();
+
         await connectDB(); 
         const deleteData = await DestinationContent.findByIdAndDelete(params.id);
         if(deleteData) {
@@ -25,12 +24,9 @@ export async function DELETE(req:Request, {params}: {params: {id: string}}) {
 export async function PUT(req:Request, {params}: {params: {id: string}}) { 
     try{
         const body = await req.json();
-        console.log('destination',body.destination)
-        const exists = cache.has(body.destination);
-        console.log('cache data',exists)
-
-       
-
+        
+        cache.flushAll();
+        
         await connectDB();
 
         const updatedData = await DestinationContent.findByIdAndUpdate(params.id, {
@@ -57,9 +53,8 @@ export async function GET(req: Request,{params}: {params: {id: string}}){
     try{
         const id = params.id;
         //cache data
-        const cachedData = cache.get(id);
+        const cachedData = cache.get("data");
         if(cachedData) {
-            console.log('cache hit')
             return NextResponse.json({success: true, data: cachedData});
         }
 
@@ -69,9 +64,8 @@ export async function GET(req: Request,{params}: {params: {id: string}}){
 
         await connectDB();
         const data = await DestinationContent.find({destination: id})
-        console.log('cahe exists');
         //set cache
-        cache.set(id, data);
+        cache.set("data", data);
 
         return NextResponse.json({success: true, data:data })
     }catch(error) {

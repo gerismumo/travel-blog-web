@@ -1,12 +1,15 @@
 import { HolidayBlog } from "@/(models)/models";
 import { IHolidayBlog } from "@/(types)/type";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
+import { NextResponse } from "next/server";
 
 export async function POST(req:Request) {
     try {
         const body:IHolidayBlog = await req.json();
 
         const {category, month, heading, info, coverImage, image, metaTitle, metaDescription, metaKeyWords, content} =body;
+        cache.del("hBg");
         await connectDB();
 
         if (!category || !heading || !info || !coverImage || !image || content.length === 0) {
@@ -38,9 +41,14 @@ export async function POST(req:Request) {
 
 export async function GET(req:Request) {
     try{
+        const cachedData = cache.get("hBg");
+        if(cachedData) {
+            return Response.json({ success: true, data: cachedData });
+        }
         await connectDB();
-        const holidayBlogs = await HolidayBlog.find();
-        return Response.json({ success: true, data: holidayBlogs });
+        const hBg = await HolidayBlog.find();
+        cache.set("hBg", hBg)
+        return Response.json({ success: true, data: hBg });
     }catch(error) {
         return Response.json({ success: false, message:'server error' });
     }

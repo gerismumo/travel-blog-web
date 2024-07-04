@@ -1,5 +1,6 @@
 import { DestinationContent } from "@/(models)/models";
 import { IDestinationContent } from "@/(types)/type";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -21,6 +22,7 @@ export async function POST(req:NextRequest) {
 
         const savedData = await DestinationContent.create({destination, weatherInfo, destinationInfo, image, metaTitle, metaDescription,metaKeyWords});
         if(savedData) {
+            cache.del("destinationContent");
             return NextResponse.json({ success: true, message: 'Added successfully' });
         }else {
             return NextResponse.json({ success: false, message:'something went wrong' });
@@ -33,8 +35,14 @@ export async function POST(req:NextRequest) {
 
 export async function GET(req:NextRequest) {
     try{
+        const cachedData = cache.get("destinationContent")
+        if(cachedData) {
+            return NextResponse.json({ success: true, data: cachedData });
+        }
+
         await connectDB();
         const destinationContent = await DestinationContent.find();
+        cache.set("destinationContent",destinationContent)
         return NextResponse.json({ success: true, data: destinationContent });
     }catch(error) {
         return NextResponse.json({ success: false, message:'server error' });

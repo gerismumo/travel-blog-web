@@ -1,10 +1,13 @@
 
 import { DestinationMonthContent } from "@/(models)/models";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
 
 
 export async function DELETE(req:Request, {params}: {params: {id: string}}) {
     try {
+        cache.flushAll();
+
         await connectDB(); 
         const deleteData = await DestinationMonthContent.findByIdAndDelete(params.id);
         if(deleteData) {
@@ -21,6 +24,7 @@ export async function DELETE(req:Request, {params}: {params: {id: string}}) {
 export async function PUT(req: Request, {params}: {params: {id: string}}) {
 
     try{
+        
         const body = await req.json();
 
         const {destinationId, month, weatherInfo, metaTitle, metaDescription,metaKeyWords} = body;
@@ -28,6 +32,8 @@ export async function PUT(req: Request, {params}: {params: {id: string}}) {
         if(destinationId === "" || month === "" || weatherInfo === "" || metaTitle ==="" || metaDescription === "" || metaKeyWords === "") {
             return Response.json({success: false, message: "all fields are required"})
         }
+        
+        cache.flushAll();
         
         await connectDB();
 

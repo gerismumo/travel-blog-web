@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
                 };
             })
         );
-
+        // cache.set("")
         return NextResponse.json({ success: true, data: weatherData });
 
     } catch (error: any) {

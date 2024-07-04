@@ -1,5 +1,6 @@
 import { DestinationMonthContent } from "@/(models)/models";
 import { IDestinationMonthContent } from "@/(types)/type";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -14,6 +15,8 @@ export async function POST(req:NextRequest) {
 
         await connectDB();
 
+        cache.flushAll();
+
         const existingRecord = await DestinationMonthContent.findOne({destination, month});
         
         if(existingRecord) {
@@ -21,6 +24,7 @@ export async function POST(req:NextRequest) {
         }
 
         const savedData = await DestinationMonthContent.create(body);
+       
         if(savedData) {
             return NextResponse.json({success: true, message: "added successfully"});
         }else {
@@ -33,8 +37,13 @@ export async function POST(req:NextRequest) {
 
 export async function GET(req:NextRequest) {
     try{
+        const cachedData = cache.get("destinationContentMonth");
+
+        if(cachedData) return NextResponse.json({ success: true, data: cachedData });
+        
         await connectDB();
         const destinationContent = await DestinationMonthContent.find();
+        cache.set("destinationContentMonth", destinationContent)
         return NextResponse.json({ success: true, data: destinationContent });
     }catch(error) {
         return NextResponse.json({ success: false, message:'server error' });

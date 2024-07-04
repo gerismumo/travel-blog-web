@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/utils/dbConnect';
 import { Destination } from '@/(models)/models';
 import { IDestination, IDestinationList } from '@/(types)/type';
+import cache from '@/utils/cache';
 
 
 // const destinationsData = [
@@ -69,8 +70,13 @@ import { IDestination, IDestinationList } from '@/(types)/type';
 
 export async function GET(req: NextRequest) {
   try {
+    const cachedData = cache.get("destinations");
+
+    if (cachedData) return NextResponse.json({ success: true, data: cachedData });
+    
     await connectDB(); 
     const destinations = await Destination.find({});
+    cache.set("destinations", destinations);
     return NextResponse.json({ success: true, data: destinations });
   } catch (err: any) { 
     return NextResponse.json({ success: false, message: 'Error retrieving destinations' });

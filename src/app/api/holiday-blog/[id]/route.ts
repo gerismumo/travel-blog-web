@@ -1,9 +1,11 @@
 import { HolidayBlog } from "@/(models)/models";
 import { IHolidayBlogList } from "@/(types)/type";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
 
 export async function DELETE(req: Request, {params}: {params: {id: string}}) {
     try {
+        cache.del("hBg");
         await connectDB(); 
         const deleteData = await HolidayBlog.findByIdAndDelete(params.id);
         if(deleteData) {
@@ -24,6 +26,9 @@ export async function PUT(req: Request, {params}: {params: {id: string}}) {
         if(!heading ||!info || !coverImage ||!image ||content.length === 0) {
             return Response.json({success: false, message: "all fields are required"})
         }
+
+        cache.del("hBg");
+        
         await connectDB();
         const updateData = await HolidayBlog.findByIdAndUpdate(params.id, {
             heading:heading,

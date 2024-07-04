@@ -1,10 +1,12 @@
 import { DestinationFaq } from "@/(models)/models";
 import { IDestionationFaq } from "@/(types)/type";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
 
 
 export async function DELETE(req:Request, {params}: {params: {id: string}}) {
     try {
+        cache.flushAll();
         await connectDB(); 
         const deleteData = await DestinationFaq.findByIdAndDelete(params.id);
         if(deleteData) {
@@ -26,6 +28,7 @@ export async function PUT(req:Request, {params}: {params: {id: string}}) {
             return Response.json({success: false, message: "all fields are required"})
         }
 
+        cache.flushAll();
         await connectDB(); 
         const updateData = await DestinationFaq.findByIdAndUpdate(params.id, body);
         if(updateData) {

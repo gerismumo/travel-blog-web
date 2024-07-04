@@ -1,10 +1,12 @@
 
 import { ThingsToDo } from "@/(models)/models";
 import { IThingsToDo } from "@/(types)/type";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
 
 export async function DELETE(req:Request, {params}: {params: {id: string}}) {
     try {
+        cache.del("ttd");
         await connectDB(); 
         const deleteData = await ThingsToDo.findByIdAndDelete(params.id);
         if(deleteData) {
@@ -26,6 +28,8 @@ export async function PUT(req:Request, {params}: {params: {id: string}}) {
         if(!destination || !overviewHeading || !overviewDescription || !image || !metaTitle || !metaDescription || !metaKeyWords || placesToVisit.length === 0) {
             return Response.json({success: false, message: "all fields are required"})
         }
+
+        cache.del("ttd");
         await connectDB();
 
         const updatedData = await ThingsToDo.findByIdAndUpdate(params.id, {

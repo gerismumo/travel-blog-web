@@ -245,9 +245,9 @@ const Page: React.FC = () => {
                       <td className="table-cell">
                         {TruncateContent(d.destinationInfo, 20)}
                       </td>
-                      <td className="table-cell">{d.metaTitle}</td>
-                      <td className="table-cell">{d.metaDescription}</td>
-                      <td className="table-cell">{d.metaKeyWords}</td>
+                      <td className="table-cell">{TruncateContent(d.metaTitle, 20)}</td>
+                      <td className="table-cell">{TruncateContent(d.metaDescription, 20)}</td>
+                      <td className="table-cell">{TruncateContent(d.metaKeyWords, 20)}</td>
                       <td className="table-cell">
                         <div className="flex flex-row justify-center gap-[30px]">
                          <button

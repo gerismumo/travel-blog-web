@@ -2,12 +2,14 @@
 
 import { NewsBlog } from "@/(models)/models";
 import { INewsList } from "@/(types)/type";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
 import { NextResponse } from "next/server";
 
 
 export async function DELETE(req:Request, {params}: {params: {id: string}}) {
     try {
+        cache.del("news");
         await connectDB(); 
         const deleteData = await NewsBlog.findByIdAndDelete(params.id);
         if(deleteData) {
@@ -29,6 +31,8 @@ export async function PUT(req:Request, {params}: {params: {id: string}}) {
         if(!heading) {
             return Response.json({success: false, message: "all fields are required"})
         }
+
+        cache.del("news");
         await connectDB();
 
         const updatedData = await NewsBlog.findByIdAndUpdate(params.id, {

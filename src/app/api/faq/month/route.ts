@@ -1,6 +1,7 @@
 
 import { DestinationMonthFaq } from "@/(models)/models";
 import { IDestionationMonthFaq } from "@/(types)/type";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -14,6 +15,7 @@ export async function POST(req:NextRequest) {
             return NextResponse.json({success: false, message: "all fields are required"})
         }
 
+        cache.flushAll();
         await connectDB();
 
        
@@ -31,9 +33,15 @@ export async function POST(req:NextRequest) {
 
 export async function GET(req: NextRequest) {
     try{
+        const cachedData = cache.get("dFaqMon");
+
+        if(cachedData) {
+            return NextResponse.json({success: true, data: cachedData})
+        }
         await connectDB();
-        const destinationFaq = await DestinationMonthFaq.find();
-        return NextResponse.json({success: true, data: destinationFaq});
+        const dFaqMon = await DestinationMonthFaq.find();
+        cache.set("dFaqMon", dFaqMon)
+        return NextResponse.json({success: true, data: dFaqMon});
     }catch(error) {
         return NextResponse.json({success: false, message: "server error"})
     }
