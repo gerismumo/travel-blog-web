@@ -222,10 +222,10 @@ const Page:React.FC = () => {
                     ): filteredData.map((d) => (
                         <React.Fragment key={d._id}>
                             <tr>
-                                <td className='table-cell'>{destinations?.find(ob => ob._id === d.destination)?.name}</td>
-                                <td className='table-cell'>{months.find(m => m.id === parseInt(d.month))?.name}</td>
-                                <td className='table-cell'>{TruncateContent(d.question, 30)}</td>
-                                <td className='table-cell'>{TruncateContent(d.answer, 30)}</td>
+                                <td className='table-cell'>{d.destination && destinations?.find(ob => ob._id === d.destination)?.name}</td>
+                                <td className='table-cell'>{d.month && months.find(m => m.id === parseInt(d.month))?.name}</td>
+                                <td className='table-cell'>{d.question && TruncateContent(d.question, 15)}</td>
+                                <td className='table-cell'>{d.answer && TruncateContent(d.answer, 15)}</td>
                                 <td className='table-cell'>
                                 <div className="flex flex-row justify-center gap-[30px]">
                                         <button

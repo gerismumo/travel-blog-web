@@ -230,24 +230,24 @@ const Page: React.FC = () => {
                   <React.Fragment key={d._id}>
                     <tr>
                       <td className="table-cell">
-                        {destinations.find((ob) => ob._id === d.destination)?.name}
+                        {d.destination && destinations.find((ob) => ob._id === d.destination)?.name}
                       </td>
                       <td className="table-cell">
                         <img
-                          src={d.image}
+                          src={d.image && d.image}
                           alt=""
                           className="w-[50px] h-[50px] transition-transform duration-300 hover:scale-125 hover:z-10"
                         />
                       </td>
                       <td className="table-cell">
-                        {TruncateContent(d.weatherInfo, 20)}
+                        {d.weatherInfo && TruncateContent(d.weatherInfo, 15)}
                       </td>
                       <td className="table-cell">
-                        {TruncateContent(d.destinationInfo, 20)}
+                        {d.destinationInfo && TruncateContent(d.destinationInfo, 15)}
                       </td>
-                      <td className="table-cell">{TruncateContent(d.metaTitle, 20)}</td>
-                      <td className="table-cell">{TruncateContent(d.metaDescription, 20)}</td>
-                      <td className="table-cell">{TruncateContent(d.metaKeyWords, 20)}</td>
+                      <td className="table-cell">{d.metaTitle && TruncateContent(d.metaTitle, 15)}</td>
+                      <td className="table-cell">{d.metaDescription && TruncateContent(d.metaDescription, 15)}</td>
+                      <td className="table-cell">{d.metaKeyWords && TruncateContent(d.metaKeyWords, 15)}</td>
                       <td className="table-cell">
                         <div className="flex flex-row justify-center gap-[30px]">
                          <button

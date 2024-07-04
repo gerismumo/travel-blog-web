@@ -233,14 +233,14 @@ const Page:React.FC = () => {
                         return(
                             <React.Fragment key={d._id}>
                                 <tr>
-                                    <td className='table-cell'>{destinations.find(ob => ob._id === d.destination)?.name}</td>
-                                    <td className='table-cell'>{months.find(ob => ob.id === parseInt(d.month))?.name}</td>
+                                    <td className='table-cell'>{d.destination && destinations.find(ob => ob._id === d.destination)?.name}</td>
+                                    <td className='table-cell'>{d.month && months.find(ob => ob.id === parseInt(d.month))?.name}</td>
                                     <td className='table-cell'>
-                                      {TruncateContent(d.weatherInfo, 30)}
+                                      {d.weatherInfo && TruncateContent(d.weatherInfo, 15)}
                                     </td>
-                                    <td className="table-cell">{TruncateContent(d.metaTitle, 30)}</td>
-                                    <td className="table-cell">{TruncateContent(d.metaDescription, 30)}</td>
-                                    <td className="table-cell">{TruncateContent(d.metaKeyWords, 30)}</td>
+                                    <td className="table-cell">{ d.metaTitle && TruncateContent(d.metaTitle, 15)}</td>
+                                    <td className="table-cell">{d.metaDescription && TruncateContent(d.metaDescription, 15)}</td>
+                                    <td className="table-cell">{d.metaKeyWords && TruncateContent(d.metaKeyWords, 15)}</td>
                                     <td className="table-cell">
                                     <div className="flex flex-row justify-center gap-[30px]">
                                         <button

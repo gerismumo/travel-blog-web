@@ -4,6 +4,7 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fontawesome from '@/(icons)/fontawesome';
+import { useRouter } from 'next/router';
 
 
 
@@ -24,6 +25,9 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
   const [openFaqTabs, setOpenFaqTabs] = useState<boolean>(false);
   const [openWeatherTabs, setOpenWeatherTabs] = useState<boolean>(false);
   const [openThingsTodo, setOpenThingsTodo] = useState<boolean>(false);
+  const [openNews, setOpenNews] = useState<boolean>(false);
+
+  
 
   return (
     <div className={`fixed flex flex-col bg-dark gap-[30px]   w-[250px] z-[999] px-[20px] py-[10px] overflow-auto h-[100%] ${isSidebarOpen ? '': 'hidden'}`}>
@@ -164,30 +168,17 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                 </div>
               </div>
             )}
-            <button
-            onClick={() => setOpenHolidaysTabs(!openHolidaysTabs)}
+            <Link
+            href="/dashboard/holiday-blogs"
             className='sidebar-link'
             >
               <div className="flex flex-row items-center gap-[20px]">
                 <FontAwesomeIcon icon={fontawesome.faHollyBerry}/>
                 <span>Holidays</span>
               </div>
-              {openContentTabs ? <FontAwesomeIcon icon={fontawesome.angleUp} />: <FontAwesomeIcon icon={fontawesome.angleDown} /> }
-            </button>
-            {openHolidaysTabs && (
-              <div className="flex flex-col gap-[10px]">
-                <Link href="/dashboard/holiday-blogs"
-                className='flex flex-row items-center justify-start pl-[50px] gap-[20px]  hover:bg-white px-[20px]  py-[12px] rounded-[8px] text-white hover:text-dark text-[16px] font-[400]'
-                >
-                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
-                  className=''
-                  />
-                  Blogs
-                </Link>
-              </div>
-            )}
-            <button
-            onClick={() => setOpenThingsTodo(!openThingsTodo)}
+            </Link>
+            <Link
+            href="/dashboard/things-to-do"
             className='sidebar-link'
             >
               <div className="flex flex-row items-center gap-[20px]">
@@ -196,20 +187,19 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   />
                 <span>Things to do</span>
               </div>
-              {openThingsTodo ? <FontAwesomeIcon icon={fontawesome.angleUp} />: <FontAwesomeIcon icon={fontawesome.angleDown} /> }
-            </button>
-            {openThingsTodo && (
-              <div className="flex flex-col gap-[10px]">
-                <Link href="/dashboard/things-to-do"
-                className='flex flex-row items-center justify-start pl-[50px] gap-[20px]  hover:bg-white px-[20px]  py-[12px] rounded-[8px] text-white hover:text-dark text-[16px] font-[400]'
-                >
-                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
+            </Link>
+            <Link
+            href='/dashboard/news'
+            className='sidebar-link'
+            >
+              <div className="flex flex-row items-center gap-[20px]">
+                <FontAwesomeIcon icon={fontawesome.faNewspaper}
                   className=''
                   />
-                  Data
-                </Link>
+                <span>news</span>
               </div>
-            )}
+            </Link>
+            
         </div>
     </div>
   )

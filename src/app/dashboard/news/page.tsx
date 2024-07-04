@@ -188,16 +188,16 @@ const Page = () => {
           ):contentList.map((d) => (
             <React.Fragment key={d._id}>
               <tr>
-                <td className='table-cell'>{TruncateContent(d.heading, 40)}</td>
+                <td className='table-cell'>{ d.heading && TruncateContent(d.heading, 15)}</td>
                 <td className='table-cell'>
                   <img src={d.image} alt=""
                   className='w-[50px] h-[50px] '
                    />
                 </td>
-                <td className="table-cell">{d.info && TruncateContent(d.info, 40)}</td>
-                <td className="table-cell">{d.metaTitle && TruncateContent(d.metaTitle, 40)}</td>
-                <td className="table-cell">{d.metaDescription && TruncateContent(d.metaDescription, 40)}</td>
-                <td className="table-cell">{d.metaKeyWords && TruncateContent(d.metaKeyWords, 40)}</td>
+                <td className="table-cell">{d.info && TruncateContent(d.info, 15)}</td>
+                <td className="table-cell">{d.metaTitle && TruncateContent(d.metaTitle, 15)}</td>
+                <td className="table-cell">{d.metaDescription && TruncateContent(d.metaDescription, 15)}</td>
+                <td className="table-cell">{d.metaKeyWords && TruncateContent(d.metaKeyWords, 15)}</td>
                 <td className="table-cell">
                   <div className="flex flex-row justify-center gap-[30px] items-center">
                     <button

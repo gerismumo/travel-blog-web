@@ -244,11 +244,11 @@ const Page:React.FC = () => {
                                   className='h-[50px] w-[50px]'
                                    />
                                 </td>
-                                <td className='table-cell'>{ d.overviewHeading && TruncateContent(d.overviewHeading, 30)}</td>
-                                <td className='table-cell'>{d.overviewDescription && TruncateContent(d.overviewDescription, 30)}</td>
-                                <td className='table-cell'>{d.metaTitle && TruncateContent(d.metaTitle, 30)}</td>
-                                <td className='table-cell'>{d.metaDescription && TruncateContent(d.metaDescription, 30)}</td>
-                                <td className='table-cell'>{d.metaKeyWords && TruncateContent(d.metaKeyWords, 30)}</td>
+                                <td className='table-cell'>{ d.overviewHeading && TruncateContent(d.overviewHeading, 15)}</td>
+                                <td className='table-cell'>{d.overviewDescription && TruncateContent(d.overviewDescription, 15)}</td>
+                                <td className='table-cell'>{d.metaTitle && TruncateContent(d.metaTitle, 15)}</td>
+                                <td className='table-cell'>{d.metaDescription && TruncateContent(d.metaDescription, 15)}</td>
+                                <td className='table-cell'>{d.metaKeyWords && TruncateContent(d.metaKeyWords, 15)}</td>
                                 <td className='table-cell'>
                                 <div className="flex flex-row justify-center gap-[30px]">
                                         <button
