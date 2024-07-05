@@ -9,11 +9,11 @@ export async function POST(req:Request) {
         const body:IHolidayBlog = await req.json();
        
 
-        const {category, overViewHeading, coverImage, overViewDescription, metaTitle, metaDescription, metaKeyWords, month , WeatherHolidayContent, OtherHolidayContent} =body;
+        const {category, overViewHeading, coverImage, overViewDescription, metaTitle, metaDescription, metaKeyWords, destination, otherCategory, month , WeatherHolidayContent, OtherHolidayContent} =body;
         cache.del("hBg");
         await connectDB();
 
-        if (!category || !overViewHeading || !coverImage || !overViewDescription || !metaTitle || !metaDescription || !metaKeyWords ) {
+        if (!category || !overViewHeading || !coverImage  || !metaTitle || !metaDescription || !metaKeyWords ) {
             return Response.json({success: false, message: 'All fields are required.' });
         }
 
@@ -25,9 +25,11 @@ export async function POST(req:Request) {
             metaTitle: metaTitle,
             metaDescription: metaDescription,
             metaKeyWords: metaKeyWords,
+            destination: destination,
+            otherCategory: otherCategory,
             month: month,
             WeatherHolidayContent: WeatherHolidayContent.length === 0 ? [] : WeatherHolidayContent,
-            OtherHolidayContent: OtherHolidayContent.length === 0 ? []: OtherHolidayContent
+            OtherHolidayContent:  otherCategory === "month" || OtherHolidayContent.length === 0 ? []: OtherHolidayContent
         });
 
         if(newHolidayBlog) {

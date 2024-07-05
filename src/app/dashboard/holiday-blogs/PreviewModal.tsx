@@ -1,7 +1,9 @@
 "use client"
-import React from "react";
-import { IHolidayBlogList } from "@/(types)/type";
+import React, { useEffect, useState } from "react";
+import { IDestinationList, IHolidayBlogList } from "@/(types)/type";
 import { months } from "@/lib/months";
+import { getDestinations } from "@/utils/(apis)/destinationApi";
+import toast from "react-hot-toast";
 
 interface PreviewModalProps {
   show: boolean;
@@ -10,6 +12,20 @@ interface PreviewModalProps {
 }
 
 const PreviewModal: React.FC<PreviewModalProps> = ({ show, data, onClose }) => {
+  const [destinations, setDestinations] = useState<IDestinationList[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getDestinations();
+        setDestinations(data);
+      } catch (error: any) {
+        toast.error(error.message);
+      } 
+    };
+
+    fetchData();
+  }, [setDestinations]);
  
 
   if (!show) return null;
@@ -38,25 +54,30 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, data, onClose }) => {
                 <h2 className="font-[600] text-dark">Cover Image</h2>
                 <img src={data?.coverImage} alt="" className="w-full h-auto max-h-96 object-cover" />
             </div>
-            <div className="flex flex-row items-center gap-[5px] mb-4">
+            {data?.category && (
+              <div className="flex flex-row items-center gap-[5px] mb-4">
                 <h2 className="font-[600] text-dark">Category:</h2>
                 <p className="text-gray-700 text-sm ">{data?.category}</p>
             </div>
-            {data?.month !== null && (
-                <div className="flex flex-row items-center gap-[5px] mb-4">
-                    <h2 className="font-[600] text-dark">Month:</h2>
-                    <p className="text-gray-700 text-sm ">{data?.month !== null && months.find(m => m.id === parseInt(data?.month as string))?.name}</p>
-                </div>
             )}
-            
-            <div className="flex flex-col gap-[5px]">
-                <h2 className="font-[600] text-dark">Heading</h2>
-                <p className="text-gray-700 text-sm mb-4">{data?.heading}</p>
+            {data?.destination && (
+              <div className="flex flex-col gap-[5px]">
+                <h2 className="font-[600] text-dark">Destination</h2>
+                <p className="text-gray-700 text-sm ">{destinations.find(d => d._id === data?.destination)?.name}</p>
             </div>
-            <div className="flex flex-col gap-[5px]">
-                <h2 className="font-[600] text-dark">Info</h2>
-                <p className="text-gray-700 text-sm mb-4">{data?.info}</p>
+            )}
+            {data?.overViewHeading && (
+              <div className="flex flex-col gap-[5px]">
+                <h2 className="font-[600] text-dark">Over View Heading</h2>
+                <p className="text-gray-700 text-sm ">{data?.overViewHeading}</p>
             </div>
+            )}
+            {data?.overViewDescription && (
+              <div className="flex flex-col gap-[5px]">
+                <h2 className="font-[600] text-dark">Over View Description</h2>
+                <p className="text-gray-700 text-sm ">{data?.overViewDescription}</p>
+            </div>
+            )}
             {data?.metaTitle && (
               <div className="flex flex-col gap-[5px]">
                 <h2 className="font-[600] text-dark">Meta Title</h2>
@@ -71,25 +92,69 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, data, onClose }) => {
             )}
             {data?.metaKeyWords && (
               <div className="flex flex-col gap-[5px]">
-                <h2 className="font-[600] text-dark">Meta Keyword</h2>
-                <p className="text-gray-700 text-sm mb-4">{data?.metaKeyWords}</p>
-            </div>
+                  <h2 className="font-[600] text-dark">Meta Keyword</h2>
+                  <p className="text-gray-700 text-sm mb-4">{data?.metaKeyWords}</p>
+              </div>
             )}
-            <div className="flex justify-center mb-4">
-                <img src={data?.image} alt="" className="w-full h-auto max-h-96 object-cover" />
-            </div>
-            <div className="flex flex-col gap-[5px] px-[10px]">
-                <h2 className="font-[600] text-dark">Contents</h2>
-                    <ol className="list-decimal">
-                        {data.content.map((c, index) => (
-                            <li key={index}>
-                                <div className="">
-                                    <p className="text-gray-700 text-sm mb-4 border-b-[#ddd] border-b-[1px] pb-[5px]">{c.text}</p>
-                                </div>
-                            </li>
-                        )) }
-                    </ol>
-            </div>
+            {data?.otherCategory && (
+              <div className="flex flex-col gap-[5px]">
+                  <h2 className="font-[600] text-dark">Sub Category</h2>
+                  <p className="text-gray-700 text-sm mb-4">{data?.otherCategory}</p>
+              </div>
+            )}
+            {data.WeatherHolidayContent.length > 0 && (
+              <div className="flex flex-col">
+                {data?.month !== null && (
+                    <div className="flex flex-row items-center gap-[5px] mb-4">
+                        <h2 className="font-[600] text-dark">Month:</h2>
+                        <p className="text-gray-700 text-sm ">{data?.month !== null && months.find(m => m.id === parseInt(data?.month as string))?.name}</p>
+                    </div>
+                )}
+                <div className="flex flex-col gap-[10px]">
+                  <h2 className="font-[600] text-dark">Contents</h2>
+                  {data.WeatherHolidayContent.map((w, index) => (
+                    <div key={index}>
+                      <div className="flex flex-col gap-[10px] border-[1px] border-[#ddd] p-[10px]">
+                          <h2 className="font-[600] text-dark  ">{destinations.find(d => d._id === w.destination)?.name}</h2>
+                          <p className="text-gray-700 text-sm  ">{w.text}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {data.OtherHolidayContent.length > 0 && (
+              <div className="flex flex-col">
+                {data.OtherHolidayContent.map((h) => (
+                  <div className="flex flex-col">
+                    {h.destination && (
+                      <div className="flex flex-col gap-[5px]">
+                        <h2 className="font-[600] text-dark">Destination</h2>
+                        <p className="text-gray-700 text-sm mb-4">{h.destination}</p>
+                    </div>
+                    )}
+                    {h.subHeading && (
+                      <div className="flex flex-col gap-[5px]">
+                        <h2 className="font-[600] text-dark">Heading</h2>
+                        <p className="text-gray-700 text-sm mb-4">{h.subHeading}</p>
+                    </div>
+                    )}
+                    {h.subImage && (
+                      <div className="flex flex-col justify-center mb-4">
+                        <h2 className="font-[600] text-dark">Image</h2>
+                        <img src={h.subImage} alt="" className="w-full h-auto max-h-96 object-cover" />
+                      </div>
+                    )}
+                    {h.subDescription && (
+                      <div className="flex flex-col gap-[5px]">
+                        <h2 className="font-[600] text-dark">Description</h2>
+                        <p className="text-gray-700 text-sm mb-4">{h.subDescription}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

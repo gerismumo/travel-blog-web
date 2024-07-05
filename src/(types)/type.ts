@@ -113,6 +113,8 @@ export interface IHolidayBlog {
   metaTitle: string;
   metaDescription: string;
   metaKeyWords: string;
+  destination: string | null;
+  otherCategory: string | null;
   month: string | null;
   WeatherHolidayContent: ISelectedDestination[];
   OtherHolidayContent: IInfoContent[];
@@ -127,6 +129,8 @@ export interface IHolidayBlogList {
   metaTitle: string;
   metaDescription: string;
   metaKeyWords: string;
+  destination: string | null;
+  otherCategory: string | null;
   month: string | null;
   WeatherHolidayContent: ISelectedDestination[];
   OtherHolidayContent: IInfoContent[];

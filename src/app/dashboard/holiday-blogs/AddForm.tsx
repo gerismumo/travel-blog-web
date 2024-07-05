@@ -23,10 +23,10 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
     const [metaKeywords, setMetaKeywords] = useState<string>("");
     const [selectedDestinations, setSelectedDestinations] = useState<ISelectedDestination[]>([]);
     const [Info, setInfo] = useState<string>("");
+    const [destination, setDestination] = useState<string>("");
+    const [othercategory, setOtherCategory] = useState<string>("");
 
-    const [subContents, setSubContents] = useState<IInfoContent[]>([
-      {destination: '', subHeading: '', subImage: '', subDescription: ''}
-    ])
+    const [subContents, setSubContents] = useState<IInfoContent[]>([])
 
     const handleAddContents = () => {
       setSubContents([...subContents, { destination: '', subHeading: '', subImage: '', subDescription: '' }]);
@@ -92,7 +92,7 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
       const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if(!category || !overViewH || !coverImage || !Info || !metaTitle || !metaDescription || !metaKeywords || (category === "WEATHER" && selectedDestinations.length === 0) || (category !== "WEATHER" && subContents.length === 0)  ) {
+        if(!category || !overViewH || !coverImage  || !metaTitle || !metaDescription || !metaKeywords || (othercategory === "month" && selectedDestinations.length === 0)  ) {
           return toast.error("fill required fields");
         }
 
@@ -104,10 +104,13 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
           metaTitle: metaTitle,
           metaDescription: metaDescription,
           metaKeyWords: metaKeywords,
-          month: category === "WEATHER" ? month : null,
-          OtherHolidayContent:subContents,
-          WeatherHolidayContent: selectedDestinations
+          destination: category === "WEATHER" ? destination: null,
+          otherCategory: othercategory? othercategory: null,
+          month: othercategory === "month" ? month : null,
+          OtherHolidayContent: othercategory === "month" ? [] : subContents,
+          WeatherHolidayContent:selectedDestinations
       };
+
 
       //submit to database
 
@@ -126,6 +129,8 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
           setMetaKeywords('');
           setSelectedDestinations([]);
           setSubContents([]);
+          setOtherCategory("other");
+          setDestination("");
         }else {
           toast.error(response.data.message);
         }
@@ -151,7 +156,7 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
         >
             <div className="flex flex-col">
               <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                category <span className="text-red-500">*</span>
+                Category <span className="text-red-500">*</span>
               </label>
               <select name="category" id="category"
               value={category}
@@ -165,22 +170,58 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
               </select>
             </div>
             {category === "WEATHER" && (
-                <div className="flex flex-col">
-                    <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                        Month <span className="text-red-500">*</span>
-                    </label>
-                    <select name="month" id="month"
-                    className='input w-full'
-                        value={month}
-                        onChange={(e) => setMonth(e.target.value)}
-                    >
-                        <option value="">select month</option>
-                        {months.map((month) => (
-                            <option key={month.id} value={month.id}>{month.name}</option>
-                        ))}
-                    </select>
-                </div>
+              <div className="flex flex-col">
+                <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                    Destinations <span className="text-red-500">*</span>
+                </label>
+                <select name="destination" id="destination"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                className='input w-full'  
+                
+                >
+                    <option value="">select</option>
+                    {destinations.map((d) => (
+                        <option key={d._id} value={d._id}>{d.name}</option>
+                    ))}
+                </select>
+            </div>
             )}
+            {category === "WHERE TO GO ON VACATION" && (
+              <>
+              <div className="flex flex-col">
+                <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                  Sub Category <span className="text-red-500">*</span>
+                </label>
+                <select name="otherCategory" id="otherCategory"
+                value={othercategory}
+                onChange={(e) => setOtherCategory(e.target.value)}
+                className='input w-full'
+                >
+                  <option value="other">Other</option>
+                  <option value="month">Month (Weather Data)</option>
+                </select>
+              </div>
+              {othercategory === "month" && (
+                  <div className="flex flex-col">
+                      <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                          Month <span className="text-red-500">*</span>
+                      </label>
+                      <select name="month" id="month"
+                      className='input w-full'
+                          value={month}
+                          onChange={(e) => setMonth(e.target.value)}
+                      >
+                          <option value="">select month</option>
+                          {months.map((month) => (
+                              <option key={month.id} value={month.id}>{month.name}</option>
+                          ))}
+                      </select>
+                  </div>
+              )}
+              </>
+            )}
+            
             <div className="flex flex-col">
               <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
                 Overview Heading <span className="text-red-500">*</span>
@@ -248,7 +289,7 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
                 >
                 </textarea>
             </div>
-            {category !== "WEATHER" && (
+            {category !== "WEATHER" && othercategory !== "month" && (
               <>
               <div className="flex flex-col justify-end">
                 <button
@@ -315,7 +356,7 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
               ))}
               </>
             )}
-            {category === "WEATHER" && (
+            {category === "WHERE TO GO ON VACATION" && othercategory === "month" && (
               <div className='border-[1px] border-[#ddd] p-[20px]'>
               <div className="flex flex-col">
                   <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">

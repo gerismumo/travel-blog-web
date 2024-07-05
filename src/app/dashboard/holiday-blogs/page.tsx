@@ -12,6 +12,7 @@ import ConfirmModal from '@/app/components/ConfirmModal';
 import PreviewModal from './PreviewModal';
 import Loader from '@/app/components/Loader';
 import { TruncateContent } from '@/utils/service';
+import EditForm from './EditForm';
 
 const Page = () => {
   const [contentList, setContentList] = useState<IHolidayBlogList[]>([]);
@@ -139,7 +140,7 @@ const Page = () => {
     if(editObject) {
       setEditObject((prev) => {
         if (!prev) return prev; 
-        const updatedContent = prev.content.map((dest) => (dest.destination === id? {...dest, text: newText } : dest));
+        const updatedContent = prev.OtherHolidayContent.map((dest) => (dest.destination === id? {...dest, text: newText } : dest));
         return {
          ...prev,
           content: updatedContent,
@@ -154,7 +155,7 @@ const Page = () => {
       setEditObject((prev) => {
         if (!prev) return prev; 
   
-        const updatedContent = prev.content.filter((dest) => dest.destination !== id);
+        const updatedContent = prev.OtherHolidayContent.filter((dest) => dest.destination !== id);
   
         return {
           ...prev,
@@ -254,13 +255,12 @@ const Page = () => {
             <thead>
               <tr>
                 <th className='table-cell'>Category</th>
-                <th className='table-cell'>Heading</th>
-                <th className='table-cell'>Info</th>
+                <th className='table-cell'>Cover Image</th>
+                <th className='table-cell'>Over View Heading</th>
+                <th className='table-cell'>Over View Description</th>
                 <th className='table-cell'>Meta Title</th>
                 <th className='table-cell'>Meta Description</th>
                 <th className='table-cell'>Meta keywords</th>
-                <th className='table-cell'>Cover Image</th>
-                <th className='table-cell'>Image</th>
                 <th className='table-cell'>Actions</th>
               </tr>
             </thead>
@@ -279,21 +279,16 @@ const Page = () => {
                     <td className='table-cell'>
                     {TruncateContent(`${d.category} ${d.month !== null ? `- ${months.find(m => m.id === parseInt(d.month as string))?.name}` : ''}`, 15)}
                     </td>
-                    <td className='table-cell'>{d.heading && TruncateContent(d.heading, 15)}</td>
-                    <td className='table-cell'>{d.info && TruncateContent(d.info, 15)}</td>
-                    <td className='table-cell'>{d.metaTitle && TruncateContent(d.metaTitle, 15)}</td>
-                    <td className='table-cell'>{d.metaDescription && TruncateContent(d.metaDescription, 15)}</td>
-                    <td className='table-cell'>{d.metaTitle && TruncateContent(d.metaTitle, 15)}</td>
                     <td className='table-cell'>
                       <img src={d.coverImage} alt="" 
                       className='h-[50px] w-[50px]'
                       />
                     </td>
-                    <td className='table-cell'>
-                      <img src={d.image} alt="" 
-                      className='h-[50px] w-[50px]'
-                      />
-                    </td>
+                    <td className='table-cell'>{d.overViewHeading && TruncateContent(d.overViewHeading, 15)}</td>
+                    <td className='table-cell'>{d.overViewDescription && TruncateContent(d.overViewDescription, 15)}</td>
+                    <td className='table-cell'>{d.metaTitle && TruncateContent(d.metaTitle, 15)}</td>
+                    <td className='table-cell'>{d.metaDescription && TruncateContent(d.metaDescription, 15)}</td>
+                    <td className='table-cell'>{d.metaTitle && TruncateContent(d.metaTitle, 15)}</td>
                     <td className='table-cell'>
                     <div className="flex flex-row justify-center gap-[30px]">
                       <button
@@ -334,170 +329,7 @@ const Page = () => {
                   {openEdit && openEditId === d._id && (
                     <tr>
                       <td colSpan={8}>
-                        <div className="flex flex-col">
-                        <form 
-                          onSubmit={handleSubmit}
-                          className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                          >
-                              {/* <div className="flex flex-col">
-                                  <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                                      Holiday category <span className="text-red-500">*</span>
-                                  </label>
-                                  <select name="holidayCategory" id="holidaycategory"
-                                      value={editObject?.category}
-                                      onChange={(e) => setEditObject(editObject ? {...editObject, category: e.target.value}: null)}
-                                      className='input'
-                                  >
-                                      <option value="">select category</option>
-                                      <option value="month">Month</option>
-                                      <option value="other">Other</option>
-                                  </select>
-                              </div>
-                              {editObject?.category === "month" && (
-                                  <div className="flex flex-col">
-                                      <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                                          Month <span className="text-red-500">*</span>
-                                      </label>
-                                      <select name="month" id="month"
-                                      className='input w-full'
-                                        value={editObject.month !== null ? editObject.month : ''}
-                                        onChange={(e) => setEditObject(editObject ? {...editObject, month: e.target.value}: null)}
-                                      >
-                                          <option value="">select month</option>
-                                          {months.map((month) => (
-                                              <option key={month.id} value={month.id}>{month.name}</option>
-                                          ))}
-                                      </select>
-                                  </div>
-                              )} */}
-                              <div className="flex flex-col">
-                                  <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                                      Heading <span className="text-red-500">*</span>
-                                  </label>
-                                  <textarea name="" id=""
-                                  value={editObject?.heading}
-                                   onChange={(e) => setEditObject(editObject ? {...editObject, heading: e.target.value}: null)}
-                                   placeholder='heading...'
-                                   className='input'
-                                  ></textarea>
-                              </div>
-                              <div className="flex flex-col">
-                                  <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                                      Info <span className="text-red-500">*</span>
-                                  </label>
-                                  <textarea name="monthInfo" id="monthInfo"
-                                  value={editObject?.info}
-                                  onChange={(e) => setEditObject(editObject ? {...editObject, info: e.target.value}: null)}
-                                  className='input'
-                                  >
-
-                                  </textarea>
-                              </div>
-                              <div className="flex flex-col">
-                                <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                                  Cover Image <span className="text-red-500">*</span>
-                                </label>
-                                <input type="url" name="image" id="image" 
-                                value={editObject?.coverImage}
-                                onChange={(e) => setEditObject(editObject ? {...editObject, coverImage: e.target.value}: null)}
-                                placeholder='image url'
-                                className='input'
-                                />
-                              </div>
-                              <div className="flex flex-col">
-                                <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                                  Image <span className="text-red-500">*</span>
-                                </label>
-                                <input type="url" name="image" id="image" 
-                                value={editObject?.image}
-                                onChange={(e) => setEditObject(editObject ? {...editObject, image: e.target.value}: null)}
-                                placeholder='image url'
-                                className='input'
-                                />
-                              </div>
-                              <div className="flex flex-col">
-                                  <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                                      Meta Title
-                                  </label>
-                                  <textarea name="" id=""
-                                  value={editObject?.metaTitle}
-                                   onChange={(e) => setEditObject(editObject ? {...editObject, metaTitle: e.target.value}: null)}
-                                  
-                                   className='input'
-                                  ></textarea>
-                              </div>
-                              <div className="flex flex-col">
-                                  <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                                     Meta Description
-                                  </label>
-                                  <textarea name="" id=""
-                                  value={editObject?.metaDescription}
-                                   onChange={(e) => setEditObject(editObject ? {...editObject, metaDescription: e.target.value}: null)}
-                                 
-                                   className='input'
-                                  ></textarea>
-                              </div>
-                              <div className="flex flex-col">
-                                  <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                                      Meta Keywords
-                                  </label>
-                                  <textarea name="" id=""
-                                  value={editObject?.metaKeyWords}
-                                   onChange={(e) => setEditObject(editObject ? {...editObject, metaKeyWords: e.target.value}: null)}
-                                   className='input'
-                                  ></textarea>
-                              </div>
-                              <div className="flex flex-col">
-                                  <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
-                                      Add Destinations
-                                  </label>
-                                  <select name="destination" id="destination"
-                                  className='input w-full'  
-                                      onChange={handleChangeDestinations}
-                                  >
-                                      <option value="">Destination contents</option>
-                                      {destinations.map((d) => (
-                                          <option key={d._id} value={d._id}>{d.name}</option>
-                                      ))}
-                                  </select>
-                              </div>
-                              <div className="flex flex-col">
-                                  <h2 className="block text-gray-700 text-sm font-bold " >Selected Destinations:</h2>
-                                  <ul>
-                                      {editObject?.content.map((selectedDest) => {
-                                          const destination = destinations.find((d) => d._id === selectedDest.destination);
-                                          return (
-                                          <li key={selectedDest.destination} className="flex flex-col mt-2 border-[1px] border-[#ddd] rounded-[4px] p-[10px]">
-                                              <div className="flex justify-between items-center">
-                                              {destination?.name}
-                                              <button
-                                                  className="text-red-500"
-                                                  onClick={(e) => removeDestination(e,selectedDest.destination)}
-                                              >
-                                                  Remove
-                                              </button>
-                                              </div>
-                                              <input
-                                              type="text"
-                                              className="input w-full mt-1"
-                                              value={selectedDest.text}
-                                              onChange={(e) => handleTextChange(selectedDest.destination, e.target.value)}
-                                              />
-                                          </li>
-                                          );
-                                      })}
-                                  </ul>
-                              </div>
-                              <div className="flex flex-row w-[100%]">
-                                <button
-                                  className="bg-lightDark hover:dark text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                  type="submit"
-                                >
-                                  Submit
-                                </button>
-                              </div>
-                          </form>
-                        </div>
+                        <EditForm data={editObject || null} />
                       </td>
                     </tr>
                   )}
