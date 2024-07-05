@@ -84,7 +84,7 @@ const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
   };
 
   return (
-    <div className="w-[100%]">
+    <div className="w-[100%] flex flex-col">
       <form onSubmit={handleSubmit}
       className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >

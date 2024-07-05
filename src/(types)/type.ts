@@ -98,31 +98,38 @@ export interface ISelectedDestination {
   text: string;
 };
 
+export interface IInfoContent {
+  destination: string;
+  subHeading: string;
+  subImage: string;
+  subDescription: string;
+}
+
 export interface IHolidayBlog {
   category: string;
-  month: string | null;
-  heading: string;
-  info: string;
+  overViewHeading: string;
   coverImage: string;
-  image: string;
+  overViewDescription: string;
   metaTitle: string;
   metaDescription: string;
   metaKeyWords: string;
-  content: ISelectedDestination[]
+  month: string | null;
+  WeatherHolidayContent: ISelectedDestination[];
+  OtherHolidayContent: IInfoContent[];
 }
 
 export interface IHolidayBlogList {
   _id: string;
   category: string;
-  month: string | null;
-  heading: string;
-  info: string;
+  overViewHeading: string;
   coverImage: string;
-  image: string;
+  overViewDescription: string;
   metaTitle: string;
   metaDescription: string;
   metaKeyWords: string;
-  content: ISelectedDestination[]
+  month: string | null;
+  WeatherHolidayContent: ISelectedDestination[];
+  OtherHolidayContent: IInfoContent[];
 }
 
 export interface IWeatherBlog {
@@ -195,3 +202,9 @@ export interface IThingsToDoList {
   placesToVisit: IPlaceToVisit[];
 }
 
+
+export interface IUser {
+  email: string;
+  password: string;
+  role: string;
+}

@@ -139,7 +139,7 @@ const Page = () => {
 
   return (
    <div className="flex flex-col">
-    <div className="flex flex-row justify-between w-full items-end">
+    <div className="flex flex-row justify-between items-end">
         <input
         type="text"
         placeholder="Search destination..."
@@ -165,8 +165,8 @@ const Page = () => {
         </div>
     </div>
         {openAddForm && <AddForm onSuccess={fetchData} />}
-    <div className="overflow-auto mt-5">
-      <table className='border-collapse w-full'>
+    <div className="flex flex-col overflow-auto mt-5">
+      <table className='border-collapse  overflow-auto'>
         <thead>
           <tr>
               <th className='table-cell'>Heading</th>

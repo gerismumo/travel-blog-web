@@ -7,26 +7,27 @@ import { NextResponse } from "next/server";
 export async function POST(req:Request) {
     try {
         const body:IHolidayBlog = await req.json();
+       
 
-        const {category, month, heading, info, coverImage, image, metaTitle, metaDescription, metaKeyWords, content} =body;
+        const {category, overViewHeading, coverImage, overViewDescription, metaTitle, metaDescription, metaKeyWords, month , WeatherHolidayContent, OtherHolidayContent} =body;
         cache.del("hBg");
         await connectDB();
 
-        if (!category || !heading || !info || !coverImage || !image || content.length === 0) {
+        if (!category || !overViewHeading || !coverImage || !overViewDescription || !metaTitle || !metaDescription || !metaKeyWords ) {
             return Response.json({success: false, message: 'All fields are required.' });
         }
 
         const newHolidayBlog = await HolidayBlog.create({
             category: category,
-            month: month,
-            heading: heading,
-            info: info,
+            overViewHeading: overViewHeading,
             coverImage: coverImage,
-            image: image,
+            overViewDescription: overViewDescription,
             metaTitle: metaTitle,
             metaDescription: metaDescription,
             metaKeyWords: metaKeyWords,
-            content: content
+            month: month,
+            WeatherHolidayContent: WeatherHolidayContent.length === 0 ? [] : WeatherHolidayContent,
+            OtherHolidayContent: OtherHolidayContent.length === 0 ? []: OtherHolidayContent
         });
 
         if(newHolidayBlog) {
@@ -35,6 +36,7 @@ export async function POST(req:Request) {
             return Response.json({ success: false, message: 'Something went wrong.' });
         }
     } catch (error: any) {
+        console.log(error);
         return Response.json({ success: false, message: 'server error' });
     }
 }

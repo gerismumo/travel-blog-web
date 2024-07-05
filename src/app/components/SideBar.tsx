@@ -20,19 +20,14 @@ interface SideBarProps {
 const SideBar: React.FC<SideBarProps> = ({ data }) => {
   const { isSidebarOpen, toggleSidebar } = data;
   const [openDestinationTabs, setOpenDestinationTabs] = useState<boolean>(false);
-  const [openHolidaysTabs, setOpenHolidaysTabs] = useState<boolean>(false);
   const [openContentTabs, setOpenContentTabs] = useState<boolean>(false);
   const [openFaqTabs, setOpenFaqTabs] = useState<boolean>(false);
   const [openWeatherTabs, setOpenWeatherTabs] = useState<boolean>(false);
-  const [openThingsTodo, setOpenThingsTodo] = useState<boolean>(false);
-  const [openNews, setOpenNews] = useState<boolean>(false);
-
-  
 
   return (
     <div className={`fixed flex flex-col bg-dark gap-[30px]   w-[250px] z-[999] px-[20px] py-[10px] overflow-auto h-[100%] ${isSidebarOpen ? '': 'hidden'}`}>
         <div className="flex flex-row justify-around">
-          <img src="" alt="logo" 
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4LQls8X8-JbJ1dGmUtYqDKKFZb23SxJ-kAA&s" alt="logo" 
           className='h-[70px] w-[70px]'
           />
           <button

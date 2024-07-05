@@ -1,4 +1,4 @@
-import { IDestination, IDestinationContent, IDestinationMonthContent, IDestionationFaq, IDestionationMonthFaq, IHolidayBlog, INews, IThingsToDo, IWeatherBlog } from '@/(types)/type';
+import { IDestination, IDestinationContent, IDestinationMonthContent, IDestionationFaq, IDestionationMonthFaq, IHolidayBlog, INews, IThingsToDo, IUser, IWeatherBlog } from '@/(types)/type';
 import mongoose, {mongo, Schema} from 'mongoose';
 
 
@@ -115,22 +115,32 @@ export const DestinationMonthFaq = mongoose.models.DestiMonFaq || mongoose.model
 //blogs
 
 const SelectedDestinationSchema: Schema = new Schema({
-    destination: { type: String, required: true },
-    text: { type: String, required: true },
+    destination: { type: String, default: null  },
+    text: { type: String, default: null  },
 });
+
+const OtherHolidayContentSchema: Schema = new Schema({
+    destination: { type: String, default: null  },
+    subHeading: { type: String, default: null  },
+    subImage: { type: String, default: null  },
+    subDescription: { type: String, default: null  }
+  });
+
 
 const HolidayBlogSchema: Schema = new Schema({
     category: { type: String, required: true },
-    month: { type: String, default: null },
-    heading: { type: String, required: true },
-    info: { type: String, required: true },
-    coverImage: { type:String, required: true },
-    image: { type: String, required: true },
+    overViewHeading: {type: String, required: true},
+    coverImage: {type: String, required: true},
+    overViewDescription: {type: String, required: true},
     metaTitle: { type: String, required: true},
     metaDescription: { type: String, required: true},
     metaKeyWords: { type: String, required: true},
-    content: { type: [SelectedDestinationSchema], required: true },
+    month: { type: String, default: null },
+    WeatherHolidayContent: { type: [SelectedDestinationSchema], default: [] },
+    OtherHolidayContent: { type: [OtherHolidayContentSchema],  default: [] },
 });
+
+
 
 export const HolidayBlog = mongoose.models.HolidayBlog || mongoose.model<IHolidayBlog>('HolidayBlog', HolidayBlogSchema);
 
@@ -178,3 +188,11 @@ const SubNewsSchema: Schema = new Schema({
   })
 
   export const ThingsToDo = mongoose.models.ThingsToDo|| mongoose.model<IThingsToDo>("ThingsToDo", ThingsToDoSchema);
+
+  const usersSchema: Schema = new Schema({
+    email:{type: "string", required: true},
+    password: {type: "string", required: true},
+    role: {type: "string", required: true}
+  })
+
+  export const Users = mongoose.models.Users || mongoose.model<IUser>("Users", usersSchema);
