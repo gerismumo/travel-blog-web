@@ -21,24 +21,21 @@ export async function DELETE(req: Request, {params}: {params: {id: string}}) {
 export async function PUT(req: Request, {params}: {params: {id: string}}) {
     try {
         const body:IHolidayBlogList = await req.json();
-        const {heading , info, coverImage, image, content, metaDescription, metaTitle, metaKeyWords} = body;
 
-        if(!heading ||!info || !coverImage ||!image ||content.length === 0) {
-            return Response.json({success: false, message: "all fields are required"})
-        }
-
-        cache.del("hBg");
-        
         await connectDB();
         const updateData = await HolidayBlog.findByIdAndUpdate(params.id, {
-            heading:heading,
-            info:info,
-            coverImage:coverImage,
-            image:image,
-            metaTitle: metaTitle,
-            metaDescription: metaDescription,
-            metaKeyWords: metaKeyWords,
-            content:content
+            category: body.category,
+            overViewHeading: body.overViewHeading,
+            coverImage: body.coverImage,
+            overViewDescription: body.overViewDescription,
+            metaTitle: body.metaTitle,
+            metaDescription: body.metaDescription,
+            metaKeyWords: body.metaKeyWords,
+            destination: body.destination,
+            otherCategory: body.otherCategory,
+            month: body.month,
+            WeatherHolidayContent: body.WeatherHolidayContent,
+            OtherHolidayContent: body.OtherHolidayContent
         }, {new: true});
 
         if(updateData) {

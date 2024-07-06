@@ -65,10 +65,7 @@ const Page = () => {
   }, [setDestinations]);
 
   //
-  const handleViewContents = (id: string) => {
-    setOpenViewContents(!openViewContents);
-    setOpenContentId(id);
-  }
+  
 
   //delete
   const deleteData = async (id: string) => {
@@ -108,104 +105,6 @@ const Page = () => {
     setOpenEdit(!openEdit);
     setOpenEditId(id);
     setEditObject(contentList.find(d => d._id === id) || null);
-  }
-
-  const handleChangeDestinations = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    if (editObject && value) {
-      setEditObject((prev) => {
-        if (!prev) return prev; 
-  
-        const updatedContent = prev.content.map((dest) => ({ ...dest }));
-  
-        if (updatedContent.some((dest) => dest.destination === value)) {
-          toast.error('This destination is already selected.');
-          return prev;
-        }
-  
-        const newDestination = {
-          destination: value,
-          text: `Where to go on holiday in ${prev.month && months.find(m => m.id === parseInt(prev.month as string))?.name}? ${value && destinations.find(d => d._id === value)?.name}`,
-        };
-  
-        return {
-          ...prev,
-          content: [...updatedContent, newDestination],
-        };
-      });
-    }
-  };
-
-  const handleTextChange = (id: string, newText: string) => {
-    if(editObject) {
-      setEditObject((prev) => {
-        if (!prev) return prev; 
-        const updatedContent = prev.OtherHolidayContent.map((dest) => (dest.destination === id? {...dest, text: newText } : dest));
-        return {
-         ...prev,
-          content: updatedContent,
-        };
-      })
-    }
-  };
-
-  const removeDestination = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
-    e.preventDefault();
-    if (editObject) {
-      setEditObject((prev) => {
-        if (!prev) return prev; 
-  
-        const updatedContent = prev.OtherHolidayContent.filter((dest) => dest.destination !== id);
-  
-        return {
-          ...prev,
-          content: updatedContent,
-        };
-      });
-    }
-  };
-
-
-  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (editObject === null) {
-      toast.error("no available data");
-      return;
-    }
-
-    if(!editObject.heading || !editObject.info || !editObject.image || editObject.content.length === 0) {
-      return toast.error("no available data");
-    }
-
-    const data: IHolidayBlogList ={
-      _id: editObject._id,
-      category: editObject.category,
-      month: editObject.month,
-      heading: editObject.heading,
-      info: editObject.info,
-      coverImage: editObject.coverImage,
-      image: editObject?.image,
-      metaTitle: editObject?.metaTitle,
-      metaDescription: editObject?.metaDescription,
-      metaKeyWords: editObject?.metaKeyWords,
-      content: editObject?.content
-    }
-
-    //
-    try {
-      const response = await axios.put(`/api/holiday-blog/${data._id}`, data);
-      if(response.data.success) {
-        toast.success(response.data.message);
-        setOpenEdit(false);
-        fetchData();
-      }else {
-        toast.error(response.data.message);
-      }
-    }catch(error) {
-      toast.error("network error")
-    }
-
   }
 
   const handlePreview = (content: IHolidayBlogList) => {

@@ -1,6 +1,7 @@
-import { IDestinationList, IHolidayBlogList } from '@/(types)/type';
+import { IDestinationList, IHolidayBlogList, IInfoContent } from '@/(types)/type';
 import { months } from '@/lib/months';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -36,14 +37,42 @@ const EditForm: React.FC<EditFormProps> = ({ data }) => {
         setFormData(prevState => prevState ? { ...prevState, [name]: value } : prevState);
     };
 
-    const handleDestinationChange = (index: number, name: string, value: string) => {
-        if (formData) {
-            const updatedContents = [...formData.WeatherHolidayContent];
-            updatedContents[index] = { ...updatedContents[index], [name]: value };
-            setFormData({ ...formData, WeatherHolidayContent: updatedContents });
+    const handleDestinationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = e.target.value;
+        if (value) {
+            setFormData(prevState => {
+                if (!prevState) return prevState;
+                const updatedDestinations = [...prevState.WeatherHolidayContent];
+                if (updatedDestinations.some((d) => d.destination === value)) {
+                    toast.error('This destination is already selected.');
+                    return prevState;
+                }
+                updatedDestinations.push({ destination: value, text: '' });
+                return { ...prevState, WeatherHolidayContent: updatedDestinations };
+            });
         }
     };
+    
 
+    const handleTextChange = (id: string, newText: string) => {
+        setFormData((prev) => {
+            if (!prev) return prev;
+            const updatedDestinations = prev.WeatherHolidayContent.map((dest) =>
+                dest.destination === id ? { ...dest, text: newText } : dest
+            );
+            return { ...prev, WeatherHolidayContent: updatedDestinations };
+        });
+    };
+
+    const removeDestination = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+        e.preventDefault();
+        setFormData((prev) => {
+            if(!prev) return prev;
+            const updatedDestinations = prev.WeatherHolidayContent.filter((dest) => dest.destination!== id);
+            return {...prev, WeatherHolidayContent: updatedDestinations };
+        })
+      };
+    
     const handleAddContents = () => {
         if (formData) {
             setFormData({
@@ -60,18 +89,50 @@ const EditForm: React.FC<EditFormProps> = ({ data }) => {
         }
     };
 
-    const handleOtherHolidayContentChange = (index: number, name: string, value: string) => {
+    const handleOtherHolidayContentChange = (index: number, name: keyof IInfoContent, value: string) => {
         if (formData) {
             const updatedContents = [...formData.OtherHolidayContent];
-            updatedContents[index] = { ...updatedContents[index], [name]: value };
+            updatedContents[index][name] = value;
             setFormData({ ...formData, OtherHolidayContent: updatedContents });
         }
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Add your form submission logic here
-        console.log('Form submitted', formData);
+
+        if (formData === null) {
+            toast.error("no available data");
+            return;
+          }
+       
+
+        const data: IHolidayBlogList ={
+           _id: formData._id,
+           category: formData.category,
+           overViewHeading: formData.overViewHeading,
+           coverImage: formData.coverImage,
+           overViewDescription: formData.overViewDescription,
+           metaTitle: formData.metaTitle,
+           metaDescription: formData.metaDescription,
+           metaKeyWords: formData.metaKeyWords,
+           destination: formData.destination,
+           otherCategory: formData.otherCategory,
+           month: formData.month,
+           WeatherHolidayContent: formData.WeatherHolidayContent,
+           OtherHolidayContent: formData.OtherHolidayContent
+          }
+
+          try {
+            const response = await axios.put(`/api/holiday-blog/${data._id}`, data);
+            if(response.data.success) {
+              toast.success(response.data.message);
+            //   fetchData();
+            }else {
+              toast.error(response.data.message);
+            }
+          }catch(error) {
+            toast.error("network error")
+          }
     };
 
     if (!formData) {
@@ -81,7 +142,7 @@ const EditForm: React.FC<EditFormProps> = ({ data }) => {
     return (
         <div className="w-[100%] flex flex-col">
             <form onSubmit={handleSubmit} className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                {formData.category === "WEATHER" && (
+                {/* {formData.category === "WEATHER" && (
                     <div className="flex flex-col">
                         <label className="block text-gray-700 text-sm font-bold" htmlFor="destination">
                             Destinations <span className="text-red-500">*</span>
@@ -96,8 +157,8 @@ const EditForm: React.FC<EditFormProps> = ({ data }) => {
                             ))}
                         </select>
                     </div>
-                )}
-                {formData.otherCategory && formData.category === "WHERE TO GO ON VACATION" && (
+                )} */}
+                {/* {formData.otherCategory && formData.category === "WHERE TO GO ON VACATION" && (
                     <>
                         <div className="flex flex-col">
                             <label className="block text-gray-700 text-sm font-bold" htmlFor="otherCategory">
@@ -128,7 +189,7 @@ const EditForm: React.FC<EditFormProps> = ({ data }) => {
                             </div>
                         )}
                     </>
-                )}
+                )} */}
                 {formData.overViewHeading && (
                     <div className="flex flex-col">
                         <label className="block text-gray-700 text-sm font-bold" htmlFor="overViewHeading">
@@ -217,7 +278,7 @@ const EditForm: React.FC<EditFormProps> = ({ data }) => {
                                     <select name="destination" id="destination"
                                         className='input w-full'
                                         value={s.destination}
-                                        onChange={(e) => handleDestinationChange(index, 'destination', e.target.value)}>
+                                        onChange={(e) => handleOtherHolidayContentChange(index, 'destination', e.target.value)}>
                                         <option value="">select</option>
                                         {destinations.map((d) => (
                                             <option key={d._id} value={d._id}>{d.name}</option>
@@ -230,7 +291,7 @@ const EditForm: React.FC<EditFormProps> = ({ data }) => {
                                     </label>
                                     <textarea name="subHeading" id="subHeading"
                                         value={s.subHeading}
-                                        onChange={(e) => handleDestinationChange(index, 'subHeading', e.target.value)}
+                                        onChange={(e) => handleOtherHolidayContentChange(index, 'subHeading', e.target.value)}
                                         className='input'></textarea>
                                 </div>
                                 <div className="flex flex-col">
@@ -239,7 +300,7 @@ const EditForm: React.FC<EditFormProps> = ({ data }) => {
                                     </label>
                                     <input type="url" name="subImage" id="subImage"
                                         value={s.subImage}
-                                        onChange={(e) => handleDestinationChange(index, 'subImage', e.target.value)}
+                                        onChange={(e) => handleOtherHolidayContentChange(index, 'subImage', e.target.value)}
                                         className='input' />
                                 </div>
                                 <div className="flex flex-col">
@@ -248,7 +309,7 @@ const EditForm: React.FC<EditFormProps> = ({ data }) => {
                                     </label>
                                     <textarea name="subDescription" id="subDescription"
                                         value={s.subDescription}
-                                        onChange={(e) => handleDestinationChange(index, 'subDescription', e.target.value)}
+                                        onChange={(e) => handleOtherHolidayContentChange(index, 'subDescription', e.target.value)}
                                         className='input'></textarea>
                                 </div>
                             </div>
@@ -263,7 +324,7 @@ const EditForm: React.FC<EditFormProps> = ({ data }) => {
                             </label>
                             <select name="destination" id="destination"
                                 className='input w-full'
-                                onChange={handleChangeDestinations}>
+                                onChange={(e) => handleDestinationChange(e)}>
                                 <option value="">Destination contents</option>
                                 {destinations.map((d) => (
                                     <option key={d._id} value={d._id}>{d.name}</option>
@@ -283,7 +344,8 @@ const EditForm: React.FC<EditFormProps> = ({ data }) => {
                                                 {destination?.name}
                                                 <button
                                                     className="text-red-500"
-                                                    onClick={(e) => removeDestination(e, selectedDest.destination)}>
+                                                    onClick={(e) => removeDestination(e, selectedDest.destination)}
+                                                    >
                                                     Remove
                                                 </button>
                                             </div>
