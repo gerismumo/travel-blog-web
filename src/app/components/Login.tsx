@@ -1,29 +1,50 @@
 "use client"
 import React, { useState } from 'react';
-import '@fortawesome/fontawesome-svg-core/styles.css';
+import { redirect, useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { useRouter } from 'next/navigation';
-
-
+import fontawesome from '@/(icons)/fontawesome';
+import toast from 'react-hot-toast';
+import axios from 'axios';
 
 
 const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!email || !password) {
+        return toast.error('All fields are required');
+    }
+
     setIsLoading(true);
 
-    // Simulate login process
-    setTimeout(() => {
-      setIsLoading(false);
-      router.push('/dashboard');
-    }, 2000);
-  };
+    try {
+        const response = await axios.post('/api/auth/sg', { email, password });
+
+        console.log(response.data);
+        if (response.data.success) {
+            toast.success(response.data.message);
+            setEmail('');
+            setPassword('');
+            
+            setTimeout(() => {
+              setIsLoading(false); 
+              router.push('/dashboard');
+            }, 1000)
+        } else {
+            toast.error(response.data.message);
+        }
+    } catch (error) {
+        toast.error("Network error");
+        console.error("Network error:", error);
+    } finally {
+        setIsLoading(false); 
+    }
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-lightDark">
@@ -38,7 +59,7 @@ const LoginForm: React.FC = () => {
               className="input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
+             
             />
           </div>
           <div className='flex flex-col'>
@@ -49,7 +70,7 @@ const LoginForm: React.FC = () => {
               className="input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
+              
             />
           </div>
           <div className="flex items-center justify-between">
@@ -58,7 +79,7 @@ const LoginForm: React.FC = () => {
               className="w-full bg-lightRed hover:bg-lightOrange text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-lightOrange transition duration-300 ease-in-out"
               disabled={isLoading}
             >
-              {isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : 'Login'}
+              {isLoading ? <FontAwesomeIcon icon={fontawesome.faSpinner} spin /> : 'Login'}
             </button>
           </div>
         </form>
