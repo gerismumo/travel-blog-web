@@ -125,8 +125,8 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, data, onClose }) => {
             )}
             {data.OtherHolidayContent.length > 0 && (
               <div className="flex flex-col">
-                {data.OtherHolidayContent.map((h) => (
-                  <div className="flex flex-col">
+                {data.OtherHolidayContent.map((h, index) => (
+                  <div key={index} className="flex flex-col">
                     {h.destination && (
                       <div className="flex flex-col gap-[5px]">
                         <h2 className="font-[600] text-dark">Destination</h2>
