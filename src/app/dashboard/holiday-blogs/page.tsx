@@ -228,7 +228,7 @@ const Page = () => {
                   {openEdit && openEditId === d._id && (
                     <tr>
                       <td colSpan={8}>
-                        <EditForm data={editObject || null} />
+                        <EditForm data={editObject || null} fetchData={() => fetchData()} closeForm={setOpenEdit} />
                       </td>
                     </tr>
                   )}

@@ -20,29 +20,33 @@ export async function DELETE(req: Request, {params}: {params: {id: string}}) {
 
 export async function PUT(req: Request, {params}: {params: {id: string}}) {
     try {
-        const body:IHolidayBlogList = await req.json();
+        const body = await req.json();
+        
 
         await connectDB();
-        const updateData = await HolidayBlog.findByIdAndUpdate(params.id, {
-            category: body.category,
-            overViewHeading: body.overViewHeading,
-            coverImage: body.coverImage,
-            overViewDescription: body.overViewDescription,
-            metaTitle: body.metaTitle,
-            metaDescription: body.metaDescription,
-            metaKeyWords: body.metaKeyWords,
-            destination: body.destination,
-            otherCategory: body.otherCategory,
-            month: body.month,
-            WeatherHolidayContent: body.WeatherHolidayContent,
-            OtherHolidayContent: body.OtherHolidayContent
-        }, {new: true});
 
-        if(updateData) {
-            return Response.json({success: true, message: "update success"})
-        } else {
-            return Response.json({success: false, message: "update failed"})
+        const updateData = await HolidayBlog.findById(params.id);
+        if (!updateData) {
+            return Response.json({ success: false, message: "Document not found" });
         }
+
+       
+        updateData.category = body.category;
+        updateData.overViewHeading = body.overViewHeading;
+        updateData.coverImage = body.coverImage;
+        updateData.overViewDescription = body.overViewDescription;
+        updateData.metaTitle = body.metaTitle;
+        updateData.metaDescription = body.metaDescription;
+        updateData.metaKeyWords = body.metaKeyWords;
+        updateData.destination = body.destination;
+        updateData.otherCategory = body.otherCategory;
+        updateData.month = body.month;
+        updateData.WeatherHolidayContent = body.WeatherHolidayContent;
+        updateData.OtherHolidayContent = body.OtherHolidayContent;
+
+        await updateData.save();
+
+        return Response.json({ success: true, message: "Update success" });
 
     }catch(error) {
         return Response.json({success:false, message: "server error"})

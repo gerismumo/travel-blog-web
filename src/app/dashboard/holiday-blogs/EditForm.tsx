@@ -7,9 +7,11 @@ import toast from 'react-hot-toast';
 
 interface EditFormProps {
     data: IHolidayBlogList | null;
+    fetchData: () => void;
+    closeForm: (value: boolean) => void;
 }
 
-const EditForm: React.FC<EditFormProps> = ({ data }) => {
+const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
     console.log('edit data', data);
     
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
@@ -104,7 +106,7 @@ const EditForm: React.FC<EditFormProps> = ({ data }) => {
             toast.error("no available data");
             return;
           }
-       
+       console.log('editdata', formData);
 
         const data: IHolidayBlogList ={
            _id: formData._id,
@@ -126,7 +128,8 @@ const EditForm: React.FC<EditFormProps> = ({ data }) => {
             const response = await axios.put(`/api/holiday-blog/${data._id}`, data);
             if(response.data.success) {
               toast.success(response.data.message);
-            //   fetchData();
+              fetchData();
+              closeForm(false);
             }else {
               toast.error(response.data.message);
             }
