@@ -9,7 +9,7 @@ export async function POST(req:Request) {
         const body:IHolidayBlog = await req.json();
        
 
-        const {category, overViewHeading, coverImage, overViewDescription, metaTitle, metaDescription, metaKeyWords, destination, otherCategory, month , WeatherHolidayContent, OtherHolidayContent} =body;
+        const {category, overViewHeading, coverImage, heading, image, overViewDescription, metaTitle, metaDescription, metaKeyWords, destination, otherCategory, month , WeatherHolidayContent, OtherHolidayContent} =body;
         cache.del("hBg");
         await connectDB();
 
@@ -21,6 +21,8 @@ export async function POST(req:Request) {
             category: category,
             overViewHeading: overViewHeading,
             coverImage: coverImage,
+            heading: heading,
+            image: image,
             overViewDescription: overViewDescription,
             metaTitle: metaTitle,
             metaDescription: metaDescription,

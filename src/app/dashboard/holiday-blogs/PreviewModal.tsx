@@ -130,7 +130,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, data, onClose }) => {
                     {h.destination && (
                       <div className="flex flex-col gap-[5px]">
                         <h2 className="font-[600] text-dark">Destination</h2>
-                        <p className="text-gray-700 text-sm mb-4">{h.destination}</p>
+                        <p className="text-gray-700 text-sm mb-4">{destinations.find(d => d._id === h?.destination)?.name}</p>
                     </div>
                     )}
                     {h.subHeading && (

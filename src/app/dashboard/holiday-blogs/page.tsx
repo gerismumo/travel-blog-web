@@ -187,7 +187,7 @@ const Page = () => {
                     <td className='table-cell'>{d.overViewDescription && TruncateContent(d.overViewDescription, 15)}</td>
                     <td className='table-cell'>{d.metaTitle && TruncateContent(d.metaTitle, 15)}</td>
                     <td className='table-cell'>{d.metaDescription && TruncateContent(d.metaDescription, 15)}</td>
-                    <td className='table-cell'>{d.metaTitle && TruncateContent(d.metaTitle, 15)}</td>
+                    <td className='table-cell'>{d.metaKeyWords && TruncateContent(d.metaKeyWords, 15)}</td>
                     <td className='table-cell'>
                     <div className="flex flex-row justify-center gap-[30px]">
                       <button
@@ -228,7 +228,7 @@ const Page = () => {
                   {openEdit && openEditId === d._id && (
                     <tr>
                       <td colSpan={8}>
-                        <EditForm data={editObject || null} fetchData={() => fetchData()} closeForm={setOpenEdit} />
+                        <EditForm data={editObject || null} fetchData={fetchData} closeForm={setOpenEdit} />
                       </td>
                     </tr>
                   )}

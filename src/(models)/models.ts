@@ -131,6 +131,8 @@ const HolidayBlogSchema: Schema = new Schema({
     category: { type: String, required: true },
     overViewHeading: {type: String, required: true},
     coverImage: {type: String, required: true},
+    heading: {type: String, default: null},
+    image: {type: String, default: null},
     overViewDescription: {type: String, default: null},
     metaTitle: { type: String, required: true},
     metaDescription: { type: String, required: true},

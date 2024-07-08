@@ -17,6 +17,8 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
     const [category, setCategory] = useState<string>("");
     const [coverImage, setCoverImage] = useState<string>("");
     const [overViewH, setOverViewH] = useState<string>("");
+    const [heading, setHeading] = useState<string>("");
+    const [image, setImage] = useState<string>("");
     const [month, setMonth] = useState<string>("");
     const [metaTitle, setMetaTitle] = useState<string>("");
     const [metaDescription, setMetaDescription] = useState<string>("");
@@ -100,6 +102,8 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
           category: category,
           overViewHeading: overViewH, 
           coverImage: coverImage,
+          heading:heading,
+          image: image,
           overViewDescription:Info,
           metaTitle: metaTitle,
           metaDescription: metaDescription,
@@ -121,6 +125,8 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
           toast.success(response.data.message);
           setCategory("");
           setOverViewH("");
+          setHeading("");
+          setImage("");
           setMonth('');
           setInfo('');
           setCoverImage('');
@@ -243,6 +249,31 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
               className='input'
               />
             </div>
+            {category !== "WEATHER" && (
+              <>
+              <div className="flex flex-col">
+                <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                  Heading <span className="text-red-500">*</span>
+                </label>
+                <textarea name="heading" id="heading"
+                value={heading}
+                onChange={(e) => setHeading(e.target.value)}
+                className='input'
+                ></textarea>
+              </div>
+              <div className="flex flex-col">
+                <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
+                  Image <span className="text-red-500">*</span>
+                </label>
+                <input type="url" name="image" id="image" 
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
+                placeholder='image url'
+                className='input'
+                />
+              </div>
+              </>
+            )}
             <div className="flex flex-col">
                 <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
                     Overview Description <span className="text-red-500">*</span>

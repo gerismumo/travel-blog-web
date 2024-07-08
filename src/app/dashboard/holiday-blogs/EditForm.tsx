@@ -18,6 +18,7 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
     const [loadingDestination, setLoadingDestination] = useState<Boolean>(true);
 
     const [formData, setFormData] = useState<IHolidayBlogList | null>(data);
+    const [initialData, setInitialData] = useState<IHolidayBlogList | null>(data);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,6 +34,11 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
     
         fetchData();
       }, []);
+
+      useEffect(() => {
+        setInitialData(data);
+        setFormData(data);
+      }, [data]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -106,13 +112,15 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
             toast.error("no available data");
             return;
           }
-       console.log('editdata', formData);
+  
 
         const data: IHolidayBlogList ={
            _id: formData._id,
            category: formData.category,
            overViewHeading: formData.overViewHeading,
            coverImage: formData.coverImage,
+           heading: formData.heading,
+           image: formData.image,
            overViewDescription: formData.overViewDescription,
            metaTitle: formData.metaTitle,
            metaDescription: formData.metaDescription,
@@ -130,8 +138,10 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
               toast.success(response.data.message);
               fetchData();
               closeForm(false);
+              return;
             }else {
               toast.error(response.data.message);
+              return;
             }
           }catch(error) {
             toast.error("network error")
@@ -193,7 +203,7 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
                         )}
                     </>
                 )} */}
-                {formData.overViewHeading && (
+                {initialData?.overViewHeading && (
                     <div className="flex flex-col">
                         <label className="block text-gray-700 text-sm font-bold" htmlFor="overViewHeading">
                             Overview Heading <span className="text-red-500">*</span>
@@ -204,7 +214,7 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
                             className='input'></textarea>
                     </div>
                 )}
-                {formData.coverImage && (
+                {initialData?.coverImage && (
                     <div className="flex flex-col">
                         <label className="block text-gray-700 text-sm font-bold" htmlFor="coverImage">
                             Cover Image <span className="text-red-500">*</span>
@@ -216,7 +226,30 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
                             className='input' />
                     </div>
                 )}
-                {formData.overViewDescription && (
+                {initialData?.heading && (
+                    <div className="flex flex-col">
+                        <label className="block text-gray-700 text-sm font-bold" htmlFor="overViewHeading">
+                            Heading <span className="text-red-500">*</span>
+                        </label>
+                        <textarea name="heading" id="heading"
+                            value={formData.heading}
+                            onChange={handleInputChange}
+                            className='input'></textarea>
+                    </div>
+                )}
+                {initialData?.image && (
+                    <div className="flex flex-col">
+                        <label className="block text-gray-700 text-sm font-bold" htmlFor="coverImage">
+                            Image <span className="text-red-500">*</span>
+                        </label>
+                        <input type="url" name="image" id="image"
+                            value={formData.image}
+                            onChange={handleInputChange}
+                            placeholder='image url'
+                            className='input' />
+                    </div>
+                )}
+                {initialData?.overViewDescription && (
                     <div className="flex flex-col">
                         <label className="block text-gray-700 text-sm font-bold" htmlFor="overViewDescription">
                             Overview Description <span className="text-red-500">*</span>
@@ -254,7 +287,7 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
                         onChange={handleInputChange}
                         className='input'></textarea>
                 </div>
-                {formData.category !== "WEATHER" && formData.otherCategory !== "month" && (
+                {initialData?.category !== "WEATHER" && initialData?.otherCategory !== "month" && (
                     <>
                         <div className="flex flex-col justify-end">
                             <button

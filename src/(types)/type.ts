@@ -109,6 +109,8 @@ export interface IHolidayBlog {
   category: string;
   overViewHeading: string;
   coverImage: string;
+  heading: string;
+  image: string;
   overViewDescription: string;
   metaTitle: string;
   metaDescription: string;
@@ -125,6 +127,8 @@ export interface IHolidayBlogList {
   category: string;
   overViewHeading: string;
   coverImage: string;
+  heading: string;
+  image: string;
   overViewDescription: string;
   metaTitle: string;
   metaDescription: string;

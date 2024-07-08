@@ -24,29 +24,40 @@ export async function PUT(req: Request, {params}: {params: {id: string}}) {
         
 
         await connectDB();
-
-        const updateData = await HolidayBlog.findById(params.id);
-        if (!updateData) {
-            return Response.json({ success: false, message: "Document not found" });
+        console.log(body);
+        if(!body.category ||!body.overViewHeading || !body.coverImage  || !body.metaTitle || !body.metaDescription || !body.metaKeyWords) {
+            return Response.json({success: false, message: "Fill the required fields"})
         }
 
-       
-        updateData.category = body.category;
-        updateData.overViewHeading = body.overViewHeading;
-        updateData.coverImage = body.coverImage;
-        updateData.overViewDescription = body.overViewDescription;
-        updateData.metaTitle = body.metaTitle;
-        updateData.metaDescription = body.metaDescription;
-        updateData.metaKeyWords = body.metaKeyWords;
-        updateData.destination = body.destination;
-        updateData.otherCategory = body.otherCategory;
-        updateData.month = body.month;
-        updateData.WeatherHolidayContent = body.WeatherHolidayContent;
-        updateData.OtherHolidayContent = body.OtherHolidayContent;
+        const updateData = await HolidayBlog.findByIdAndUpdate(
+            params.id,
+            {
+                $set: {
+                    category: body.category,
+                    overViewHeading: body.overViewHeading,
+                    coverImage: body.coverImage,
+                    heading: body.heading,
+                    image: body.image,
+                    overViewDescription: body.overViewDescription,
+                    metaTitle: body.metaTitle,
+                    metaDescription: body.metaDescription,
+                    metaKeyWords: body.metaKeyWords,
+                    destination: body.destination,
+                    otherCategory: body.otherCategory,
+                    month: body.month,
+                    WeatherHolidayContent: body.WeatherHolidayContent,
+                    OtherHolidayContent: body.OtherHolidayContent
+                }
+            },
+            { new: true }
+        );
 
-        await updateData.save();
+        if (updateData) {
+            return Response.json({ success: true, message: "update success" });
+        } else {
+            return Response.json({ success: false, message: "update failed" });
+        }
 
-        return Response.json({ success: true, message: "Update success" });
 
     }catch(error) {
         return Response.json({success:false, message: "server error"})
