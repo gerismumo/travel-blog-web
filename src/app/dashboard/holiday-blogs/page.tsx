@@ -183,8 +183,8 @@ const Page = () => {
                       className='h-[50px] w-[50px]'
                       />
                     </td>
-                    <td className='table-cell'>{d.overViewHeading && TruncateContent(d.overViewHeading, 15)}</td>
-                    <td className='table-cell'>{d.overViewDescription && TruncateContent(d.overViewDescription, 15)}</td>
+                    <td className='table-cell'>{d.overViewHeading ? TruncateContent(d.overViewHeading, 15): "-"}</td>
+                    <td className='table-cell'>{d.overViewDescription ? TruncateContent(d.overViewDescription, 15): "-"}</td>
                     <td className='table-cell'>{d.metaTitle && TruncateContent(d.metaTitle, 15)}</td>
                     <td className='table-cell'>{d.metaDescription && TruncateContent(d.metaDescription, 15)}</td>
                     <td className='table-cell'>{d.metaKeyWords && TruncateContent(d.metaKeyWords, 15)}</td>

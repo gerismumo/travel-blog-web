@@ -32,7 +32,7 @@ body {
 }
 
 .table-cell {
-  @apply border-[1px] border-slate-400 px-[20px] py-[3px];
+  @apply border-[1px] border-slate-400 px-[20px] py-[3px] justify-center items-center text-wrap;
 }
 
 .sidebar-link {
