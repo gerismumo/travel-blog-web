@@ -1,4 +1,4 @@
-import { HolidayBlog } from "@/(models)/models";
+import { DestinationContent, DestinationMonthContent, HolidayBlog } from "@/(models)/models";
 import { IHolidayBlog } from "@/(types)/type";
 import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
@@ -51,10 +51,43 @@ export async function GET(req:Request) {
         if(cachedData) {
             return Response.json({ success: true, data: cachedData });
         }
+        
         await connectDB();
         const hBg = await HolidayBlog.find();
-        cache.set("hBg", hBg)
-        return Response.json({ success: true, data: hBg });
+
+       const data = await Promise.all(hBg.map(async (d) => {
+            if (d.WeatherHolidayContent.length === 0) {
+              return d;
+            }
+          
+            const promises = d.WeatherHolidayContent.map(async (weatherHolidayItem: any) => {
+              const wi = await DestinationMonthContent.findOne({
+                destination: weatherHolidayItem.destination,
+                month: d.month,
+              });
+              const di = await DestinationContent.findOne({
+                destination: weatherHolidayItem.destination,
+              });
+          
+              return {
+                destination: weatherHolidayItem.destination,
+                text: weatherHolidayItem.text,
+                _id: weatherHolidayItem._id,
+                weatherInfo: wi ? wi.weatherInfo : null,
+                image: di ? di.image : null,
+              };
+            });
+          
+            const updatedWeatherHolidayContent = await Promise.all(promises);
+            console.log(updatedWeatherHolidayContent)
+            return { ...d.toObject(), WeatherHolidayContent: updatedWeatherHolidayContent };
+          }));
+
+          
+        
+        cache.set("hBg", data)
+       
+        return Response.json({ success: true, data: data });
     }catch(error) {
         return Response.json({ success: false, message:'server error' });
     }
