@@ -32,7 +32,7 @@ const WeatherDashboard = () => {
   return (
     <>
     <Toaster position="top-right" reverseOrder={false} />
-    <LoginForm/>
+      <LoginForm/>
     </>
    
   );

@@ -25,22 +25,21 @@ const LoginForm: React.FC = () => {
     try {
         const response = await axios.post('/api/auth/sg', { email, password });
 
-        console.log(response.data);
         if (response.data.success) {
             toast.success(response.data.message);
             setEmail('');
             setPassword('');
-            
             setTimeout(() => {
               setIsLoading(false); 
               router.push('/dashboard');
             }, 1000)
+            
         } else {
             toast.error(response.data.message);
         }
     } catch (error) {
         toast.error("Network error");
-        console.error("Network error:", error);
+        console.log("login error", error);
     } finally {
         setIsLoading(false); 
     }

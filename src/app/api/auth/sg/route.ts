@@ -1,7 +1,10 @@
 import { Users } from "@/(models)/models";
 import connectDB from "@/utils/dbConnect";
+import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req:Request) {
+
+export async function POST(req: NextRequest, res: NextResponse) {
     try {
         const body = await req.json();
         const {email, password} =body;
@@ -24,10 +27,14 @@ export async function POST(req:Request) {
             return Response.json({ success: false, message: "password incorrect" });
         }
 
+        const id = existingUser._id;
+        const user_email = existingUser.email;
+
         //login user & generate jwt
-        return Response.json({success: true, message: "login successful" });
+        
+        return Response.json({success: true, message: "login successful"});
     }catch(error: any) {
-        console.log(error.message);
+        console.log(error);
         return Response.json({success: false, message: "server error"})
     }
 }
