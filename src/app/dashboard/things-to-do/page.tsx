@@ -188,26 +188,26 @@ const Page:React.FC = () => {
       }
   return (
     <div className="flex flex-col gap-[20px]">
-        <div className="flex flex-row justify-between w-full items-end">
+        <div className="flex flex-col sm:flex-row justify-between w-full xs:items-end">
           <input
             type="text"
             placeholder="Search destination..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="input w-[400px]"
+            className="input w-[100%] xs:w-[350px]"
           />
-          <div className="flex flex-row items-center gap-[30px]">
+          <div className="flex flex-col xs:flex-row items-center gap-[10px] xs:gap-[30px]">
               <button
               onClick={() => {
                   setOpenAddForm(!openAddForm);
                   setOpenEdit(false);
               }}
-              className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded mt-2"
+              className="w-[100%] xs:w-auto bg-lightDark hover:bg-dark text-white px-4 py-2 rounded mt-2"
               >
               {openAddForm ? "Close Add Form" : "Add New Info"}
               </button>
               <button
-              className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded mt-2"
+              className="w-[100%] xs:w-auto bg-lightDark hover:bg-dark text-white px-4 py-2 rounded mt-2"
               >Publish</button>
           </div>
         </div>

@@ -139,26 +139,26 @@ const Page = () => {
 
   return (
    <div className="flex flex-col">
-    <div className="flex flex-row justify-between items-end">
+    <div className="flex flex-col sm:flex-row justify-between xs:items-end gap-[10px]">
         <input
         type="text"
         placeholder="Search destination..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="input w-[400px]"
+        className="input w-[100%] xs:w-[350px]"
         />
-        <div className="flex flex-row justify-center gap-[30px] items-center">
+        <div className="flex flex-col xs:flex-row justify-center gap-[10px] xs:gap-[30px] items-center">
           <button
           onClick={() => {
               setOpenAddForm(!openAddForm);
               setOpenEdit(false);
           }}
-          className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded "
+          className="w-[100%] xs:w-auto bg-lightDark hover:bg-dark text-white px-4 py-2 rounded "
           >
           {openAddForm ? "Close Add Form" : "Add New Info"}
           </button>
           <button
-              className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded"
+              className="w-[100%] xs:w-auto bg-lightDark hover:bg-dark text-white px-4 py-2 rounded"
           >
               Publish
           </button>

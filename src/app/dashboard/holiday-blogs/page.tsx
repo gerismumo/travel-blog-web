@@ -123,7 +123,7 @@ const Page = () => {
 
   return (
     <div className="flex flex-col gap-[30px]">
-      <div className="flex flex-row justify-between w-full items-end">
+      <div className="flex flex-col xs:flex-row justify-between w-full xs:items-end">
         <div className=""></div>
           {/* <input
             type="text"
@@ -132,18 +132,18 @@ const Page = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="input w-[400px]"
           /> */}
-          <div className="flex flex-row items-center gap-[30px]">
+          <div className="flex flex-col xs:flex-row items-center gap-[10px] xs:gap-[30px]">
               <button
               onClick={() => {
                   setOpenAddForm(!openAddForm);
                   // setOpenEdit(false);
               }}
-              className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded mt-2"
+              className="w-[100%] xs:w-auto bg-lightDark hover:bg-dark text-white px-4 py-2 rounded "
               >
               {openAddForm ? "Close Add Form" : "Add New Info"}
               </button>
               <button
-              className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded mt-2"
+              className="w-[100%] xs:w-auto bg-lightDark hover:bg-dark text-white px-4 py-2 rounded "
               >Publish</button>
           </div>
         </div>
