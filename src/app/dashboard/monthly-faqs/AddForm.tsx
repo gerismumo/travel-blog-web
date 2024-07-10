@@ -72,7 +72,7 @@ const AddForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
   return (
     <div className="w-[100%]">
       <form onSubmit={handleSubmit} 
-      className="flex flex-col gap-[10px] bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      className="flex flex-col gap-[10px] bg-white shadow-md rounded p-[10px] sm:p-[30px]">
         <div className="flex flex-col">
           <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
             Destination <span className="text-red-500">*</span>

@@ -20,6 +20,8 @@ const config: Config = {
       ...colors,
     },
     screens: {
+      'xs': '350px',
+      'xs1': '400px',
       'sm': '640px',
       'md': '768px',
       'lg': '1024px',

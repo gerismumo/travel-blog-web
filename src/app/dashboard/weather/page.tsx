@@ -77,9 +77,9 @@ const Page = () => {
     }
 
     return (
-        <div className="flex flex-col p-4">
-            <form onSubmit={handleSubmit} className="mb-4">
-                <div className="mb-4">
+        <div className="flex flex-col gap-[30px]">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-[10px]">
+                <div className="flex flex-col">
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                         Destination
                     </label>
@@ -96,7 +96,7 @@ const Page = () => {
                         ))}
                     </select>
                 </div>
-                <div className="mb-4">
+                <div className="flex flex-col">
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                         Start Date
                     </label>
@@ -107,7 +107,7 @@ const Page = () => {
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     />
                 </div>
-                <div className="mb-4">
+                <div className="flex flex-col">
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                         End Date
                     </label>
@@ -118,68 +118,67 @@ const Page = () => {
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     />
                 </div>
-                <div className="flex flex-row items-center gap-[30px]">
+                <div className="flex flex-col xs1:flex-row items-center gap-[10px] xs1:gap-[30px]">
                     <button
                         type="submit"
-                        className="bg-lightDark hover:bg-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-lightDark w-[100%] xs1:w-auto hover:bg-dark text-nowrap text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
                         Fetch Weather Data
                     </button>
                     <button
                         type="button"
                         onClick={handleReset}
-                        className="bg-lightDark hover:bg-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-lightDark w-[100%] xs1:w-auto hover:bg-dark text-nowrap text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
                         Cancel Filter
                     </button>
                 </div>
                 
             </form>
-
-            <div>
-                <table className="min-w-full border-collapse block md:table">
-                    <thead className="block md:table-header-group">
-                        <tr className="border border-gray-300 md:border-none block md:table-row absolute -top-full md:top-auto -left-full md:left-auto md:relative">
-                            <th className="bg-gray-100 p-2 text-gray-600 font-bold md:border md:border-gray-300 block md:table-cell">Destination</th>
-                            <th className="bg-gray-100 p-2 text-gray-600 font-bold md:border md:border-gray-300 block md:table-cell">Date</th>
-                            <th className="bg-gray-100 p-2 text-gray-600 font-bold md:border md:border-gray-300 block md:table-cell">Avg Temp (°C)</th>
-                            <th className="bg-gray-100 p-2 text-gray-600 font-bold md:border md:border-gray-300 block md:table-cell">Min Temp (°C)</th>
-                            <th className="bg-gray-100 p-2 text-gray-600 font-bold md:border md:border-gray-300 block md:table-cell">Max Temp (°C)</th>
-                            <th className="bg-gray-100 p-2 text-gray-600 font-bold md:border md:border-gray-300 block md:table-cell">Precipitation (mm)</th>
-                            <th className="bg-gray-100 p-2 text-gray-600 font-bold md:border md:border-gray-300 block md:table-cell">Snowfall Amount (cm)</th>
-                            <th className="bg-gray-100 p-2 text-gray-600 font-bold md:border md:border-gray-300 block md:table-cell">Wind Direction (°)</th>
-                            <th className="bg-gray-100 p-2 text-gray-600 font-bold md:border md:border-gray-300 block md:table-cell">Wind Speed (m/s)</th>
-                            <th className="bg-gray-100 p-2 text-gray-600 font-bold md:border md:border-gray-300 block md:table-cell">Peak Gust Wind Speed (m/s)</th>
-                            <th className="bg-gray-100 p-2 text-gray-600 font-bold md:border md:border-gray-300 block md:table-cell">Pressure (hPa)</th>
-                            <th className="bg-gray-100 p-2 text-gray-600 font-bold md:border md:border-gray-300 block md:table-cell">Sunshine Duration (hrs)</th>
+            <div className='overflow-auto'>
+                <table className=" border-collapse ">
+                    <thead>
+                        <tr>
+                            <th  className='table-cell'>Destination</th>
+                            <th  className='table-cell'>Date</th>
+                            <th  className='table-cell'>Avg Temp (°C)</th>
+                            <th  className='table-cell'>Min Temp (°C)</th>
+                            <th  className='table-cell'>Max Temp (°C)</th>
+                            <th  className='table-cell'>Precipitation (mm)</th>
+                            <th  className='table-cell'>Snowfall Amount (cm)</th>
+                            <th  className='table-cell'>Wind Direction (°)</th>
+                            <th  className='table-cell'>Wind Speed (m/s)</th>
+                            <th  className='table-cell'>Peak Gust Wind Speed (m/s)</th>
+                            <th  className='table-cell'>Pressure (hPa)</th>
+                            <th  className='table-cell'>Sunshine Duration (hrs)</th>
                         </tr>
                     </thead>
-                    <tbody className="block md:table-row-group">
+                    <tbody>
                         {weatherData.length === 0 ? (
-                            <tr className="border border-gray-300 md:border-none block md:table-row">
+                            <tr>
                                 <td colSpan={12} className="p-2 md:border md:border-gray-300 text-center block md:table-cell">No Data</td>
                             </tr>
                         ) : (
                             weatherData.map((d) => (
                                 <React.Fragment key={d.destination}>
                                     {(d.data.data !== null || d.data.data !== undefined) && d.data?.data?.map((t: any, index: any) => (
-                                        <tr key={`${d.destination}-${index}`} className="border border-gray-300 md:border-none block md:table-row">
+                                        <tr key={`${d.destination}-${index}`} >
                                             {index === 0 ? (
-                                                <td rowSpan={d.data.data.length} className="p-2 md:border md:border-gray-300 block md:table-cell">
+                                                <td rowSpan={d.data.data.length}  className='table-cell'>
                                                     {destinations.find(l => l._id === d.destination)?.name}
                                                 </td>
                                             ) : null}
-                                            <td className="p-2 md:border md:border-gray-300 block md:table-cell">{t.date}</td>
-                                            <td className="p-2 md:border md:border-gray-300 block md:table-cell">{t.tavg}</td>
-                                            <td className="p-2 md:border md:border-gray-300 block md:table-cell">{t.tmin}</td>
-                                            <td className="p-2 md:border md:border-gray-300 block md:table-cell">{t.tmax}</td>
-                                            <td className="p-2 md:border md:border-gray-300 block md:table-cell">{t.prcp}</td>
-                                            <td className="p-2 md:border md:border-gray-300 block md:table-cell">{t.snow || '-'}</td>
-                                            <td className="p-2 md:border md:border-gray-300 block md:table-cell">{t.wdir}</td>
-                                            <td className="p-2 md:border md:border-gray-300 block md:table-cell">{t.wspd}</td>
-                                            <td className="p-2 md:border md:border-gray-300 block md:table-cell">{t.wpgt}</td>
-                                            <td className="p-2 md:border md:border-gray-300 block md:table-cell">{t.pres}</td>
-                                            <td className="p-2 md:border md:border-gray-300 block md:table-cell">{t.tsun || '-'}</td>
+                                            <td  className='table-cell'>{t.date}</td>
+                                            <td  className='table-cell'>{t.tavg}</td>
+                                            <td  className='table-cell'>{t.tmin}</td>
+                                            <td  className='table-cell'>{t.tmax}</td>
+                                            <td  className='table-cell'>{t.prcp}</td>
+                                            <td  className='table-cell'>{t.snow || '-'}</td>
+                                            <td  className='table-cell'>{t.wdir}</td>
+                                            <td  className='table-cell'>{t.wspd}</td>
+                                            <td  className='table-cell'>{t.wpgt}</td>
+                                            <td  className='table-cell'>{t.pres}</td>
+                                            <td  className='table-cell'>{t.tsun || '-'}</td>
                                         </tr>
                                     ))}
                                 </React.Fragment>

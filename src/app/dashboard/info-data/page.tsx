@@ -172,36 +172,35 @@ const Page: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col gap-5 p-5">
-      <div className="flex flex-row justify-between w-full items-end">
+    <div className="flex flex-col gap-[30px] p-[10px] lg:p-[20px]">
+      <div className="flex flex-col md:flex-row justify-between w-full md:items-end gap-[10px]">
         <input
           type="text"
           placeholder="Search destination..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="input w-[400px]"
+          className="input w-[100%] md:w-[400px]"
         />
-        <div className="flex flex-row justify-center items-center gap-[30px]">
+        <div className="flex flex-col xs:flex-row justify-center items-center gap-[10px] xs:gap-[30px]">
           <button
             onClick={() => {
               setOpenAddForm(!openAddForm);
               setOpenEdit(false);
             }}
-            className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded"
+            className=" w-[100%] xs:w-auto bg-lightDark hover:bg-dark text-white px-4 py-2 rounded"
           >
             {openAddForm ? "Close Add Form" : "Add New Info"}
           </button>
           <button
-            className="bg-lightDark hover:bg-dark text-white px-4 py-2 rounded"
+            className="w-[100%] xs:w-auto bg-lightDark hover:bg-dark text-white px-4 py-2 rounded"
           >
             Publish
           </button>
         </div>
       </div>
-
       {openAddForm && <DestInfoForm onSuccess={fetchData} />}
 
-      <div className="overflow-auto mt-5">
+      <div className="overflow-auto">
         <table className="border-collapse w-full">
           <thead>
             <tr>
@@ -425,9 +424,9 @@ const Page: React.FC = () => {
       {/* Preview Modal */}
       {showPreviewModal && previewContent && (
         <PreviewModal
-          show={showPreviewModal} // Pass show prop
-          content={previewContent} // Pass content prop
-          onClose={() => setShowPreviewModal(false)} // Pass onClose prop
+          show={showPreviewModal} 
+          content={previewContent} 
+          onClose={() => setShowPreviewModal(false)} 
         />
       )}
 

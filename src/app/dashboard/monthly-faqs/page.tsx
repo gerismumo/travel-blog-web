@@ -181,7 +181,7 @@ const Page:React.FC = () => {
             placeholder="Search destination or month"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="input w-[400px]"
+            className="input w-[350px]"
           />
           <div className="flex flex-row items-center gap-[30px]">
               <button
