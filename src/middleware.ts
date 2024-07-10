@@ -1,4 +1,6 @@
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
 
 
 const corsOptions = {
@@ -26,6 +28,10 @@ export async function middleware(req: NextRequest) {
 
   if (req.nextUrl.pathname.startsWith('/dashboard')) {
     //authenticate user here
+    const user = req.cookies.get('user')?.value && JSON.parse(req.cookies.get('user')?.value as any);
+    if (!user) {
+      return NextResponse.redirect(new URL('/', req.url));
+    }
 }
 
   return response;

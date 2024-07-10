@@ -1,7 +1,7 @@
 import { Users } from "@/(models)/models";
 import connectDB from "@/utils/dbConnect";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from "next/headers";
 
 
 export async function POST(req: NextRequest, res: NextResponse) {
@@ -31,7 +31,22 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const user_email = existingUser.email;
 
         //login user & generate jwt
+        const user = {
+            id,
+            user_email
+        }
         
+        cookies().set({
+            name: 'user',
+            value:JSON.stringify({user}),
+            path: '/',
+            expires: new Date(Date.now() + 60 * 60 * 24* 1000),
+            maxAge: 60 * 60 * 24 ,
+            secure: true,
+            httpOnly: true,
+            sameSite: 'strict',
+          });
+
         return Response.json({success: true, message: "login successful"});
     }catch(error: any) {
         console.log(error);

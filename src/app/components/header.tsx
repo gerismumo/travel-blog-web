@@ -1,3 +1,5 @@
+
+
 import fontawesome from '@/(icons)/fontawesome';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link'
@@ -12,6 +14,9 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({data}) => {
   const {isSidebarOpen, toggleSidebar} = data;
+
+ 
+
   return (
     <div className={`bg-lightRed fixed z-[50] top-0  right-0 ${isSidebarOpen ? 'left-0 lg:left-[250px]': 'w-[100%] left-0'} `}>
       <nav className="flex flex-col  w-[100%] py-[15px]  px-[20px]  gap-[20px] shadow-sm">
