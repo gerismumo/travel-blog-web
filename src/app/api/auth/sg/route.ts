@@ -33,7 +33,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         //login user & generate jwt
         const user = {
             id,
-            user_email
+            email: user_email
         }
         
         cookies().set({

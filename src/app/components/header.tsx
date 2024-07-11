@@ -2,6 +2,7 @@
 
 import fontawesome from '@/(icons)/fontawesome';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { cookies } from 'next/headers';
 import Link from 'next/link'
 import React from 'react'
 
@@ -10,13 +11,15 @@ interface HeaderProps {
     isSidebarOpen: boolean;
     toggleSidebar: () => void;
   };
+  user: {
+    id: string,
+    email: string
+} | null;
 }
 
-const Header: React.FC<HeaderProps> = ({data}) => {
+const Header: React.FC<HeaderProps> = ({data, user}) => {
   const {isSidebarOpen, toggleSidebar} = data;
-
- 
-
+  
   return (
     <div className={`bg-lightRed fixed z-[50] top-0  right-0 ${isSidebarOpen ? 'left-0 lg:left-[250px]': 'w-[100%] left-0'} `}>
       <nav className="flex flex-col  w-[100%] py-[15px]  px-[20px]  gap-[20px] shadow-sm">
@@ -28,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({data}) => {
             </button>
             <div className="flex flex-row items-center gap-[30px]">
               <div className="flex flex-col items-center">
-                <h2 className='font-[500] text-[15px]'>John Doe</h2>
+                <h2 className='font-[500] text-[15px]'>{user? user.email : "Guest"}</h2>
                 <p className='text-[13px]'>Admin</p>
               </div>
                 <button
