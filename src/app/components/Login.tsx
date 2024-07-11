@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import { redirect, useRouter } from 'next/navigation';
+import {useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fontawesome from '@/(icons)/fontawesome';
 import toast from 'react-hot-toast';
