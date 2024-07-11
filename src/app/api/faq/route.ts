@@ -8,14 +8,16 @@ export async function POST(req:NextRequest) {
     try {
         const body: IDestionationFaq = await req.json();
 
-        const {destination, question, answer} = body;
+        const {destination, faqs} = body;
 
-        if(destination === "" || answer === "" || question === "") {
+        if(destination === "" || faqs.length === 0) {
             return NextResponse.json({success: false, message: "all fields are required"})
         }
         
         cache.flushAll();
         await connectDB();
+
+        
 
         const savedData = await DestinationFaq.create(body);
         if(savedData) {

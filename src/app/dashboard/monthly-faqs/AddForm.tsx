@@ -1,6 +1,6 @@
 "use client"
 
-import { IDestinationList, IDestionationMonthFaq, ISuccessFormProp } from '@/(types)/type';
+import { IDestinationList, IDestionationMonthFaq, IFaq, ISuccessFormProp } from '@/(types)/type';
 import Loader from '@/app/components/Loader';
 import { months } from '@/lib/months';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
@@ -15,7 +15,24 @@ const AddForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
     const[month, setMonth] = useState<string>('');
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [faqs, setFaqs] = useState<IFaq[]>([{question: "", answer: ""}]);
 
+    //add faqs object
+    const handleAddFaq = () => {
+      setFaqs([...faqs, {question: "", answer: ""}]);
+    }
+    //delete faq object
+    const handleDeleteFaq = (index: number) => {
+      setFaqs(faqs.filter((_, i) => i!== index));
+    }
+
+    //handleChangeOfaq
+
+    const handleChangeOfaq = (index: number, key: keyof IFaq, value: string) => {
+        const updatedFaqs = [...faqs];
+        updatedFaqs[index][key] = value;
+        setFaqs(updatedFaqs);
+    }
     useEffect(() => {
         const fetchData = async () => {
           try {
@@ -34,15 +51,14 @@ const AddForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if(destination === ""|| month === "" || question === "" || answer === "") {
+        if(destination === ""|| month === "" || faqs.length === 0) {
             return toast.error("all fields are required")
         }
 
         const data: IDestionationMonthFaq = {
             destination: destination,
             month: month,
-            question: question,
-            answer: answer
+            faqs: faqs
         }
 
         try{
@@ -52,8 +68,7 @@ const AddForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
                 toast.success(response.data.message);
                 setMonth('');
                 setDestination('');
-                setQuestion('');
-                setAnswer('');
+                setFaqs([{question: "", answer: ""}]);
             } else {
                 toast.error(response.data.message);
             }
@@ -103,28 +118,50 @@ const AddForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
             ))}
           </select>
         </div>
-        <div className="flex flex-col">
-          <label className="block text-gray-700 text-sm font-bold " htmlFor="question">
-            Question <span className="text-red-500">*</span>
-          </label>
-          <textarea name="question" id="question"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          className='input w-full'
-          >
-          </textarea>
+        <div className="flex flex-row items-end">
+          <button
+          type='button'
+          onClick={handleAddFaq}
+          className="bg-lightDark hover:dark text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >Add Faq</button>
         </div>
-        <div className="flex flex-col">
-          <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
-            Answer <span className="text-red-500">*</span>
-          </label>
-          <textarea name="answer" id="answer"
-          placeholder=''
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
-          className='input w-full'
-          >
-          </textarea>
+        <div className="flex flex-col gap-[10px]">
+          {faqs.map((f, index) => (
+            <div className="flex flex-col">
+              <div className="flex flex-row justify-end">
+                <button
+                type='button'
+                 className='bg-red-400 px-[15px] py-[5px] rounded-[4px] text-white'
+                onClick={() => handleDeleteFaq(index)}
+                >
+                  Remove
+              </button>
+              </div>
+              <div className="flex flex-col">
+                <label className="block text-gray-700 text-sm font-bold " htmlFor="question">
+                  Question <span className="text-red-500">*</span>
+                </label>
+                <textarea name="question" id="question"
+                value={f.question}
+                onChange={(e) => handleChangeOfaq(index, "question", e.target.value)}
+                className='input w-full'
+                >
+                </textarea>
+              </div>
+              <div className="flex flex-col">
+                <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
+                  Answer <span className="text-red-500">*</span>
+                </label>
+                <textarea name="answer" id="answer"
+                placeholder=''
+                value={f.answer}
+                onChange={(e) => handleChangeOfaq(index, "answer", e.target.value)}
+                className='input w-full'
+                >
+                </textarea>
+              </div>
+            </div>
+          ))}
         </div>
         <div className="flex flex-row w-[100%]">
           <button

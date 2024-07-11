@@ -61,10 +61,14 @@ export interface IDestinationMonthContentList {
   metaKeyWords: string;
 }
 
-export interface IDestionationFaq {
-  destination: string;
+export interface IFaq {
   question: string;
   answer: string;
+}
+
+export interface IDestionationFaq {
+  destination: string;
+  faqs: IFaq[];
 }
 
 export interface IDestionationFaqList {
@@ -74,11 +78,18 @@ export interface IDestionationFaqList {
   answer: string;
 }
 
+
+
+export interface IFaqList {
+  _id: string;
+  question: string;
+  answer: string;
+}
+
 export interface IDestionationMonthFaq {
   destination: string;
   month: string;
-  question: string;
-  answer: string;
+  faqs: IFaq[];
 }
 
 export interface IDestionationMonthFaqList {
