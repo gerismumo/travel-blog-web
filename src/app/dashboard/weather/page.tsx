@@ -1,15 +1,16 @@
 "use client"
 
-import { IDestinationList } from '@/(types)/type';
+import { IDestinationList, IWeatherDataList, IWeatherList, } from '@/(types)/type';
 import Loader from '@/app/components/Loader';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import Loading from './loading';
+import Edit from './Edit';
 
 const Page = () => {
-    const [weatherData, setWeatherData] = useState<any[]>([]);
+    const [weatherData, setWeatherData] = useState<IWeatherList[]>([]);
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [startDate, setStartDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [endDate, setEndDate] = useState<string>(new Date().toISOString().split('T')[0]); 
@@ -33,15 +34,9 @@ const Page = () => {
         fetchData();
     }, []);
 
-    const fetchData = async (startDate: string, endDate: string, destinationId: string) => {
+    const fetchData = async () => {
         try {
-            const response = await axios.get(`/api/weather`, {
-                params: {
-                    startDate,
-                    endDate,
-                    destinationId
-                }
-            });
+            const response = await axios.get(`/api/weather`);
             if (response.data.success) {
                 setWeatherData(response.data.data);
             } else {
@@ -55,19 +50,31 @@ const Page = () => {
     };
 
     useEffect(() => {
-        fetchData(startDate, endDate, selectedDestination);
-    }, [startDate, endDate, selectedDestination]);
+        fetchData();
+    }, []);
+
+    console.log("response", weatherData)
+
+    //edit weather data
+    const [openEdit, setOpenEdit] = useState<boolean>(false);
+    const [openEditId, setOpenEditId] = useState<any>(null);
+    const [editData, setEditData] = useState<IWeatherDataList | null>(null)
+
+    const handleOpenEdit = (data: IWeatherDataList) => {
+        setOpenEdit(!openEdit);
+        setOpenEditId(data._id);
+        setEditData(data);
+    }
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        fetchData(startDate, endDate, selectedDestination);
+
     };
 
     const handleReset = () => {
         setStartDate(new Date().toISOString().split('T')[0]);
         setEndDate(new Date().toISOString().split('T')[0]);
         setSelectedDestination("");
-        fetchData(new Date().toISOString().split('T')[0], new Date().toISOString().split('T')[0], "");
     }
 
     if (loading || loadingData) {
@@ -135,8 +142,118 @@ const Page = () => {
                 </div>
                 
             </form>
-            <div className='overflow-auto'>
-                <table className=" border-collapse ">
+            <div className="flex flex-col">
+                {weatherData?.length === 0 ? (
+                    <div className="">No available </div>
+                ) : (
+                    <div className="flex flex-col gap-[10px]">
+                        {weatherData?.slice(0, 6).map((d) => (
+                            <div key={d._id} className='flex flex-col gap-[10px] p-[10px] border-[1px] border-grey shadow-sm rounded-[5px]'>
+                                <div className="flex flex-col justify-center items-center ">
+                                    <h2 className='font-[800] text-dark'>{destinations.find(t => t._id === d.destination)?.name}</h2>
+                                </div>
+                                {d.data.length === 0 ? (
+                                    <div className="flex flex-col justify-center items-center ">
+                                        <p className='text-[14px] text-red-400'>No available weather data in {destinations.find(t => t._id === d.destination)?.name}</p>
+                                    </div>
+                                ): (
+                                    <div className="flex flex-col gap-[10px]">
+                                        {d.data.slice(0, 5).map((w) => (
+                                            <React.Fragment key={w._id}>
+                                                <div  className='flex flex-col gap-[10px] shadow-inner p-[10px]'>
+                                                    <div className="flex flex-row justify-start">
+                                                        <button
+                                                        onClick={() => handleOpenEdit(w)}
+                                                        type='button'
+                                                        className='px-[20px] py-[6px] rounded-[4px] text-white bg-lightDark hover:bg-dark'
+                                                        >
+                                                            {openEdit && openEditId === w._id ? "Close" : "Edit"}
+                                                        </button>
+                                                    </div>
+                                                    <div className="flex flex-row overflow-auto  border-[1px] border-[#ddd]">
+                                                        <div className="flex flex-col justify-between items-center p-[10px] border-[1px] border-l-[#ddd]">
+                                                            <div className="flex flex-col justify-center items-center ">
+                                                                <h2 className='font-[600] text-lightDark'>Date</h2>
+                                                            </div>
+                                                            <p className='text-orange-800 text-[15px]'>{w.date || '-'}</p>
+                                                        </div>
+                                                        <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                            <div className="flex flex-col justify-center items-center ">
+                                                                <h2 className='font-[600] text-lightDark'>Avg Temp (°C)</h2>
+                                                            </div>
+                                                            <p className='text-orange-800 text-[15px]'>{w.tavg || '-'}</p>
+                                                        </div>
+                                                        <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                            <div className="flex flex-col justify-center items-center ">
+                                                                <h2 className='font-[600] text-lightDark'>Min Temp (°C)</h2>
+                                                            </div>
+                                                            <p className='text-orange-800 text-[15px]'>{w.tmin || '-'}</p>
+                                                        </div>
+                                                        <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                            <div className="flex flex-col justify-center items-center ">
+                                                                <h2 className='font-[600] text-lightDark'>Max Temp (°C)</h2> 
+                                                            </div>
+                                                            <p className='text-orange-800 text-[15px]'>{w.tmax || '-'}</p>
+                                                        </div>
+                                                        <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                            <div className="flex flex-col justify-center items-center ">
+                                                                <h2 className='font-[600] text-lightDark'>Precipitation (mm)</h2>
+                                                            </div>
+                                                            <p className='text-orange-800 text-[15px]'>{w.prcp || '-'}</p>
+                                                        </div>
+                                                        <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                            <div className="flex flex-col justify-center items-center ">
+                                                                <h2 className='font-[600] text-lightDark'>Snowfall Amount (cm)</h2>
+                                                            </div>
+                                                            <p className='text-orange-800 text-[15px]'>{w.snow || '-'}</p>
+                                                        </div>
+                                                        <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                            <div className="flex flex-col justify-center items-center ">
+                                                                <h2 className='font-[600] text-lightDark'>Wind Direction (°)</h2>
+                                                            </div>
+                                                            <p className='text-orange-800 text-[15px]'>{w.wdir || '-'}</p>
+                                                        </div>
+                                                        <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                            <div className="flex flex-col justify-center items-center ">
+                                                                <h2 className='font-[600] text-lightDark'>Wind Speed (m/s)</h2>
+                                                            </div>
+                                                            <p className='text-orange-800 text-[15px]'>{w.wspd || '-'}</p>
+                                                        </div>
+                                                        <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                            <div className="flex flex-col justify-center items-center ">
+                                                                <h2 className='font-[600] text-lightDark'>Peak Gust Wind Speed (m/s)</h2>
+                                                            </div>
+                                                            <p className='text-orange-800 text-[15px]'>{w.wpgt || '-'}</p>
+                                                        </div>
+                                                        <div className="flex flex-col justify-between items-center p-[10px]  border-1-[1px] border-l-[#ddd]">
+                                                            <div className="flex flex-col justify-center items-center ">
+                                                                <h2 className='font-[600] text-lightDark'>Pressure (hPa)</h2>
+                                                            </div>
+                                                            <p className='text-orange-800 text-[15px]'>{w.pres || '-'}</p>
+                                                        </div>
+                                                        <div className="flex flex-col justify-between items-center p-[10px]  border-1-[1px] border-l-[#ddd]">
+                                                            <div className="flex flex-col justify-center items-center ">
+                                                                <h2 className='font-[600] text-lightDark'>Sunshine Duration (hrs)</h2>
+                                                            </div>
+                                                            <p className='text-orange-800 text-[15px]'>{w.tsun || '-'}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {openEdit && openEditId === w._id && (
+                                                    <Edit data={editData}/>
+                                                )}
+                                            </React.Fragment>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                )}
+                
+            </div>
+             <div className='overflow-auto'>
+                {/* <table className=" border-collapse ">
                     <thead>
                         <tr>
                             <th  className='table-cell'>Destination</th>
@@ -160,12 +277,18 @@ const Page = () => {
                             </tr>
                         ) : (
                             weatherData.map((d) => (
-                                <React.Fragment key={d.destination}>
-                                    {(d.data.data !== null || d.data.data !== undefined) && d.data?.data?.map((t: any, index: any) => (
+                                <React.Fragment key={d._id}>
+                                    {d.data?.length === 0 ? (
+                                        <tr>
+                                            <td>
+                                                <p>No weather data here</p>
+                                            </td>
+                                        </tr>
+                                    ): d.data?.map((t: any, index: any) => (
                                         <tr key={`${d.destination}-${index}`} >
                                             {index === 0 ? (
-                                                <td rowSpan={d.data.data.length}  className='table-cell'>
-                                                    {destinations.find(l => l._id === d.destination)?.name}
+                                                <td rowSpan={d.data.length}  className='table-cell'>
+                                                    {d.destination}
                                                 </td>
                                             ) : null}
                                             <td  className='table-cell'>{t.date}</td>
@@ -185,8 +308,8 @@ const Page = () => {
                             ))
                         )}
                     </tbody>
-                </table>
-            </div>
+                </table> */}
+            </div> 
         </div>
     );
 };

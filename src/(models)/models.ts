@@ -1,4 +1,4 @@
-import { IDestination, IDestinationContent, IDestinationMonthContent, IDestionationFaq, IDestionationMonthFaq, IHolidayBlog, INews, IThingsToDo, IUser, IWeatherBlog } from '@/(types)/type';
+import { IDestination, IDestinationContent, IDestinationMonthContent, IDestionationFaq, IDestionationMonthFaq, IHolidayBlog, INews, IThingsToDo, IUser, IWeather, IWeatherBlog, IWeatherData } from '@/(types)/type';
 import mongoose, {mongo, Schema} from 'mongoose';
 
 
@@ -10,6 +10,66 @@ const destinationSchema : Schema<IDestination> = new mongoose.Schema({
 
 export const Destination = mongoose.models.Destination || mongoose.model<IDestination>('Destination', destinationSchema);
 
+const IweatherDataSchema: Schema<IWeatherData> = new mongoose.Schema({
+    date: {
+        type: String,
+        required: true,
+    },
+    tavg: {
+        type: String,
+        default: null,
+    },
+    tmin: {
+        type: String,
+        default: null,
+    },
+    tmax: {
+        type: String,
+        default: null,
+    },
+    prcp: {
+        type: String,
+        default: null,
+    },
+    snow: {
+        type: String,
+        default: null,
+    },
+    wdir: {
+        type: String,
+        default: null,
+    },
+    wspd: {
+        type: String,
+        default: null,
+    },
+    wpgt: {
+        type: String,
+        default: null,
+    },
+    pres: {
+        type: String,
+        default: null,
+    },
+    tsun: {
+        type: String,
+        default: null,
+    }
+})
+
+const weatherSchema: Schema<IWeather> = new mongoose.Schema({
+    destination: {
+        type: String,
+        required: true,
+    },
+    stationID: {
+        type: String,
+        required: true,
+    },
+    data: {type: [IweatherDataSchema] , default: []}
+})
+
+export const Weather = mongoose.models.Weather || mongoose.model<IWeather>('Weather', weatherSchema)
 
 const destinationContentSchema: Schema<IDestinationContent> = new mongoose.Schema({
     destination: {
@@ -44,6 +104,7 @@ const destinationContentSchema: Schema<IDestinationContent> = new mongoose.Schem
 })
 
 export const DestinationContent = mongoose.models.DestiInfo || mongoose.model<IDestinationContent>('DestiInfo', destinationContentSchema)
+
 
 const destinationMonthContentSchema: Schema<IDestinationMonthContent> = new mongoose.Schema({
     destination: {

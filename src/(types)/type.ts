@@ -20,6 +20,49 @@ export interface IDestinationList {
     stationID: string;
   }
 
+export interface IWeatherData {
+  date: string;
+  tavg: string;
+  tmin: string;
+  tmax: string;
+  prcp: string;
+  snow: string;
+  wdir: string;
+  wspd: string;
+  wpgt: string;
+  pres: string;
+  tsun: string;
+}
+
+export interface IWeatherDataList {
+  _id: string;
+  date: string;
+  tavg: string;
+  tmin: string;
+  tmax: string;
+  prcp: string;
+  snow: string;
+  wdir: string;
+  wspd: string;
+  wpgt: string;
+  pres: string;
+  tsun: string;
+}
+ 
+export interface IWeather {
+  destination: string;
+  stationID: string;
+  data: IWeatherData[]
+}
+
+export interface IWeatherList {
+  _id: string;
+  destination: string;
+  stationID: string;
+  data: IWeatherDataList[]
+}
+
+
 
 export interface IDestinationContent {
   destination: string;
