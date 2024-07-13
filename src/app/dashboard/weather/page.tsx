@@ -9,6 +9,8 @@ import toast from 'react-hot-toast';
 import Loading from './loading';
 import Edit from './Edit';
 import Add from './Add';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import fontawesome from '@/(icons)/fontawesome';
 
 const Page = () => {
     const [weatherData, setWeatherData] = useState<IWeatherList[]>([]);
@@ -54,7 +56,7 @@ const Page = () => {
         fetchData();
     }, []);
 
-    console.log("response", weatherData)
+
 
     //edit weather data
     const [openEdit, setOpenEdit] = useState<boolean>(false);
@@ -80,22 +82,41 @@ const Page = () => {
     }
 
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [currentWDPage,setCurrentWDpage] = useState<number>(1);
+    const [currentWDPage, setCurrentWDPage] = useState<{ [key: string]: number }>({});
 
-    const itemsPerPage = 10;
+  
+    const itemsPerPage = 5;
 
     const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
     };
 
-    
+    const handleResetPg = () => {
+        setCurrentPage(1);
+    }
+
+    const handleResetPgD =(id: string) => {
+        setCurrentWDPage((prev) => ({
+         ...prev,
+          [id]: 1,
+        }));
+  
+    }
 
     const pagesCount = Math.ceil(weatherData.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentDataPage = weatherData.slice(indexOfFirstItem, indexOfLastItem);
 
+    //handle change for weather(data)
+    const handleWDPageChange = (pageNumber: number, id: string) => {
+        setCurrentWDPage((prev) => ({
+          ...prev,
+          [id]: pageNumber,
+        }));
+      };
     
+      const getCurrentWDPage = (id: string) => currentWDPage[id] || 1;
 
     if (loading || loadingData) {
         return (
@@ -168,7 +189,7 @@ const Page = () => {
             className='px-[25px] py-[6px] rounded-[4px] bg-lightDark hover:bg-dark text-white'
             >Add</button>
             {openAdd && (
-                <Add/>
+                <Add success={fetchData} close={setOpenAdd}/>
             )}
             <div className="flex flex-col">
                 {currentDataPage?.length === 0 ? (
@@ -176,158 +197,158 @@ const Page = () => {
                 ) : (
                     <div className="flex flex-col gap-[10px]">
                         {currentDataPage?.map((d) => {
-
-                            const itemsPerPage = 2;
-                            const pagesCount = Math.ceil(d.data.length / itemsPerPage);
-                            const indexOfLastItemWD = currentWDPage * itemsPerPage;
-                            const indexOfFirstItemWD = indexOfLastItem - itemsPerPage;
-                            const currentWD = d.data.slice(indexOfFirstItemWD, indexOfLastItemWD);
-
-                            
-
-                            const handleWDpageChange = (pageNumber: number, id: string) => {
-                                if(d._id === id) {
-                                    setCurrentWDpage(pageNumber);
-                                } 
-                            };
+                            //pagination for each data
+                        const wdPagesCount = Math.ceil(d.data.length / itemsPerPage);
+                        const indexOfLastItemWD = getCurrentWDPage(d._id) * itemsPerPage;
+                        const indexOfFirstItemWD = indexOfLastItemWD - itemsPerPage;
+                        const currentWD = d.data.slice(indexOfFirstItemWD, indexOfLastItemWD);
                             return (
                                 <div key={d._id} className='flex flex-col gap-[10px] p-[10px] border-[1px] border-grey shadow-sm rounded-[5px]'>
-                                <div className="flex flex-col justify-center items-center ">
-                                    <h2 className='font-[800] text-dark'>{destinations.find(t => t._id === d.destination)?.name}</h2>
-                                </div>
-                                {d.data.length === 0 ? (
                                     <div className="flex flex-col justify-center items-center ">
-                                        <p className='text-[14px] text-red-400'>No available weather data in {destinations.find(t => t._id === d.destination)?.name}</p>
+                                        <h2 className='font-[800] text-dark'>{destinations.find(t => t._id === d.destination)?.name}</h2>
                                     </div>
-                                ): (
-                                    <div className="flex flex-col gap-[10px]">
-                                        {currentWD.map((w) => {
-                                            return (
-                                                <React.Fragment key={w._id}>
-                                                    <div  className='flex flex-col gap-[10px] shadow-inner p-[10px]'>
-                                                        <div className="flex flex-row justify-start">
-                                                            <button
-                                                            onClick={() => handleOpenEdit(w)}
-                                                            type='button'
-                                                            className='px-[20px] py-[6px] rounded-[4px] text-white bg-lightDark hover:bg-dark'
-                                                            >
-                                                                {openEdit && openEditId === w._id ? "Close" : "Edit"}
-                                                            </button>
-                                                        </div>
-                                                        <div className="flex flex-row overflow-auto  border-[1px] border-[#ddd]">
-                                                            <div className="flex flex-col justify-between items-center p-[10px] border-[1px] border-l-[#ddd]">
-                                                                <div className="flex flex-col justify-center items-center ">
-                                                                    <h2 className='font-[600] text-lightDark'>Date</h2>
-                                                                </div>
-                                                                <p className='text-orange-800 text-[15px]'>{w.date || '-'}</p>
-                                                            </div>
-                                                            <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
-                                                                <div className="flex flex-col justify-center items-center ">
-                                                                    <h2 className='font-[600] text-lightDark'>Avg Temp (°C)</h2>
-                                                                </div>
-                                                                <p className='text-orange-800 text-[15px]'>{w.tavg || '-'}</p>
-                                                            </div>
-                                                            <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
-                                                                <div className="flex flex-col justify-center items-center ">
-                                                                    <h2 className='font-[600] text-lightDark'>Min Temp (°C)</h2>
-                                                                </div>
-                                                                <p className='text-orange-800 text-[15px]'>{w.tmin || '-'}</p>
-                                                            </div>
-                                                            <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
-                                                                <div className="flex flex-col justify-center items-center ">
-                                                                    <h2 className='font-[600] text-lightDark'>Max Temp (°C)</h2> 
-                                                                </div>
-                                                                <p className='text-orange-800 text-[15px]'>{w.tmax || '-'}</p>
-                                                            </div>
-                                                            <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
-                                                                <div className="flex flex-col justify-center items-center ">
-                                                                    <h2 className='font-[600] text-lightDark'>Precipitation (mm)</h2>
-                                                                </div>
-                                                                <p className='text-orange-800 text-[15px]'>{w.prcp || '-'}</p>
-                                                            </div>
-                                                            <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
-                                                                <div className="flex flex-col justify-center items-center ">
-                                                                    <h2 className='font-[600] text-lightDark'>Snowfall Amount (cm)</h2>
-                                                                </div>
-                                                                <p className='text-orange-800 text-[15px]'>{w.snow || '-'}</p>
-                                                            </div>
-                                                            <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
-                                                                <div className="flex flex-col justify-center items-center ">
-                                                                    <h2 className='font-[600] text-lightDark'>Wind Direction (°)</h2>
-                                                                </div>
-                                                                <p className='text-orange-800 text-[15px]'>{w.wdir || '-'}</p>
-                                                            </div>
-                                                            <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
-                                                                <div className="flex flex-col justify-center items-center ">
-                                                                    <h2 className='font-[600] text-lightDark'>Wind Speed (m/s)</h2>
-                                                                </div>
-                                                                <p className='text-orange-800 text-[15px]'>{w.wspd || '-'}</p>
-                                                            </div>
-                                                            <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
-                                                                <div className="flex flex-col justify-center items-center ">
-                                                                    <h2 className='font-[600] text-lightDark'>Peak Gust Wind Speed (m/s)</h2>
-                                                                </div>
-                                                                <p className='text-orange-800 text-[15px]'>{w.wpgt || '-'}</p>
-                                                            </div>
-                                                            <div className="flex flex-col justify-between items-center p-[10px]  border-1-[1px] border-l-[#ddd]">
-                                                                <div className="flex flex-col justify-center items-center ">
-                                                                    <h2 className='font-[600] text-lightDark'>Pressure (hPa)</h2>
-                                                                </div>
-                                                                <p className='text-orange-800 text-[15px]'>{w.pres || '-'}</p>
-                                                            </div>
-                                                            <div className="flex flex-col justify-between items-center p-[10px]  border-1-[1px] border-l-[#ddd]">
-                                                                <div className="flex flex-col justify-center items-center ">
-                                                                    <h2 className='font-[600] text-lightDark'>Sunshine Duration (hrs)</h2>
-                                                                </div>
-                                                                <p className='text-orange-800 text-[15px]'>{w.tsun || '-'}</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    {openEdit && openEditId === w._id && (
-                                                        <Edit data={editData}/>
-                                                    )}
-                                                </React.Fragment>
-                                            )
-                                        })}
-                                        <div className="flex justify-center mt-4">
-                                            <button
-                                                className="bg-lightDark hover:bg-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                                onClick={() => handleWDpageChange(currentWDPage - 1, d._id)}
-                                                disabled={currentWDPage=== 1}
-                                            >
-                                                Previous
-                                            </button>
-                                            <button
-                                                className="bg-lightDark hover:bg-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
-                                                onClick={() => handleWDpageChange(currentWDPage + 1, d._id)}
-                                                disabled={currentWD.length < itemsPerPage || currentWDPage === pagesCount}
-                                            >
-                                                Next
-                                            </button>
+                                    {d.data.length === 0 ? (
+                                        <div className="flex flex-col justify-center items-center ">
+                                            <p className='text-[14px] text-red-400'>No available weather data in {destinations.find(t => t._id === d.destination)?.name}</p>
                                         </div>
-                                    </div>
-                                )}
-                            </div>
+                                    ): (
+                                        <div className="flex flex-col gap-[10px]">
+                                            {currentWD.map((w) => {
+                                                return (
+                                                    <React.Fragment key={w._id}>
+                                                        <div  className='flex flex-col gap-[10px] shadow-inner p-[10px]'>
+                                                            <div className="flex flex-row justify-start">
+                                                                <button
+                                                                onClick={() => handleOpenEdit(w)}
+                                                                type='button'
+                                                                className='px-[20px] py-[6px] rounded-[4px] text-white bg-lightDark hover:bg-dark'
+                                                                >
+                                                                    {openEdit && openEditId === w._id ? "Close" : "Edit"}
+                                                                </button>
+                                                            </div>
+                                                            <div className="flex flex-row overflow-auto  border-[1px] border-[#ddd]">
+                                                                <div className="flex flex-col justify-between items-center p-[10px] border-[1px] border-l-[#ddd]">
+                                                                    <div className="flex flex-col justify-center items-center ">
+                                                                        <h2 className='font-[600] text-lightDark'>Date</h2>
+                                                                    </div>
+                                                                    <p className='text-orange-800 text-[15px]'>{w.date || '-'}</p>
+                                                                </div>
+                                                                <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                                    <div className="flex flex-col justify-center items-center ">
+                                                                        <h2 className='font-[600] text-lightDark'>Avg Temp (°C)</h2>
+                                                                    </div>
+                                                                    <p className='text-orange-800 text-[15px]'>{w.tavg || '-'}</p>
+                                                                </div>
+                                                                <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                                    <div className="flex flex-col justify-center items-center ">
+                                                                        <h2 className='font-[600] text-lightDark'>Min Temp (°C)</h2>
+                                                                    </div>
+                                                                    <p className='text-orange-800 text-[15px]'>{w.tmin || '-'}</p>
+                                                                </div>
+                                                                <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                                    <div className="flex flex-col justify-center items-center ">
+                                                                        <h2 className='font-[600] text-lightDark'>Max Temp (°C)</h2> 
+                                                                    </div>
+                                                                    <p className='text-orange-800 text-[15px]'>{w.tmax || '-'}</p>
+                                                                </div>
+                                                                <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                                    <div className="flex flex-col justify-center items-center ">
+                                                                        <h2 className='font-[600] text-lightDark'>Precipitation (mm)</h2>
+                                                                    </div>
+                                                                    <p className='text-orange-800 text-[15px]'>{w.prcp || '-'}</p>
+                                                                </div>
+                                                                <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                                    <div className="flex flex-col justify-center items-center ">
+                                                                        <h2 className='font-[600] text-lightDark'>Snowfall Amount (cm)</h2>
+                                                                    </div>
+                                                                    <p className='text-orange-800 text-[15px]'>{w.snow || '-'}</p>
+                                                                </div>
+                                                                <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                                    <div className="flex flex-col justify-center items-center ">
+                                                                        <h2 className='font-[600] text-lightDark'>Wind Direction (°)</h2>
+                                                                    </div>
+                                                                    <p className='text-orange-800 text-[15px]'>{w.wdir || '-'}</p>
+                                                                </div>
+                                                                <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                                    <div className="flex flex-col justify-center items-center ">
+                                                                        <h2 className='font-[600] text-lightDark'>Wind Speed (m/s)</h2>
+                                                                    </div>
+                                                                    <p className='text-orange-800 text-[15px]'>{w.wspd || '-'}</p>
+                                                                </div>
+                                                                <div className="flex flex-col justify-between items-center p-[10px]  border-[1px] border-l-[#ddd]">
+                                                                    <div className="flex flex-col justify-center items-center ">
+                                                                        <h2 className='font-[600] text-lightDark'>Peak Gust Wind Speed (m/s)</h2>
+                                                                    </div>
+                                                                    <p className='text-orange-800 text-[15px]'>{w.wpgt || '-'}</p>
+                                                                </div>
+                                                                <div className="flex flex-col justify-between items-center p-[10px]  border-1-[1px] border-l-[#ddd]">
+                                                                    <div className="flex flex-col justify-center items-center ">
+                                                                        <h2 className='font-[600] text-lightDark'>Pressure (hPa)</h2>
+                                                                    </div>
+                                                                    <p className='text-orange-800 text-[15px]'>{w.pres || '-'}</p>
+                                                                </div>
+                                                                <div className="flex flex-col justify-between items-center p-[10px]  border-1-[1px] border-l-[#ddd]">
+                                                                    <div className="flex flex-col justify-center items-center ">
+                                                                        <h2 className='font-[600] text-lightDark'>Sunshine Duration (hrs)</h2>
+                                                                    </div>
+                                                                    <p className='text-orange-800 text-[15px]'>{w.tsun || '-'}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {openEdit && openEditId === w._id && (
+                                                            <Edit data={editData}/>
+                                                        )}
+                                                    </React.Fragment>
+                                                )
+                                            })}
+                                            <div className="flex justify-center items-center mt-[20px] gap-[20px]">
+                                                <button
+                                                    onClick={() => handleWDPageChange(getCurrentWDPage(d._id) - 1, d._id)}
+                                                    disabled={getCurrentWDPage(d._id) === 1}
+                                                    
+                                                >
+                                                 <FontAwesomeIcon icon={fontawesome.faAnglesLeft}/>
+                                                </button>
+                                                <button
+                                                    onClick={() => handleResetPgD(d._id)}
+                                                >
+                                                    <FontAwesomeIcon icon={fontawesome.faCreativeCommonsZero}/>
+                                                </button>
+                                                <button
+                                                    onClick={() => handleWDPageChange(getCurrentWDPage(d._id) + 1, d._id)}
+                                                    disabled={getCurrentWDPage(d._id) >= wdPagesCount}
+                                                    
+                                                >
+                                                    <FontAwesomeIcon icon={fontawesome.faAnglesRight}/>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             )
                         }
                             
                         )}
                     </div>
                 )}
-                <div className="flex justify-center mt-4">
+                <div className="flex flex-row justify-center mt-4 gap-[20px]">
                     <button
-                        className="bg-lightDark hover:bg-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
                     >
-                        Previous
+                         <FontAwesomeIcon icon={fontawesome.faAnglesLeft}/>
                     </button>
                     <button
-                        className="bg-lightDark hover:bg-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
+                        onClick={() => handleResetPg()}
+                    >
+                        <FontAwesomeIcon icon={fontawesome.faCreativeCommonsZero}/>
+                    </button>
+                    <button
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentDataPage.length < itemsPerPage || currentPage === pagesCount}
                     >
-                        Next
+                        <FontAwesomeIcon icon={fontawesome.faAnglesRight}/>
                     </button>
                 </div>
             </div>

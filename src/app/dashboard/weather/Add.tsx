@@ -2,10 +2,14 @@
 
 import { IDestinationList } from '@/(types)/type';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-type Props = {};
+type Props = {
+  success: () => void,
+  close: (value: boolean) => void;
+};
 
 interface WeatherData {
   tavg: string;
@@ -27,10 +31,7 @@ interface ContentBlock {
   weatherData: WeatherData;
 }
 
-const Add: React.FC<Props> = () => {
-  const [year, setYear] = useState<number>(new Date().getFullYear());
-  const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
-  const [day, setDay] = useState<number>(new Date().getDate());
+const Add: React.FC<Props> = ({success, close}) => {
   const [destinations, setDestinations] = useState<IDestinationList[]>([]);
   const[destination, setDestination] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -135,9 +136,65 @@ const Add: React.FC<Props> = () => {
     setContentBlocks(contentBlocks.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // handle submit
+
+    const updateBlock = contentBlocks.map((d) => {
+      const updatedData = {
+        date: `${d.year}-${d.month}-${d.day}`,
+        tavg: d.weatherData.tavg,
+        tmin: d.weatherData.tmin,
+        tmax: d.weatherData.tmax,
+        prcp: d.weatherData.prcp,
+        snow: d.weatherData.snow,
+        wdir: d.weatherData.wdir,
+        wspd: d.weatherData.wspd,
+        wpgt: d.weatherData.wpgt,
+        pres: d.weatherData.pres,
+        tsun: d.weatherData.tsun,
+      }
+      return updatedData;
+    })
+
+    const data = {
+      destination,
+      data: updateBlock
+    }
+
+    //submit data
+
+    try{
+      const response = await axios.post('/api/weather/nw', data);
+      if(response.data.success) {
+        setContentBlocks([
+          {
+            year: new Date().getFullYear(),
+            month: new Date().getMonth() + 1,
+            day: new Date().getDate(),
+            weatherData: {
+              tavg: "",
+              tmin: "",
+              tmax: "",
+              prcp: "",
+              snow: "",
+              wdir: "",
+              wspd: "",
+              wpgt: "",
+              pres: "",
+              tsun: ""
+            }
+          }
+        ])
+        success();
+        close(false);
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    }catch(error : any) {
+      toast.error("Network error");
+    }
   };
 
   return (
