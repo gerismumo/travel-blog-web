@@ -11,12 +11,14 @@ import Edit from './Edit';
 import Add from './Add';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fontawesome from '@/(icons)/fontawesome';
+import { ReadableStreamDefaultController } from 'node:stream/web';
 
 const Page = () => {
     const [weatherData, setWeatherData] = useState<IWeatherList[]>([]);
+    const [filterData, setFilterData] = useState<IWeatherList[]>([]);
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [selectedDestination, setSelectedDestination] = useState<string>("");
-    const [searchDate, setSearchDate] = useState<string>(new Date().toISOString().split('T')[0]);
+    const [searchDate, setSearchDate] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(true);
     const [loadingData, setLoadingData] = useState<boolean>(true);
 
@@ -86,14 +88,34 @@ const Page = () => {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        
+        if (selectedDestination && !searchDate) {
+            setFilterData(weatherData.filter((d) => {
+                return d.destination.toString().toLowerCase().includes(selectedDestination.toLowerCase());
+            }));
+        } else if (!selectedDestination && searchDate) {
+            setFilterData(weatherData.filter((d) => {
+                return d.data.some((w) => w.date.toString().toLowerCase().includes(searchDate.toLowerCase()));
+            }));
+        } else if (selectedDestination && searchDate) {
+            setFilterData(weatherData.filter((s) => {
+                const destinationMatch = s.destination.toString().toLowerCase().includes(selectedDestination.toLowerCase());
+                const dateMatch = s.destination && s.data.filter((d) => d.date.toString().toLowerCase().includes(searchDate.toLowerCase()));
+                console.log("dateMatch",dateMatch)
+                return destinationMatch && dateMatch;
+            }));
+        } else {
+            setFilterData(weatherData)
+        }
     };
+    
 
     const handleReset = () => {
-        setSearchDate(new Date().toISOString().split('T')[0]);
+        setSearchDate("");
         setSelectedDestination("");
+        setFilterData(weatherData);
     }
 
+    //pagination funs
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [currentWDPage, setCurrentWDPage] = useState<{ [key: string]: number }>({});
 
@@ -116,10 +138,10 @@ const Page = () => {
   
     }
 
-    const pagesCount = Math.ceil(weatherData.length / itemsPerPage);
+    const pagesCount = Math.ceil(filterData.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentDataPage = weatherData.slice(indexOfFirstItem, indexOfLastItem);
+    const currentDataPage = filterData.slice(indexOfFirstItem, indexOfLastItem);
 
     //handle change for weather(data)
     const handleWDPageChange = (pageNumber: number, id: string) => {
@@ -173,7 +195,7 @@ const Page = () => {
                         type="submit"
                         className="bg-lightDark w-[100%] xs1:w-auto hover:bg-dark text-nowrap text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
-                        Fetch Weather Data
+                        Search
                     </button>
                     <button
                         type="button"
