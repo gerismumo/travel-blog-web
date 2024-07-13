@@ -1,5 +1,5 @@
 import { Destination, Weather } from "@/(models)/models";
-import { IWeather } from "@/(types)/type";
+import { IWeather, IWeatherData, IWeatherDataList } from "@/(types)/type";
 import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
 import axios from "axios";
@@ -85,9 +85,9 @@ export async function GET() {
         const cachedData = cache.get("wtd");
 
         if(cachedData) {
-            console.log("using caching");
             return NextResponse.json({success: true, data: cachedData});
         }
+
         await connectDB();
         //select data
 
@@ -97,6 +97,52 @@ export async function GET() {
 
         return NextResponse.json({success: true, data: data});
     }catch (error: any) {
+        return NextResponse.json({success: false, message: "server error"})
+    }
+}
+
+export async function PUT(req:Request) {
+    try{
+        const body: IWeatherDataList = await req.json();
+        const {date, tavg, tmin, tmax, prcp,snow, wdir, wspd, wpgt, pres, tsun, _id} = body;
+
+        if(!date || !tavg || !tmin || !tmax || !prcp || !snow || !wdir || !wspd || !wpgt || !pres || !tsun || !_id) {
+            return NextResponse.json({success: false, message: "required fields are missing."});
+        }
+
+        await connectDB();
+
+        const weatherDoc = await Weather.findOne({ "data._id": _id });
+
+        if (!weatherDoc) {
+            return NextResponse.json({ success: false, message: "Weather data not found." });
+        }
+
+        // console.log("weather data", weatherDoc);
+
+        const dataObject = weatherDoc.data.find((data: any) => data._id.toString() === _id);
+        // console.log("currebt edit", dataObject);
+        if (!dataObject) {
+            return NextResponse.json({ success: false, message: "Data object not found in weather data." });
+        }
+
+        dataObject.date = date;
+        dataObject.tavg = tavg;
+        dataObject.tmin = tmin;
+        dataObject.tmax = tmax;
+        dataObject.prcp = prcp;
+        dataObject.snow = snow;
+        dataObject.wdir = wdir;
+        dataObject.wspd = wspd;
+        dataObject.wpgt = wpgt;
+        dataObject.pres = pres;
+        dataObject.tsun = tsun;
+
+        await weatherDoc.save();
+
+        return NextResponse.json({ success: true, message: "Weather data updated successfully." });
+
+    }catch(error: any) {
         return NextResponse.json({success: false, message: "server error"})
     }
 }

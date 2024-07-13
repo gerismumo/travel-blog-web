@@ -1,13 +1,17 @@
 "use client"
 
 import { IWeatherDataList } from '@/(types)/type'
+import axios from 'axios'
 import React, { useState } from 'react'
+import toast from 'react-hot-toast'
 
 interface Props {
-    data: IWeatherDataList| null
+    data: IWeatherDataList| null,
+    close: (value: boolean) => void,
+    success: () => void
 }
 
-const Edit:React.FC<Props> = ({data}) => {
+const Edit:React.FC<Props> = ({data, close, success}) => {
 
     const [formData, setFormData] = useState<IWeatherDataList | null>(data);
 
@@ -18,10 +22,21 @@ const Edit:React.FC<Props> = ({data}) => {
         setFormData(prev => (prev ? {...prev, [name]: value}: null))
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         //submit edit data to the api
+        try {
+            const response = await axios.put('/api/weather', formData);
+            if(response.data.success) {
+                toast.success(response.data.message);
+                success();
+                close(false);
+            } else {
+                toast.error(response.data.message);
+            }
+        }catch(error: any) {
+            return toast.error("Network error");
+        }
     }
 
 
@@ -34,11 +49,11 @@ const Edit:React.FC<Props> = ({data}) => {
                 <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
                     Avg Temp (°C) <span className="text-red-500">*</span>
                 </label>
-                <input type="number"
+                <input type="text"
                 name='tavg'
                 value={formData.tavg}
                 onChange={(e) => handleInputChange(e)}
-                min={0}
+                
                 className='input'
                 />
             </div>
@@ -46,11 +61,11 @@ const Edit:React.FC<Props> = ({data}) => {
                 <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
                     Min Temp (°C) <span className="text-red-500">*</span>
                 </label>
-                <input type="number"
+                <input type="text"
                 name='tmin'
                 value={formData.tmin}
                 onChange={(e) => handleInputChange(e)}
-                min={0}
+                
                 className='input'
                 />
             </div>
@@ -58,11 +73,11 @@ const Edit:React.FC<Props> = ({data}) => {
                 <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
                     Max Temp (°C) <span className="text-red-500">*</span>
                 </label>
-                <input type="number"
+                <input type="text"
                 name='tmax'
                 value={formData.tmax}
                 onChange={(e) => handleInputChange(e)}
-                min={0}
+                
                 className='input'
                 />
             </div>
@@ -70,11 +85,11 @@ const Edit:React.FC<Props> = ({data}) => {
                 <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
                     Precipitation (mm) <span className="text-red-500">*</span>
                 </label>
-                <input type="number"
+                <input type="text"
                 name='prcp'
                 value={formData.prcp}
                 onChange={(e) => handleInputChange(e)}
-                min={0}
+                
                 className='input'
                 />
             </div>
@@ -82,11 +97,11 @@ const Edit:React.FC<Props> = ({data}) => {
                 <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
                     Snowfall Amount (cm) <span className="text-red-500">*</span>
                 </label>
-                <input type="number"
+                <input type="text"
                 name='snow'
                 value={formData.snow}
                 onChange={(e) => handleInputChange(e)}
-                min={0}
+                
                 className='input'
                 />
             </div>
@@ -94,11 +109,11 @@ const Edit:React.FC<Props> = ({data}) => {
                 <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
                     Wind Direction (°) <span className="text-red-500">*</span>
                 </label>
-                <input type="number"
+                <input type="text"
                 name='wdir'
                 value={formData.wdir}
                 onChange={(e) => handleInputChange(e)}
-                min={0}
+                
                 className='input'
                 />
             </div>
@@ -106,11 +121,11 @@ const Edit:React.FC<Props> = ({data}) => {
                 <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
                     Wind Speed (m/s) <span className="text-red-500">*</span>
                 </label>
-                <input type="number"
+                <input type="text"
                 name='wspd'
                 value={formData.wspd}
                 onChange={(e) => handleInputChange(e)}
-                min={0}
+                
                 className='input'
                 />
             </div>
@@ -118,11 +133,11 @@ const Edit:React.FC<Props> = ({data}) => {
                 <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
                     Peak Gust Wind Speed (m/s) <span className="text-red-500">*</span>
                 </label>
-                <input type="number"
+                <input type="text"
                 name='wpgt'
                 value={formData.wpgt}
                 onChange={(e) => handleInputChange(e)}
-                min={0}
+                
                 className='input'
                 />
             </div>
@@ -130,11 +145,11 @@ const Edit:React.FC<Props> = ({data}) => {
                 <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
                     Pressure (hPa)<span className="text-red-500">*</span>
                 </label>
-                <input type="number"
+                <input type="text"
                 name='pres'
                 value={formData.pres}
                 onChange={(e) => handleInputChange(e)}
-                min={0}
+                
                 className='input'
                 />
             </div>
@@ -142,11 +157,11 @@ const Edit:React.FC<Props> = ({data}) => {
                 <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
                     Sunshine Duration (hrs)<span className="text-red-500">*</span>
                 </label>
-                <input type="number"
+                <input type="text"
                 name='tsun'
                 value={formData.tsun}
                 onChange={(e) => handleInputChange(e)}
-                min={0}
+                
                 className='input'
                 />
             </div>

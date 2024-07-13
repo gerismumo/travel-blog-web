@@ -15,9 +15,8 @@ import fontawesome from '@/(icons)/fontawesome';
 const Page = () => {
     const [weatherData, setWeatherData] = useState<IWeatherList[]>([]);
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
-    const [startDate, setStartDate] = useState<string>(new Date().toISOString().split('T')[0]);
-    const [endDate, setEndDate] = useState<string>(new Date().toISOString().split('T')[0]); 
     const [selectedDestination, setSelectedDestination] = useState<string>("");
+    const [searchDate, setSearchDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [loading, setLoading] = useState<boolean>(true);
     const [loadingData, setLoadingData] = useState<boolean>(true);
 
@@ -70,14 +69,28 @@ const Page = () => {
         setEditData(data);
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+    //handle delete
+    const handleDelete = async(id: string) => {
+        try{
+            const response = await axios.delete(`/api/weather/${id}`);
+            if(response.data.success) {
+                toast.success(response.data.message);
+                fetchData();
+            }else {
+                toast.error(response.data.message);
+            }
+        }catch(error: any) {
+            return toast.error("Network error")
+        }
+    }
 
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        
     };
 
     const handleReset = () => {
-        setStartDate(new Date().toISOString().split('T')[0]);
-        setEndDate(new Date().toISOString().split('T')[0]);
+        setSearchDate(new Date().toISOString().split('T')[0]);
         setSelectedDestination("");
     }
 
@@ -126,7 +139,7 @@ const Page = () => {
 
     return (
         <div className="flex flex-col gap-[30px]">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-[10px]">
+            <form onSubmit={(e) => handleSearch(e)} className="flex flex-col gap-[10px]">
                 <div className="flex flex-col">
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                         Destination
@@ -136,7 +149,7 @@ const Page = () => {
                         onChange={(e) => setSelectedDestination(e.target.value)}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     >
-                        <option value="">All Destinations</option>
+                        <option value="">select</option>
                         {destinations.map((destination) => (
                             <option key={destination._id} value={destination._id}>
                                 {destination.name}
@@ -146,23 +159,12 @@ const Page = () => {
                 </div>
                 <div className="flex flex-col">
                     <label className="block text-gray-700 text-sm font-bold mb-2">
-                        Start Date
+                        Date
                     </label>
                     <input
                         type="date"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    />
-                </div>
-                <div className="flex flex-col">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                        End Date
-                    </label>
-                    <input
-                        type="date"
-                        value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
+                        value={searchDate}
+                        onChange={(e) => setSearchDate(e.target.value)}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     />
                 </div>
@@ -187,7 +189,9 @@ const Page = () => {
             onClick={() => setOpenAdd(!openAdd)}
             type='button'
             className='px-[25px] py-[6px] rounded-[4px] bg-lightDark hover:bg-dark text-white'
-            >Add</button>
+            >
+                {openAdd ? "Close": "Add New"}
+            </button>
             {openAdd && (
                 <Add success={fetchData} close={setOpenAdd}/>
             )}
@@ -204,8 +208,14 @@ const Page = () => {
                         const currentWD = d.data.slice(indexOfFirstItemWD, indexOfLastItemWD);
                             return (
                                 <div key={d._id} className='flex flex-col gap-[10px] p-[10px] border-[1px] border-grey shadow-sm rounded-[5px]'>
-                                    <div className="flex flex-col justify-center items-center ">
-                                        <h2 className='font-[800] text-dark'>{destinations.find(t => t._id === d.destination)?.name}</h2>
+                                    <div className="flex flex-row justify-between items-center">
+                                        <div className="flex flex-col">
+                                            <p className='text-nowrap'>Total:<span>{d.data.length}</span></p>
+                                        </div>
+                                        <div className="flex flex-col  ">
+                                            <h2 className='font-[800] text-dark'>{destinations.find(t => t._id === d.destination)?.name}</h2>
+                                        </div>
+                                        <div></div>
                                     </div>
                                     {d.data.length === 0 ? (
                                         <div className="flex flex-col justify-center items-center ">
@@ -217,13 +227,20 @@ const Page = () => {
                                                 return (
                                                     <React.Fragment key={w._id}>
                                                         <div  className='flex flex-col gap-[10px] shadow-inner p-[10px]'>
-                                                            <div className="flex flex-row justify-start">
+                                                            <div className="flex flex-row items-center justify-start gap-[30px]">
                                                                 <button
                                                                 onClick={() => handleOpenEdit(w)}
                                                                 type='button'
                                                                 className='px-[20px] py-[6px] rounded-[4px] text-white bg-lightDark hover:bg-dark'
                                                                 >
                                                                     {openEdit && openEditId === w._id ? "Close" : "Edit"}
+                                                                </button>
+                                                                <button
+                                                                onClick={() => handleDelete(w._id)}
+                                                                type='button'
+                                                                className='px-[20px] py-[6px] rounded-[4px] text-white bg-red-400'
+                                                                >
+                                                                    Delete
                                                                 </button>
                                                             </div>
                                                             <div className="flex flex-row overflow-auto  border-[1px] border-[#ddd]">
@@ -296,7 +313,7 @@ const Page = () => {
                                                             </div>
                                                         </div>
                                                         {openEdit && openEditId === w._id && (
-                                                            <Edit data={editData}/>
+                                                            <Edit data={editData} success={() =>fetchData()} close={setOpenEdit} />
                                                         )}
                                                     </React.Fragment>
                                                 )
