@@ -127,7 +127,7 @@ const AddForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
         </div>
         <div className="flex flex-col gap-[10px]">
           {faqs.map((f, index) => (
-            <div className="flex flex-col">
+            <div key={index} className="flex flex-col">
               <div className="flex flex-row justify-end">
                 <button
                 type='button'
