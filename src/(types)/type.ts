@@ -109,6 +109,12 @@ export interface IFaq {
   answer: string;
 }
 
+export interface IFaqList {
+  _id: string;
+  question: string;
+  answer: string;
+}
+
 export interface IDestionationFaq {
   destination: string;
   faqs: IFaq[];
@@ -117,17 +123,9 @@ export interface IDestionationFaq {
 export interface IDestionationFaqList {
   _id: string;
   destination: string;
-  question: string;
-  answer: string;
+  faqs: IFaqList[];
 }
 
-
-
-export interface IFaqList {
-  _id: string;
-  question: string;
-  answer: string;
-}
 
 export interface IDestionationMonthFaq {
   destination: string;
@@ -139,8 +137,7 @@ export interface IDestionationMonthFaqList {
   _id: string;
   destination: string;
   month: string;
-  question: string;
-  answer: string;
+  faqs: IFaqList[];
 }
 
 

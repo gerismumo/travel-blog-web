@@ -1,6 +1,6 @@
 "use client"
 
-import { IDestinationList, IDestionationMonthFaq, IDestionationMonthFaqList } from '@/(types)/type';
+import { IDestinationList, IDestionationMonthFaq, IDestionationMonthFaqList, IFaqList } from '@/(types)/type';
 import Loader from '@/app/components/Loader';
 import { months } from '@/lib/months';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
@@ -103,6 +103,16 @@ const Page:React.FC = () => {
         setEditObject(contentList.find(d => d._id === id) || null);
       }
 
+
+      const handleFaqChange = (index: number, field: keyof IFaqList, value: string) => {
+        if (editObject) {
+          const updatedFaqs = editObject.faqs.map((faq, i) => 
+            i === index ? { ...faq, [field]: value } : faq
+          );
+          setEditObject({ ...editObject, faqs: updatedFaqs });
+        }
+      };
+
       const handleSubmitEdit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if(editObject === null) {
@@ -115,18 +125,21 @@ const Page:React.FC = () => {
             _id: editObject._id,
             destination: editObject.destination,
             month: editObject.month,
-            question: editObject.question,
-            answer: editObject.answer,
+            faqs: editObject.faqs
         };
 
         //check empty fields
-        for(const[key, value] of Object.entries(data)) {
-            if(!value) {
-            toast.error("all fields are required");
+        if (!data.destination || !data.month) {
+            toast.error("Destination is required");
             return;
+          }
+      
+          for (const faq of data.faqs) {
+            if (!faq.question.trim() || !faq.answer.trim()) {
+              toast.error("All FAQ questions and answers are required");
+              return;
             }
-        }
-
+          }
 
         //submit data
 
@@ -205,8 +218,6 @@ const Page:React.FC = () => {
                     <tr>
                         <th className='table-cell'>Destination</th>
                         <th className='table-cell'>Month</th>
-                        <th className='table-cell'>Question</th>
-                        <th className='table-cell'>Answer</th>
                         <th className='table-cell'>Actions</th>
                     </tr>
                 </thead>
@@ -224,8 +235,6 @@ const Page:React.FC = () => {
                             <tr>
                                 <td className='table-cell'>{d.destination && destinations?.find(ob => ob._id === d.destination)?.name}</td>
                                 <td className='table-cell'>{d.month && months.find(m => m.id === parseInt(d.month))?.name}</td>
-                                <td className='table-cell'>{d.question && TruncateContent(d.question, 15)}</td>
-                                <td className='table-cell'>{d.answer && TruncateContent(d.answer, 15)}</td>
                                 <td className='table-cell'>
                                 <div className="flex flex-row justify-center gap-[30px]">
                                         <button
@@ -281,29 +290,34 @@ const Page:React.FC = () => {
                                                     ))}
                                                 </select>
                                                 </div>
-                                                <div className="flex flex-col">
-                                                <label className="block text-gray-700 text-sm font-bold " htmlFor="question">
-                                                    Question
-                                                </label>
-                                                <textarea name="question" id="question"
-                                                value={editObject?.question}
-                                                onChange={(e) => setEditObject(editObject ? {...editObject, question: e.target.value}: null)}
-                                                className='input w-full'
-                                                >
-                                                </textarea>
-                                                </div>
-                                                <div className="flex flex-col">
-                                                <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
-                                                    Answer
-                                                </label>
-                                                <textarea name="answer" id="answer"
-                                                placeholder=''
-                                                value={editObject?.answer}
-                                                onChange={(e) => setEditObject(editObject ? {...editObject, answer: e.target.value}: null)}
-                                                className='input w-full'
-                                                >
-                                                </textarea>
-                                                </div>
+                                                {editObject?.faqs.map((faq, index) => (
+                                                  <div key={faq._id} className="">
+                                                    <div className="flex flex-col">
+                                                      <label className="block text-gray-700 text-sm font-bold" htmlFor={`question-${index}`}>
+                                                        Question
+                                                      </label>
+                                                      <textarea
+                                                        name={`question-${index}`}
+                                                        id={`question-${index}`}
+                                                        value={faq.question}
+                                                        onChange={(e) => handleFaqChange(index, 'question', e.target.value)}
+                                                        className="input w-full"
+                                                      />
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                      <label className="block text-gray-700 text-sm font-bold" htmlFor={`answer-${index}`}>
+                                                        Answer
+                                                      </label>
+                                                      <textarea
+                                                        name={`answer-${index}`}
+                                                        id={`answer-${index}`}
+                                                        value={faq.answer}
+                                                        onChange={(e) => handleFaqChange(index, 'answer', e.target.value)}
+                                                        className="input w-full"
+                                                      />
+                                                    </div>
+                                                  </div>
+                                                ))}
                                                 <div className="flex flex-row w-[100%]">
                                                 <button
                                                     className="bg-lightDark hover:dark text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -329,6 +343,7 @@ const Page:React.FC = () => {
             show={showPreviewModal} 
             content={previewContent} 
             onClose={() => setShowPreviewModal(false)} 
+            success={() => fetchData()}
             />
         )}
         {/* Confirm delete */}

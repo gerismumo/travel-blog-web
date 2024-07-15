@@ -43,6 +43,7 @@ const Page = () => {
             const response = await axios.get(`/api/weather`);
             if (response.data.success) {
                 setWeatherData(response.data.data);
+                
             } else {
                 toast.error(response.data.message);
             }
@@ -53,11 +54,11 @@ const Page = () => {
         }
     };
 
+    // console.log("weatherData",weatherData);
+
     useEffect(() => {
         fetchData();
     }, []);
-
-
 
     //edit weather data
     const [openEdit, setOpenEdit] = useState<boolean>(false);
@@ -86,6 +87,10 @@ const Page = () => {
         }
     }
 
+    useEffect(() => {
+        setFilterData(weatherData)
+    }, [weatherData, setFilterData])
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         if (selectedDestination && !searchDate) {
@@ -100,7 +105,7 @@ const Page = () => {
             setFilterData(weatherData.filter((s) => {
                 const destinationMatch = s.destination.toString().toLowerCase().includes(selectedDestination.toLowerCase());
                 const dateMatch = s.destination && s.data.filter((d) => d.date.toString().toLowerCase().includes(searchDate.toLowerCase()));
-                console.log("dateMatch",dateMatch)
+                // console.log("dateMatch",dateMatch)
                 return destinationMatch && dateMatch;
             }));
         } else {

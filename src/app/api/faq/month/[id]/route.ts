@@ -3,6 +3,7 @@ import { DestinationMonthFaq } from "@/(models)/models";
 import { IDestionationMonthFaq } from "@/(types)/type";
 import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
+import { NextResponse } from "next/server";
 
 
 export async function DELETE(req:Request, {params}: {params: {id: string}}) {
@@ -23,21 +24,39 @@ export async function DELETE(req:Request, {params}: {params: {id: string}}) {
 export async function PUT(req:Request, {params}: {params: {id: string}}) {
     try {
         const body:IDestionationMonthFaq = await req.json();
-        const {destination, month,} = body;
+        const { destination, faqs , month} = body;
 
-        if(destination === "" || month === "" ) {
-            return Response.json({success: false, message: "all fields are required"})
-        }
+            if (destination === ""|| month === "" || !faqs || faqs.length === 0) {
+            return NextResponse.json({ success: false, message: "All fields are required" });
+            }
+
+            for (const faq of faqs) {
+            if (!faq.question.trim() || !faq.answer.trim()) {
+                return NextResponse.json({ success: false, message: "All FAQ questions and answers are required" });
+            }
+            }
 
         cache.flushAll();
+
+
         await connectDB(); 
-        const updateData = await DestinationMonthFaq.findByIdAndUpdate(params.id, body);
+        const updateData = await DestinationMonthFaq.findByIdAndUpdate(
+            params.id,
+            {
+              $set: {
+                destination: destination,
+                faqs: faqs
+              }
+            },
+            { new: true } 
+          );
+          
         if(updateData) {
-            return Response.json({success: true, message: "update success"})
+            return NextResponse.json({success: true, message: "update success"})
         } else {
-            return Response.json({success: false, message: "update failed"})
+            return NextResponse.json({success: false, message: "update failed"})
         }
     } catch (error) {
-        return Response.json({success: false, message: "update failed"})
+        return NextResponse.json({success: false, message: "update failed"})
     }
 }
