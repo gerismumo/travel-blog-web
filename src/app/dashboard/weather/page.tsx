@@ -43,11 +43,11 @@ const Page = () => {
             const response = await axios.get(`/api/weather`);
             if (response.data.success) {
                 setWeatherData(response.data.data);
-                
             } else {
                 toast.error(response.data.message);
             }
-        } catch (error) {
+        } catch (error: any) {
+            console.log(error)
             toast.error("Network error");
         }finally{
             setLoadingData(false);

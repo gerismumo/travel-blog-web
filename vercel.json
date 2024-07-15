@@ -1,0 +1,8 @@
+{
+    "functions": {
+      "api/weather": {
+        "maxDuration": 30
+      }
+    }
+  }
+  
