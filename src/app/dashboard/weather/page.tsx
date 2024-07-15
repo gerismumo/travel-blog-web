@@ -222,6 +222,11 @@ const Page = () => {
             {openAdd && (
                 <Add success={fetchData} close={setOpenAdd}/>
             )}
+            {/* <div className="flex flex-row justify-end">
+                <button
+                className='px-[20px] py-[4px] rounded-[4px] text-white bg-red-400'
+                >Delete All</button>
+            </div> */}
             <div className="flex flex-col">
                 {currentDataPage?.length === 0 ? (
                     <div className="">No available </div>
