@@ -1,7 +1,6 @@
 import { Destination, DestinationContent, DestinationFaq, DestinationMonthContent, DestinationMonthFaq, Weather } from "@/(models)/models";
 import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
-import axios from "axios";
 import { NextResponse } from "next/server";
 
 
@@ -14,6 +13,8 @@ export async function GET(req: Request) {
         if(cachedData) {
             return NextResponse.json({success: true, data: cachedData})
         }
+
+
         await connectDB;
 
         const destination = await Destination.find();
@@ -43,6 +44,6 @@ export async function GET(req: Request) {
 
     }catch(error: any) {
         console.log(error.message);
-        return NextResponse.json({success:false, message: "server error"});
+        return NextResponse.json({success:false, message: `server error, ${error.message}`});
     }
 }
