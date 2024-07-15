@@ -18,6 +18,7 @@ export async function GET(req: Request) {
         await connectDB;
 
         const destination = await Destination.find();
+        
 
         // console.log(destination);
         let data: any =[]
