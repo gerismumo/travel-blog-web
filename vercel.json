@@ -1,6 +1,6 @@
 {
     "functions": {
-      "api/weather": {
+      "./src/app/api/weather": {
         "maxDuration": 30
       }
     }
