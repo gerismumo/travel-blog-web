@@ -5,6 +5,48 @@ import { IDestination, IDestinationList } from '@/(types)/type';
 import cache from '@/utils/cache';
 
 
+export  async function POST(req: NextRequest) {
+
+  const body = await req.json();
+  const {destination, stationId, countryCode} = body;
+  
+  if (!destination || !countryCode) {
+    return NextResponse.json({ success: false, message: 'All fields are required' });
+  }
+
+  try {
+    await connectDB();
+
+    const result = await Destination.create({name: destination, countryCode: countryCode, stationID: stationId});
+
+    if(result) {
+      return NextResponse.json({success: true,  message: 'inserted successfully'});
+    }else {
+      return NextResponse.json({success: false,  message: 'something went wrong'});
+    }
+  } catch (error: any) {
+    return NextResponse.json({ success: false,  message: 'Error inserting data'});
+  }
+}
+
+
+export async function GET(req: NextRequest) {
+  try {
+    const cachedData = cache.get("destinations");
+
+    if (cachedData) return NextResponse.json({ success: true, data: cachedData });
+    
+    await connectDB(); 
+    const destinations = await Destination.find({});
+    cache.set("destinations", destinations);
+    return NextResponse.json({ success: true, data: destinations });
+  } catch (err: any) { 
+    return NextResponse.json({ success: false, message: 'Error retrieving destinations' });
+  }
+}
+
+
+
 // const destinationsData = [
 //   { name: "Dubai", countryCode: "AE", stationID: 41196 },
 //   { name: "Abu Dhabi", countryCode: "AE", stationID: 41200 },
@@ -56,29 +98,3 @@ import cache from '@/utils/cache';
 //   { name: "Split", countryCode: "HR", stationID: 3190261 },
 //   { name: "Tenerife", countryCode: "ES", stationID: 2510376 }
 // ]
-// export  async function POST(req: NextRequest) {
-//   try {
-//     await connectDB();
-//     const result = await Destination.insertMany(destinationsData);
-//     return NextResponse.json({ message: 'Data inserted successfully', result });
-//   } catch (error) {
-//     console.log(error);
-//     return NextResponse.json({ message: 'Error inserting data', error });
-//   }
-// }
-
-
-export async function GET(req: NextRequest) {
-  try {
-    const cachedData = cache.get("destinations");
-
-    if (cachedData) return NextResponse.json({ success: true, data: cachedData });
-    
-    await connectDB(); 
-    const destinations = await Destination.find({});
-    cache.set("destinations", destinations);
-    return NextResponse.json({ success: true, data: destinations });
-  } catch (err: any) { 
-    return NextResponse.json({ success: false, message: 'Error retrieving destinations' });
-  }
-}

@@ -1,4 +1,5 @@
 import { Destination, DestinationContent, DestinationFaq, DestinationMonthContent, DestinationMonthFaq } from "@/(models)/models";
+import { IDestinationList } from "@/(types)/type";
 import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect"
 import axios from "axios";
@@ -12,15 +13,11 @@ export async function PUT(req:Request, {params}: {params: {id: string}}) {
 
     try {
         //check if cache exits
-        const exists = cache.has(params.id);
+        cache.flushAll()
+        const body:IDestinationList = await req.json();
+        const {stationID, _id, name, countryCode } =body;
 
-        if(exists) {
-           console.log("already exists")
-        }
-
-        const body = await req.json();
-        const {stationId} =body;
-        if(!stationId) {
+        if(!stationID || !_id || !name || !countryCode) {
             return Response.json({success: false, message: "all fields are required"})
         }
 
@@ -29,7 +26,9 @@ export async function PUT(req:Request, {params}: {params: {id: string}}) {
         }
         await connectDB();
         const updatedData = await Destination.findByIdAndUpdate(params.id, {
-            stationID: stationId
+            stationID: stationID,
+            name: name,
+            countryCode: countryCode
         }, {new: true});
 
         if(updatedData){
@@ -38,7 +37,25 @@ export async function PUT(req:Request, {params}: {params: {id: string}}) {
             return Response.json({success: false, message: "update failed"})
         }
     }catch(error) {
-        console.log(error);
+        return Response.json({success: false, message: "server error"})
+    }
+}
+
+export async function DELETE(req:Request, {params}: {params: {id: string}}) {
+    try {
+        if(!params.id) {
+            return Response.json({success: false, message: "error occurred"})
+        }
+
+        await connectDB();
+
+        const deleteD = await Destination.findByIdAndDelete(params.id);
+        if(deleteD) {
+            return Response.json({success: true, message: "delete success"})
+        } else {
+            return Response.json({success: false, message: "delete failed"})
+        }
+    }catch(error: any) {
         return Response.json({success: false, message: "server error"})
     }
 }

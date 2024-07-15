@@ -70,14 +70,14 @@ const SideBar: React.FC<SideBarProps> = ({ data }) => {
                   />
                   List
                   </Link>
-                {/* <Link href="/dashboard/destination/add"
-                className='flex flex-row items-center justify-start pl-[50px] gap-[20px]  hover:bg-white px-[20px]  py-[12px] rounded-[8px] text-white hover:text-dark text-[16px] font-[400]'
-                >
-                  <FontAwesomeIcon icon={fontawesome.faAngleRight}
-                  className='  '
-                  />
-                  Add
-                </Link> */}
+                  <Link href="/dashboard/destination/lat-long"
+                  className='flex flex-row items-center justify-start pl-[50px] gap-[20px]  hover:bg-white px-[20px]  py-[12px] rounded-[8px] text-white hover:text-dark text-[16px] font-[400]'
+                  >
+                    <FontAwesomeIcon icon={fontawesome.faAngleRight}
+                    className=' '
+                    />
+                    Station IDs
+                  </Link>
               </div>
             )}
             <button
