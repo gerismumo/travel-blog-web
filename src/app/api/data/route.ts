@@ -23,7 +23,7 @@ export async function GET(req: Request) {
 
         await Promise.all(destination.map(async(d) => {
             const content = await DestinationContent.findOne({destination: d._id})
-            const faq = await DestinationFaq.find({destination: d._id})
+            const faq = await DestinationFaq.findOne({destination: d._id})
             const monthContent = await DestinationMonthContent.find({destination: d._id})
             const monthFaq = await DestinationMonthFaq.find({destination: d._id});
             const weatherData = await Weather.find({destination: d._id});
