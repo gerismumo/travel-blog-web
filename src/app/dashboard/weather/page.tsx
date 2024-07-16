@@ -56,7 +56,11 @@ const Page = () => {
     // console.log("weatherData",weatherData);
 
     useEffect(() => {
+        let isMounted = true;
         fetchData();
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     //edit weather data
@@ -262,16 +266,16 @@ const Page = () => {
                                                                 <button
                                                                 onClick={() => handleOpenEdit(w)}
                                                                 type='button'
-                                                                className='px-[20px] py-[6px] rounded-[4px] text-white bg-lightDark hover:bg-dark'
+                                                                className={`${openEdit && openEditId === w._id ? "px-[20px] py-[6px] rounded-[4px]  text-white bg-lightDark hover:bg-dark": "text-[25px]"} `}
                                                                 >
-                                                                    {openEdit && openEditId === w._id ? "Close" : "Edit"}
+                                                                    {openEdit && openEditId === w._id ? "Close" : <FontAwesomeIcon icon={fontawesome.faPenToSquare}/>}
                                                                 </button>
                                                                 <button
                                                                 onClick={() => handleDelete(w._id)}
                                                                 type='button'
-                                                                className='px-[20px] py-[6px] rounded-[4px] text-white bg-red-400'
+                                                                className='text-[25px] text-red-400'
                                                                 >
-                                                                    Delete
+                                                                    <FontAwesomeIcon icon={fontawesome.faTrashCan}/>
                                                                 </button>
                                                             </div>
                                                             <div className="flex flex-row overflow-auto  border-[1px] border-[#ddd]">
@@ -349,26 +353,44 @@ const Page = () => {
                                                     </React.Fragment>
                                                 )
                                             })}
-                                            <div className="flex justify-center items-center mt-[20px] gap-[20px]">
-                                                <button
-                                                    onClick={() => handleWDPageChange(getCurrentWDPage(d._id) - 1, d._id)}
-                                                    disabled={getCurrentWDPage(d._id) === 1}
-                                                    
-                                                >
-                                                 <FontAwesomeIcon icon={fontawesome.faAnglesLeft}/>
-                                                </button>
-                                                <button
-                                                    onClick={() => handleResetPgD(d._id)}
-                                                >
-                                                    <FontAwesomeIcon icon={fontawesome.faCreativeCommonsZero}/>
-                                                </button>
-                                                <button
-                                                    onClick={() => handleWDPageChange(getCurrentWDPage(d._id) + 1, d._id)}
-                                                    disabled={getCurrentWDPage(d._id) >= wdPagesCount}
-                                                    
-                                                >
-                                                    <FontAwesomeIcon icon={fontawesome.faAnglesRight}/>
-                                                </button>
+                                            <div className="flex justify-center items-center mt-[20px] gap-[30px]">
+                                                <div className="relative group">
+                                                    <button
+                                                        onClick={() => handleWDPageChange(getCurrentWDPage(d._id) - 1, d._id)}
+                                                        disabled={getCurrentWDPage(d._id) === 1}
+                                                        className="relative z-10"
+                                                    >
+                                                        <FontAwesomeIcon icon={fontawesome.faAnglesLeft} />
+                                                    </button>
+                                                    <div className="absolute bottom-full mb-[1px] hidden group-hover:block">
+                                                        <div className="px-2 py-1 text-gray-700 rounded">Prev</div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="relative group">
+                                                    <button
+                                                        onClick={() => handleResetPgD(d._id)}
+                                                        className="relative z-10"
+                                                    >
+                                                        <FontAwesomeIcon icon={fontawesome.faCreativeCommonsZero} />
+                                                    </button>
+                                                    <div className="absolute bottom-full mb-[1px] hidden group-hover:block">
+                                                        <div className="px-2 py-1 text-gray-700  rounded">Reset</div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="relative group">
+                                                    <button
+                                                        onClick={() => handleWDPageChange(getCurrentWDPage(d._id) + 1, d._id)}
+                                                        disabled={getCurrentWDPage(d._id) >= wdPagesCount}
+                                                        className="relative z-10"
+                                                    >
+                                                        <FontAwesomeIcon icon={fontawesome.faAnglesRight} />
+                                                    </button>
+                                                    <div className="absolute bottom-full mb-[1px] hidden group-hover:block">
+                                                        <div className="px-2 py-1 text-gray-700  rounded">Next</div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     )}
@@ -379,25 +401,43 @@ const Page = () => {
                         )}
                     </div>
                 )}
-                <div className="flex flex-row justify-center mt-4 gap-[20px]">
-                    <button
-                    
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                    >
-                         <FontAwesomeIcon icon={fontawesome.faAnglesLeft}/>
-                    </button>
-                    <button
-                        onClick={() => handleResetPg()}
-                    >
-                        <FontAwesomeIcon icon={fontawesome.faCreativeCommonsZero}/>
-                    </button>
-                    <button
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentDataPage.length < itemsPerPage || currentPage === pagesCount}
-                    >
-                        <FontAwesomeIcon icon={fontawesome.faAnglesRight}/>
-                    </button>
+                <div className="flex flex-row justify-center mt-4 gap-[30px]">
+                    <div className="relative group">
+                        <button
+                            
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="relative z-10"
+                        >
+                            <FontAwesomeIcon icon={fontawesome.faAnglesLeft}/>
+                        </button>
+                        <div className="absolute bottom-full mb-[1px] hidden group-hover:block">
+                            <div className="px-2 py-1 text-gray-700  rounded">Prev</div>
+                        </div>
+                    </div>
+                    <div className="relative group">
+                        <button
+                            onClick={() => handleResetPg()}
+                            className="relative z-10"
+                        >
+                            <FontAwesomeIcon icon={fontawesome.faCreativeCommonsZero}/>
+                        </button>
+                        <div className="absolute bottom-full mb-[1px] hidden group-hover:block">
+                            <div className="px-2 py-1 text-gray-700  rounded">Reset</div>
+                        </div>
+                    </div>
+                    <div className="relative group">
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentDataPage.length < itemsPerPage || currentPage === pagesCount}
+                            className="relative z-10"
+                        >
+                            <FontAwesomeIcon icon={fontawesome.faAnglesRight}/>
+                        </button>
+                        <div className="absolute bottom-full mb-[1px] hidden group-hover:block">
+                            <div className="px-2 py-1 text-gray-700  rounded">Next</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

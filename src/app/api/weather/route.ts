@@ -85,6 +85,7 @@ export async function GET() {
         const cachedData = cache.get("wtd");
 
         if(cachedData) {
+            console.log("cashing weather")
             return NextResponse.json({success: true, data: cachedData});
         }
 
@@ -92,7 +93,7 @@ export async function GET() {
         //select data
 
         const data = await Weather.find();
-
+        
         cache.set("wtd", data)
 
         return NextResponse.json({success: true, data: data});
@@ -109,6 +110,8 @@ export async function PUT(req:Request) {
         if(!date || !tavg || !tmin || !tmax || !prcp || !snow || !wdir || !wspd || !wpgt || !pres || !tsun || !_id) {
             return NextResponse.json({success: false, message: "required fields are missing."});
         }
+
+         cache.flushAll();
 
         await connectDB();
 

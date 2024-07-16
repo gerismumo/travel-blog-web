@@ -1,9 +1,9 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faUser,faAnglesLeft, faXmark, faSpinner ,faAnglesRight,faBars, faTrashCan, faAngleRight, faAngleDown,faArrowsToDot, faCircleInfo, faAngleUp, faHouse, faPlaneDeparture,faBolt, faHollyBerry } from '@fortawesome/free-solid-svg-icons';
-import {faCircleQuestion, faNewspaper} from '@fortawesome/free-regular-svg-icons';
+import {faCircleQuestion, faNewspaper, faPenToSquare} from '@fortawesome/free-regular-svg-icons';
 import {faCreativeCommonsZero} from '@fortawesome/free-brands-svg-icons';
 
-library.add( faCreativeCommonsZero,faAnglesLeft,faAnglesRight, faSpinner,faUser,faXmark, faBars, faTrashCan, faAngleRight,faAngleDown,faCircleInfo,faArrowsToDot, faAngleUp, faHouse, faPlaneDeparture, faBolt, faCircleQuestion, faHollyBerry, faNewspaper, );
+library.add(faPenToSquare, faCreativeCommonsZero,faAnglesLeft,faAnglesRight, faSpinner,faUser,faXmark, faBars, faTrashCan, faAngleRight,faAngleDown,faCircleInfo,faArrowsToDot, faAngleUp, faHouse, faPlaneDeparture, faBolt, faCircleQuestion, faHollyBerry, faNewspaper, );
 
 
 export default{
@@ -25,8 +25,10 @@ export default{
     faSpinner,
     faAnglesRight,
     faAnglesLeft,
-    faCreativeCommonsZero
+    faCreativeCommonsZero,
+    faPenToSquare
 }
+
 
 
 

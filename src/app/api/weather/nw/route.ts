@@ -1,4 +1,5 @@
 import { Destination, Weather } from "@/(models)/models";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
 import { NextResponse } from "next/server";
 
@@ -20,7 +21,7 @@ export async function POST(req: Request) {
         }
 
         //check if the data exists in the db
-
+        cache.flushAll();
         await connectDB();
 
         const destinationDetail = await Destination.findOne({_id:destination})

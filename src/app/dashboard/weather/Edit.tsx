@@ -1,6 +1,7 @@
 "use client"
 
 import { IWeatherDataList } from '@/(types)/type'
+import Spinner from '@/app/components/Spinner'
 import axios from 'axios'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -14,6 +15,9 @@ interface Props {
 const Edit:React.FC<Props> = ({data, close, success}) => {
 
     const [formData, setFormData] = useState<IWeatherDataList | null>(data);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    // console.log("formData", formData);
 
     if (!formData) return null;
 
@@ -25,17 +29,23 @@ const Edit:React.FC<Props> = ({data, close, success}) => {
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         //submit edit data to the api
+        setIsLoading(true);
         try {
             const response = await axios.put('/api/weather', formData);
             if(response.data.success) {
                 toast.success(response.data.message);
-                success();
+                () => success();
                 close(false);
+                setIsLoading(false);
+                return;
             } else {
                 toast.error(response.data.message);
+                setIsLoading(false);
             }
         }catch(error: any) {
             return toast.error("Network error");
+        }finally{
+            setIsLoading(false);
         }
     }
 
@@ -168,8 +178,11 @@ const Edit:React.FC<Props> = ({data, close, success}) => {
             <div className="flex flex-row justify-center items-center">
                 <button
                 type='submit'
+                disabled={isLoading}
                 className="bg-lightDark hover:dark text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >Edit</button>
+                >
+                {isLoading ? <Spinner/> : "Edit"}
+                </button>
             </div>
         </form>
 

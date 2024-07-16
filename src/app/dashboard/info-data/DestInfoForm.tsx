@@ -14,7 +14,7 @@ const DestInfoForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
     const[destination, setDestination] = useState<string>("");
     const[weatherInfo, setWeatherInfo] = useState<string>("");
     const[destinationMoreInfo, setDestinationMoreInfo] =useState<string>("");
-    const[image, setImage] = useState<string>("");
+    const [image, setImage] = useState<File | null>(null);
     const [metaTitle, setMetaTitle] = useState<string>("");
     const [metaDescription, setMetaDescription] = useState<string>("");
     const [metaKeywords, setMetaKeywords] = useState<string>("");
@@ -41,34 +41,43 @@ const DestInfoForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
         toast.error(error);
     }
 
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setImage(e.target.files[0]);
+        }
+    };
+
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if(destination === "" || weatherInfo === "" || destinationMoreInfo === "" || image ==="" || metaTitle === "" || metaDescription === "" || metaKeywords === "") {
+        if(destination === "" || weatherInfo === "" || destinationMoreInfo === "" || !image || metaTitle === "" || metaDescription === "" || metaKeywords === "") {
             return toast.error("all fields are required")
         }
 
         //
-        const data: IDestinationContent = {
-            destination: destination,
-            weatherInfo: weatherInfo,
-            destinationInfo: destinationMoreInfo,
-            image: image,
-            metaTitle: metaTitle,
-            metaDescription: metaDescription,
-            metaKeyWords: metaKeywords,
-        }
-
+        const formData = new FormData();
+        formData.append("destination", destination);
+        formData.append("weatherInfo", weatherInfo);
+        formData.append("destinationInfo", destinationMoreInfo);
+        formData.append("image", image);
+        formData.append("metaTitle", metaTitle);
+        formData.append("metaDescription", metaDescription);
+        formData.append("metaKeywords", metaKeywords);
         //submit data object to server
         try{
-            const response = await axios.post('/api/content', data);
+            const response = await axios.post('/api/content', formData, {
+              headers: {
+                  'Content-Type': 'multipart/form-data'
+              }
+            });
             if(response.data.success) {
                 onSuccess();
                 toast.success(response.data.message);
                 setDestination('');
                 setWeatherInfo('');
                 setDestinationMoreInfo('');
-                setImage('');
+                setImage(null);
                 setMetaTitle('');
                 setMetaDescription('');
                 setMetaKeywords('');
@@ -129,15 +138,15 @@ const DestInfoForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
           </textarea>
         </div>
         <div className="flex flex-col">
-          <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
-            Image Url <span className="text-red-500">*</span>
-          </label>
-          <input type="url" 
-          name="imageUrl" id="imageUrl"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          className='input'
-          />
+            <label className="block text-gray-700 text-sm font-bold " htmlFor="imageUrl">
+                Image Url <span className="text-red-500">*</span>
+            </label>
+            <input type="file"
+                name="imageUrl" id="imageUrl"
+                accept="image/*"
+                onChange={handleImageChange}
+                className='input'
+            />
         </div>
         <div className="flex flex-col">
             <span className="block text-gray-700 text-sm font-bold ">SEO Data</span>

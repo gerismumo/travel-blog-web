@@ -1,12 +1,14 @@
 import { Weather } from "@/(models)/models";
+import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
 import { NextRequest, NextResponse } from "next/server";
+
 
 export async function DELETE(req: Request, {params}:{params: { id: string}}) {
     try {
         await connectDB();
 
-        
+        cache.flushAll();
         const dataId = params.id;
 
         if (!dataId) {
