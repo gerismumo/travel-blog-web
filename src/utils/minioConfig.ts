@@ -22,4 +22,5 @@ export const minioClient = new Minio.Client({
       }
     });
   }
-  
+
+

@@ -2,7 +2,12 @@ import { DestinationContent } from "@/(models)/models";
 import { IDestinationContent } from "@/(types)/type";
 import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
+import { uploadToMinio } from "@/utils/uploadToMinio";
 import { NextRequest, NextResponse } from "next/server";
+import dotenv from "dotenv";
+
+dotenv.config({path: '../../../../.env'});
+
 
 export async function POST(req:NextRequest) {
     try{
@@ -16,20 +21,31 @@ export async function POST(req:NextRequest) {
         const metaKeyWords = formData.get('metaKeywords')?.toString();
         const image = formData.get('image')as File | null ;
 
-        console.log('formdata',formData)
-
-        console.log("image",image);
-        
-
+        //check values
         if(!destination ||!weatherInfo ||!destinationInfo || !image || !metaTitle || !metaDescription || !metaKeyWords) {
             return NextResponse.json({ success: false, message: 'Fill all fields' });
         }
 
-        const imageBuffer = await image.arrayBuffer();
-        console.log("Image buffer: " + imageBuffer);
+        //upload image to minio
+        let etag, fileName;
+        try {
+            const uploadResponse = await uploadToMinio({
+                bucketName: 'blogs',
+                file: image,
+                folder: 'weather'
+            });
+            etag = uploadResponse.etag;
+            fileName = uploadResponse.fileName;
+        } catch (error) {
+            return NextResponse.json({ success: false, message: 'Image upload failed, try again later' });
+        }
 
-        console.log("insert image", Buffer.from(imageBuffer).toString("base64"))
-        //
+        if(!process.env.IMAGE_URL) {
+            return NextResponse.json({ success: false, message: 'Error occured, try again later' });
+        }
+        //image url
+        const imageUrl = `${process.env.IMAGE_URL}/blogs/${fileName}`
+      
 
         await connectDB();
 
@@ -38,7 +54,7 @@ export async function POST(req:NextRequest) {
             return NextResponse.json({ success: false, message: 'record already exists' });
         }
 
-        const savedData = await DestinationContent.create({destination, weatherInfo, destinationInfo, image: Buffer.from(imageBuffer), metaTitle, metaDescription,metaKeyWords});
+        const savedData = await DestinationContent.create({destination, weatherInfo, destinationInfo, image: imageUrl, metaTitle, metaDescription,metaKeyWords});
         if(savedData) {
             cache.del("destinationContent");
             return NextResponse.json({ success: true, message: 'Added successfully' });
