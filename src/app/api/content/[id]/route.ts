@@ -1,7 +1,10 @@
 import { DestinationContent } from "@/(models)/models";
 import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
-import { NextResponse } from "next/server";
+import { uploadToMinio } from "@/utils/uploadToMinio";
+import { NextRequest, NextResponse } from "next/server";
+import dotenv from "dotenv";
+dotenv.config({path: '../../../../../.env'});
 
 
 export async function DELETE(req:Request, {params}: {params: {id: string}}) {
@@ -9,6 +12,7 @@ export async function DELETE(req:Request, {params}: {params: {id: string}}) {
         cache.flushAll();
 
         await connectDB(); 
+
         const deleteData = await DestinationContent.findByIdAndDelete(params.id);
         if(deleteData) {
             return Response.json({success: true, message: "delete success"})
@@ -21,22 +25,54 @@ export async function DELETE(req:Request, {params}: {params: {id: string}}) {
 }
 
 
-export async function PUT(req:Request, {params}: {params: {id: string}}) { 
+export async function PUT(req:NextRequest, {params}: {params: {id: string}}) { 
     try{
-        const body = await req.json();
+        const formData = await req.formData();
+
+        const destination = formData.get('destination')?.toString();
+        const weatherInfo = formData.get('weatherInfo')?.toString();
+        const destinationInfo = formData.get('destinationInfo')?.toString();
+        const metaTitle = formData.get('metaTitle')?.toString();
+        const metaDescription = formData.get('metaDescription')?.toString();
+        const metaKeyWords = formData.get('metaKeywords')?.toString();
+        const image = formData.get('image') as File | string | null;
+
+        console.log("image: " ,  image)
+        console.log(destination);
+
+        let etag, fileName;
+        if(image as File) {
+            console.log("image is a file")
+            try {
+                const uploadResponse = await uploadToMinio({
+                    bucketName: 'blogs',
+                    file: image,
+                    folder: 'weather'
+                });
+                etag = uploadResponse.etag;
+                fileName = uploadResponse.fileName;
+            } catch (error) {
+                return NextResponse.json({ success: false, message: 'Image upload failed, try again later' });
+            }
+        }
+
+        if(!process.env.IMAGE_URL) {
+            return NextResponse.json({ success: false, message: 'Error occured, try again later' });
+        }
+
+        const imageUrl = `${process.env.IMAGE_URL}/blogs/${fileName}`
         
         cache.flushAll();
         
         await connectDB();
 
         const updatedData = await DestinationContent.findByIdAndUpdate(params.id, {
-            weatherInfo: body.weatherInfo,
-            category: body.category,
-            destinationInfo: body.destinationInfo,
-            image: body.image,
-            metaTitle: body.metaTitle,
-            metaDescription: body.metaDescription,
-            metaKeyWords: body.metaKeyWords
+            weatherInfo: weatherInfo,
+            destinationInfo:destinationInfo,
+            image: image as File ? imageUrl : image,
+            metaTitle:metaTitle,
+            metaDescription: metaDescription,
+            metaKeyWords:metaKeyWords
         }, {new: true});
         
         if(updatedData) {
@@ -44,7 +80,8 @@ export async function PUT(req:Request, {params}: {params: {id: string}}) {
         } else {
             return Response.json({success: false, message: "update failed"})
         }
-    }catch(error) {
+    }catch(error: any) {
+        console.log(error.message)
         return Response.json({success: false, message: "server error"})
     }
 }

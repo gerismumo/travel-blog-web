@@ -1,5 +1,4 @@
 import { DestinationContent } from "@/(models)/models";
-import { IDestinationContent } from "@/(types)/type";
 import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
 import { uploadToMinio } from "@/utils/uploadToMinio";

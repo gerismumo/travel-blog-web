@@ -7,20 +7,21 @@ import { getDestinations } from "@/utils/(apis)/destinationApi";
 import { TruncateContent, truncateText } from "@/utils/service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import DestInfoForm from "./DestInfoForm";
 import ConfirmModal from "@/app/components/ConfirmModal";
 import PreviewModal from "./PreviewModal"; 
 import { getDestinationsInfo } from "@/utils/(apis)/ContentApi";
 import { destiationCategory } from "@/lib/destiCategory";
+import Spinner from "@/app/components/Spinner";
 
 const Page: React.FC = () => {
   const [contentList, setContentList] = useState<IDestinationContentList[]>([]);
   const [destinations, setDestinations] = useState<IDestinationList[]>([]);
   const [openEdit, setOpenEdit] = useState<boolean>(false);
   const [openEditId, setOpenEditId] = useState<string | null>(null);
-  const [editObject, setEditObject] = useState<IDestinationContentList | null>(null);
+  const [editObject, setEditObject] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [loadingDestinations, setLoadingDestinations] = useState<boolean>(true);
   const [loadingContent, setLoadingContent] = useState<boolean>(true);
@@ -29,6 +30,8 @@ const Page: React.FC = () => {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false); 
   const [previewContent, setPreviewContent] = useState<IDestinationContentList | null>(null); 
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchData = async () => {
     try {
@@ -100,6 +103,18 @@ const Page: React.FC = () => {
     setOpenAddForm(false);
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+
+      if(editObject) {
+        setEditObject({
+          ...editObject,
+          image: e.target.files[0]
+        })
+      }
+    }
+};
+
   const handleSubmitEdit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (editObject === null) {
@@ -107,37 +122,34 @@ const Page: React.FC = () => {
       return;
     }
 
-    const data: IDestinationContentList = {
-      _id: editObject._id,
-      destination: editObject.destination,
-      weatherInfo: editObject.weatherInfo,
-      destinationInfo: editObject.destinationInfo,
-      image: editObject.image,
-      metaTitle: editObject.metaTitle,
-      metaDescription: editObject.metaDescription,
-      metaKeyWords: editObject.metaKeyWords,
-    };
+    console.log("image c",editObject.image)
 
-    //check empty fields
-    for (const [key, value] of Object.entries(data)) {
-      if (!value) {
-        toast.error("all fields are required");
-        return;
-      }
-    }
+    const formData = new FormData();
+    formData.append('_id', editObject._id);
+    formData.append('destination', editObject.destination);
+    formData.append('weatherInfo', editObject.weatherInfo);
+    formData.append('destinationInfo', editObject.destinationInfo);
+    formData.append('image', editObject.image); 
+    formData.append('metaTitle', editObject.metaTitle);
+    formData.append('metaDescription', editObject.metaDescription);
+    formData.append('metaKeyWords', editObject.metaKeyWords);
 
     //submit data
+    setIsLoading(true)
     try {
-      const response = await axios.put(`/api/content/${editObject._id}`, data);
+      const response = await axios.put(`/api/content/${editObject._id}`, formData);
       if (response.data.success) {
         toast.success(response.data.message);
         setOpenEdit(false);
         fetchData();
+        setIsLoading(false)
       } else {
         toast.error(response.data.message);
       }
     } catch (error: any) {
       return toast.error("network error");
+    }finally {
+      setIsLoading(false)
     }
   };
 
@@ -198,7 +210,7 @@ const Page: React.FC = () => {
           </button>
         </div>
       </div>
-      {openAddForm && <DestInfoForm onSuccess={fetchData} />}
+      {openAddForm && <DestInfoForm onSuccess={fetchData} close={setOpenAddForm} />}
 
       <div className="overflow-auto">
         <table className="border-collapse w-full">
@@ -329,20 +341,14 @@ const Page: React.FC = () => {
                                   className="block text-gray-700 text-sm font-bold"
                                   htmlFor="imageUrl"
                                 >
-                                  Image Url <span className="text-red-500">*</span>
+                                  Image <span className="text-red-500">*</span>
                                 </label>
-                                <input
-                                  type="url"
+                                <input type="file" 
                                   name="imageUrl"
                                   id="imageUrl"
-                                  value={editObject?.image}
-                                  onChange={(e) =>
-                                    setEditObject(
-                                      editObject
-                                        ? { ...editObject, image: e.target.value }
-                                        : null
-                                    )
-                                  }
+                                  accept="image/*"
+                                  onChange={handleImageChange}
+                                  ref={imageInputRef}
                                   className="input"
                                 />
                               </div>
@@ -405,7 +411,7 @@ const Page: React.FC = () => {
                                   className="bg-lightDark hover:bg-[#3C4048] text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                   type="submit"
                                 >
-                                  Submit
+                                  {isLoading ? <Spinner/> : "Edit"}
                                 </button>
                               </div>
                             </form>

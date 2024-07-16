@@ -2,15 +2,19 @@
 
 import { IDestinationContent, IDestinationList, ISuccessFormProp } from '@/(types)/type';
 import Loader from '@/app/components/Loader';
+import Spinner from '@/app/components/Spinner';
 import { destiationCategory } from '@/lib/destiCategory';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast';
 
+type Props ={
+  onSuccess: () => void,
+  close: (value: boolean) => void
+}
 
-
-const DestInfoForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
+const DestInfoForm:React.FC<Props>  = ({onSuccess, close}) => {
     const[destination, setDestination] = useState<string>("");
     const[weatherInfo, setWeatherInfo] = useState<string>("");
     const[destinationMoreInfo, setDestinationMoreInfo] =useState<string>("");
@@ -21,6 +25,8 @@ const DestInfoForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const imageInputRef = useRef<HTMLInputElement>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
   
     useEffect(() => {
       const fetchData = async () => {
@@ -65,6 +71,8 @@ const DestInfoForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
         formData.append("metaDescription", metaDescription);
         formData.append("metaKeywords", metaKeywords);
         //submit data object to server
+
+        setIsLoading(true);
         try{
             const response = await axios.post('/api/content', formData, {
               headers: {
@@ -81,11 +89,20 @@ const DestInfoForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
                 setMetaTitle('');
                 setMetaDescription('');
                 setMetaKeywords('');
+                if (imageInputRef.current) {
+                  imageInputRef.current.value = "";
+                }
+                setIsLoading(false);
+                close(false);
             }else {
                 toast.error(response.data.message);
+                setIsLoading(false);
             }
         }catch(error) {
             toast.error("network error");
+            setIsLoading(false);
+        }finally {
+          setIsLoading(false);
         }
     }
 
@@ -139,12 +156,13 @@ const DestInfoForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
         </div>
         <div className="flex flex-col">
             <label className="block text-gray-700 text-sm font-bold " htmlFor="imageUrl">
-                Image Url <span className="text-red-500">*</span>
+                Image<span className="text-red-500">*</span>
             </label>
             <input type="file"
                 name="imageUrl" id="imageUrl"
                 accept="image/*"
                 onChange={handleImageChange}
+                ref={imageInputRef}
                 className='input'
             />
         </div>
@@ -188,8 +206,9 @@ const DestInfoForm:React.FC<ISuccessFormProp>  = ({onSuccess}) => {
           <button
             className="bg-lightDark hover:bg-[#3C4048] text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
+            disabled={isLoading}
           >
-            Submit
+            {isLoading ? <Spinner/> : "Add"}
           </button>
         </div>
       </form>

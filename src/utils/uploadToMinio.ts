@@ -8,6 +8,11 @@ interface UploadParams {
     folder: string;
 }
 
+interface DeleteParams {
+    bucketName: string;
+    fileName: string;
+}
+
 export async function uploadToMinio({ bucketName, file, folder }: UploadParams): Promise<any> {
     try {
         const originalFileName = file.name;
@@ -33,6 +38,24 @@ export async function uploadToMinio({ bucketName, file, folder }: UploadParams):
             );
         });
         return {etag: data.etag, fileName}
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+export async function deleteFromMinio({ bucketName, fileName }: DeleteParams): Promise<void> {
+    try {
+        await new Promise((resolve, reject) => {
+            minioClient.removeObject(bucketName, fileName, (err: any) => {
+                if (err) {
+                    console.log("Image deletion failed")
+                    reject(new Error('Image deletion failed'));
+                } else {
+                    resolve(true);
+                }
+            });
+        });
     } catch (error) {
         throw error;
     }
