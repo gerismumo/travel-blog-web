@@ -2,20 +2,123 @@ import { DestinationContent, DestinationMonthContent, HolidayBlog } from "@/(mod
 import { IHolidayBlog } from "@/(types)/type";
 import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
-import { NextResponse } from "next/server";
+import { uploadToMinio } from "@/utils/uploadToMinio";
+import { NextRequest, NextResponse } from "next/server";
+import dotenv from "dotenv";
 
-export async function POST(req:Request) {
+dotenv.config({path: '../../../../.env'});
+
+export async function POST(req:NextRequest) {
     try {
-        const body:IHolidayBlog = await req.json();
-       
+      const formData = await req.formData();
 
-        const {category, overViewHeading, coverImage, heading, image, overViewDescription, metaTitle, metaDescription, metaKeyWords, destination, otherCategory, month , WeatherHolidayContent, OtherHolidayContent} =body;
-        cache.del("hBg");
-        await connectDB();
+      //get the otherHolidayContent
+      const otherHolidayContent: any = [];
+      formData.forEach((value, key) => {
+        if (key.startsWith('OtherHolidayContent')) {
+          const match = key.match(/OtherHolidayContent\[(\d+)\]\.(.*)/);
+          if (match) {
+            const index = parseInt(match[1], 10);
+            const field = match[2];
+  
+            if (!otherHolidayContent[index]) {
+              otherHolidayContent[index] = {};
+            }
+  
+            otherHolidayContent[index][field] = value;
+          }
+        } 
+      });
+      //get the other keys
+      const category = formData.get('category');
+      const overViewHeading = formData.get('overViewHeading');
+      let coverImage = formData.get('coverImage');
+      const heading = formData.get('heading');
+      let image = formData.get('image');
+      const overViewDescription = formData.get('overViewDescription');        
+      const metaTitle = formData.get('metaTitle');
+      const metaDescription = formData.get('metaDescription');
+      const metaKeyWords = formData.get('metaKeyWords');
+      const destination = formData.get('destination');
+      const otherCategory = formData.get('otherCategory');
+      const month = formData.get('month');
+      const WeatherHolidayContent = formData.get('WeatherHolidayContent');
+      const parsedWeatherHolidayContent = WeatherHolidayContent ? JSON.parse(WeatherHolidayContent as string) : [];
 
-        if (!category || !overViewHeading || !coverImage  || !metaTitle || !metaDescription || !metaKeyWords ) {
-            return Response.json({success: false, message: 'All fields are required.' });
+
+      if (!category || !overViewHeading || !coverImage  || !metaTitle || !metaDescription || !metaKeyWords ) {
+        return Response.json({success: false, message: 'All fields are required.' });
+      }
+
+      cache.del("hBg");
+      //image insert to minio
+
+      // coverImage
+      let  CoverImageName;
+        try {
+            const uploadResponse = await uploadToMinio({
+                bucketName: 'blogs',
+                file: coverImage as File,
+                folder: 'weather'
+            });
+            CoverImageName = uploadResponse.fileName;
+        } catch (error) {
+            return NextResponse.json({ success: false, message: 'Image upload failed, try again later' });
         }
+
+        if(!process.env.IMAGE_URL) {
+          return NextResponse.json({ success: false, message: 'Error occured, try again later' });
+      }
+      //image url
+      coverImage = `${process.env.IMAGE_URL}/blogs/${CoverImageName}`
+
+      if(image) {
+        let  ImageName;
+        try {
+            const uploadResponse = await uploadToMinio({
+                bucketName: 'blogs',
+                file: image as File,
+                folder: 'weather'
+            });
+            ImageName = uploadResponse.fileName;
+        } catch (error) {
+            return NextResponse.json({ success: false, message: 'Image upload failed, try again later' });
+        }
+
+        if(!process.env.IMAGE_URL) {
+          return NextResponse.json({ success: false, message: 'Error occured, try again later' });
+      }
+      //image url
+      image = `${process.env.IMAGE_URL}/blogs/${ImageName}`
+      }
+
+      //generate image url for each subimage
+      if (otherHolidayContent.length > 0) {
+        for (const c of otherHolidayContent) {
+          let subImage = c.subImage;
+      
+          if (subImage) {
+            let subImageName;
+            try {
+              const uploadResponse = await uploadToMinio({
+                bucketName: 'blogs',
+                file: subImage as File,
+                folder: 'weather'
+              });
+              subImageName = uploadResponse.fileName;
+            } catch (error) {
+              return NextResponse.json({ success: false, message: 'Image upload failed, try again later' });
+            }
+      
+            subImage = `${process.env.IMAGE_URL}/blogs/${subImageName}`;
+          }
+      
+          c.subImage = subImage;
+        }
+      }
+
+      //submit the data to the database
+        await connectDB();
 
         const newHolidayBlog = await HolidayBlog.create({
             category: category,
@@ -30,8 +133,8 @@ export async function POST(req:Request) {
             destination: destination,
             otherCategory: otherCategory,
             month: month,
-            WeatherHolidayContent: WeatherHolidayContent.length === 0 ? [] : WeatherHolidayContent,
-            OtherHolidayContent:  otherCategory === "month" || OtherHolidayContent.length === 0 ? []: OtherHolidayContent
+            WeatherHolidayContent: parsedWeatherHolidayContent.length === 0 ? [] : parsedWeatherHolidayContent,
+            OtherHolidayContent:  otherCategory === "month" || otherHolidayContent.length === 0 ? []: otherHolidayContent
         });
 
         if(newHolidayBlog) {
@@ -79,7 +182,7 @@ export async function GET(req:Request) {
             });
           
             const updatedWeatherHolidayContent = await Promise.all(promises);
-            console.log(updatedWeatherHolidayContent)
+            // console.log(updatedWeatherHolidayContent)
             return { ...d.toObject(), WeatherHolidayContent: updatedWeatherHolidayContent };
           }));
 

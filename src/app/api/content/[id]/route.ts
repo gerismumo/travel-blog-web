@@ -1,7 +1,7 @@
 import { DestinationContent } from "@/(models)/models";
 import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
-import { uploadToMinio } from "@/utils/uploadToMinio";
+import { deleteFromMinio, uploadToMinio } from "@/utils/uploadToMinio";
 import { NextRequest, NextResponse } from "next/server";
 import dotenv from "dotenv";
 dotenv.config({path: '../../../../../.env'});
@@ -12,6 +12,26 @@ export async function DELETE(req:Request, {params}: {params: {id: string}}) {
         cache.flushAll();
 
         await connectDB(); 
+
+        const existingData = await DestinationContent.findById(params.id);
+        if(!existingData) {
+            return NextResponse.json({ success: false, message: "data not found" })
+        }
+
+        //obtain the image url
+        const urlObject = new URL(existingData.image);
+        const pathname = urlObject.pathname;
+        const desiredImgStr = pathname.replace('/blogs/', '');
+
+        try {
+            const bucketName = 'blogs';
+            const fileName = desiredImgStr;
+            await deleteFromMinio({ bucketName, fileName });
+            
+            //update the new image
+        } catch (error) {
+            return NextResponse.json({ success: false, message: 'error occured, try again later' });
+        }
 
         const deleteData = await DestinationContent.findByIdAndDelete(params.id);
         if(deleteData) {
@@ -28,7 +48,6 @@ export async function DELETE(req:Request, {params}: {params: {id: string}}) {
 export async function PUT(req:NextRequest, {params}: {params: {id: string}}) { 
     try{
         const formData = await req.formData();
-
         const destination = formData.get('destination')?.toString();
         const weatherInfo = formData.get('weatherInfo')?.toString();
         const destinationInfo = formData.get('destinationInfo')?.toString();
@@ -37,20 +56,35 @@ export async function PUT(req:NextRequest, {params}: {params: {id: string}}) {
         const metaKeyWords = formData.get('metaKeywords')?.toString();
         const image = formData.get('image') as File | string | null;
 
-        console.log("image: " ,  image)
-        console.log(destination);
+     //get esixting data
+        const existingData = await DestinationContent.findById(params.id);
+        if(!existingData) {
+            return NextResponse.json({ success: false, message: "data not found" })
+        }
 
-        let etag, fileName;
-        if(image as File) {
-            console.log("image is a file")
+        
+
+        //obtain the image url
+        const urlObject = new URL(existingData.image);
+        const pathname = urlObject.pathname;
+        const desiredImgStr = pathname.replace('/blogs/', '');
+
+        let etag, ImageName;
+        if(typeof image === "object") {
+            //delete existing image from minio
             try {
+                const bucketName = 'blogs';
+                const fileName = desiredImgStr;
+                await deleteFromMinio({ bucketName, fileName });
+                
+                //update the new image
                 const uploadResponse = await uploadToMinio({
                     bucketName: 'blogs',
-                    file: image,
+                    file: image as File,
                     folder: 'weather'
                 });
                 etag = uploadResponse.etag;
-                fileName = uploadResponse.fileName;
+                ImageName = uploadResponse.fileName;
             } catch (error) {
                 return NextResponse.json({ success: false, message: 'Image upload failed, try again later' });
             }
@@ -60,16 +94,17 @@ export async function PUT(req:NextRequest, {params}: {params: {id: string}}) {
             return NextResponse.json({ success: false, message: 'Error occured, try again later' });
         }
 
-        const imageUrl = `${process.env.IMAGE_URL}/blogs/${fileName}`
+        const imageUrl = `${process.env.IMAGE_URL}/blogs/${ImageName}`
         
         cache.flushAll();
         
         await connectDB();
 
         const updatedData = await DestinationContent.findByIdAndUpdate(params.id, {
+            destination: destination,
             weatherInfo: weatherInfo,
             destinationInfo:destinationInfo,
-            image: image as File ? imageUrl : image,
+            image: typeof image === "object" ? imageUrl : image,
             metaTitle:metaTitle,
             metaDescription: metaDescription,
             metaKeyWords:metaKeyWords
@@ -80,6 +115,7 @@ export async function PUT(req:NextRequest, {params}: {params: {id: string}}) {
         } else {
             return Response.json({success: false, message: "update failed"})
         }
+
     }catch(error: any) {
         console.log(error.message)
         return Response.json({success: false, message: "server error"})

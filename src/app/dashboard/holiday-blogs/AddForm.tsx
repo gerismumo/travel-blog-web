@@ -6,7 +6,7 @@ import { destiationCategory } from '@/lib/destiCategory';
 import { months } from '@/lib/months';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast';
 
 
@@ -15,10 +15,10 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [category, setCategory] = useState<string>("");
-    const [coverImage, setCoverImage] = useState<string>("");
+    const [coverImage, setCoverImage] = useState<File | null>(null);
     const [overViewH, setOverViewH] = useState<string>("");
     const [heading, setHeading] = useState<string>("");
-    const [image, setImage] = useState<string>("");
+    const [image, setImage] = useState<File | null>(null);
     const [month, setMonth] = useState<string>("");
     const [metaTitle, setMetaTitle] = useState<string>("");
     const [metaDescription, setMetaDescription] = useState<string>("");
@@ -27,28 +27,12 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
     const [Info, setInfo] = useState<string>("");
     const [destination, setDestination] = useState<string>("");
     const [othercategory, setOtherCategory] = useState<string>("");
+    const CoverImageInputRef = useRef<HTMLInputElement>(null);
+    const imageInputRef = useRef<HTMLInputElement>(null);
 
-    const [subContents, setSubContents] = useState<IInfoContent[]>([])
+    const [subContents, setSubContents] = useState<any[]>([])
 
-    const handleAddContents = () => {
-      setSubContents([...subContents, { destination: '', subHeading: '', subImage: '', subDescription: '' }]);
-    }
-
-    const handleContentsChange = (
-      index: number,
-      field: keyof IInfoContent,
-      value: string
-    ) => {
-      const updatedInfoContents = [...subContents];
-      updatedInfoContents[index][field] = value;
-      setSubContents(updatedInfoContents);
-    };
-   
-    const handleDeleteContent = (index: number) => {
-      setSubContents(subContents.filter((_, i) => i!== index));
-    }
-
-
+  
     useEffect(() => {
         const fetchData = async () => {
           try {
@@ -65,12 +49,43 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
       }, [setDestinations]);
 
       
+      //handle chnages here
 
+      //handle change of destination according to weather category
+      // const handleChangeDest = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      //   if(category === "WEATHER"){
+      //     setDestination(e.target.value)
+      //   }else {
+      //     setDestination(null);
+      //   }
+      // }
+
+      // const handleChangeOtherCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      //   if(othercategory) {
+      //     setOtherCategory(e.target.value)
+      //   }else {
+      //     setOtherCategory(null);
+      //   }
+      // }
+
+      const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setCoverImage(e.target.files[0]);
+        }
+    };
+
+      const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setImage(e.target.files[0]);
+        }
+      };
+
+      //handle events on adding weather category contents
       const handleChangeDestinations = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
         if (value) {
           setSelectedDestinations((prev) => {
-            if (prev.some((dest) => dest.destination === value)) {
+            if (prev.some((dest: any) => dest.destination === value)) {
               toast.error('This destination is already selected.');
               return prev;
             }
@@ -79,16 +94,48 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
         }
       };
 
+      //handle change of text
       const handleTextChange = (id: string, newText: string) => {
         setSelectedDestinations((prev) =>
           prev.map((dest) => (dest.destination === id ? { ...dest, text: newText } : dest))
         );
       };
-    
+
+    //remove destination from the array
       const removeDestination = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
         e.preventDefault();
         setSelectedDestinations((prev) => prev.filter((dest) => dest.destination !== id));
       };
+
+      //handle add contents 
+      const handleAddContents = () => {
+        setSubContents([...subContents, { destination: '', subHeading: '', subImage: null, subDescription: '' }]);
+      }
+  
+      const handleContentsChange = (
+        index: number,
+        field: keyof IInfoContent,
+        value: string | File | null
+      ) => {
+        const updatedInfoContents = [...subContents];
+        updatedInfoContents[index][field] = value;
+        setSubContents(updatedInfoContents);
+      };
+
+      const handleFileChange = (
+        index: number,
+        field: keyof IInfoContent,
+        file: File | null
+      ) => {
+        const updatedInfoContents = [...subContents];
+        updatedInfoContents[index][field] = file;
+        setSubContents(updatedInfoContents);
+      };
+      
+     
+      const handleDeleteContent = (index: number) => {
+        setSubContents(subContents.filter((_, i) => i!== index));
+      }
     
       //hnadleSubmit
       const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
@@ -98,38 +145,60 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
           return toast.error("fill required fields");
         }
 
-        const data: IHolidayBlog = {
-          category: category,
-          overViewHeading: overViewH, 
-          coverImage: coverImage,
-          heading:heading,
-          image: image,
-          overViewDescription:Info,
-          metaTitle: metaTitle,
-          metaDescription: metaDescription,
-          metaKeyWords: metaKeywords,
-          destination: category === "WEATHER" ? destination: null,
-          otherCategory: othercategory? othercategory: null,
-          month: othercategory === "month" ? month : null,
-          OtherHolidayContent: othercategory === "month" ? [] : subContents,
-          WeatherHolidayContent:selectedDestinations
-      };
+      //   const data= {
+      //     category: category,
+      //     overViewHeading: overViewH, 
+      //     coverImage: coverImage,
+      //     heading:heading,
+      //     image: image,
+      //     overViewDescription:Info,
+      //     metaTitle: metaTitle,
+      //     metaDescription: metaDescription,
+      //     metaKeyWords: metaKeywords,
+      //     destination: category === "WEATHER" ? destination: null,
+      //     otherCategory: othercategory? othercategory: null,
+      //     month: othercategory === "month" ? month : null,
+      //     OtherHolidayContent: othercategory === "month" ? [] : subContents,
+      //     WeatherHolidayContent:selectedDestinations
+      // };
 
+      const formData = new FormData();
 
+      formData.append('category', category);
+      formData.append('overViewHeading', overViewH);
+      formData.append('coverImage', coverImage); 
+      formData.append('heading', heading);
+      formData.append('image', image as File); 
+      formData.append('overViewDescription', Info);
+      formData.append('metaTitle', metaTitle);
+      formData.append('metaDescription', metaDescription);
+      formData.append('metaKeyWords', metaKeywords);
+      formData.append('destination', category === "WEATHER" ? (destination || '') : '');
+      formData.append('otherCategory', othercategory || '');
+      formData.append('month', othercategory === "month" ? month : '');
+      formData.append('WeatherHolidayContent', JSON.stringify(selectedDestinations));
+
+      subContents.forEach((c, index) => {
+        formData.append(`OtherHolidayContent[${index}].destination`, c.destination);
+        formData.append(`OtherHolidayContent[${index}].subHeading`, c.subHeading);
+        formData.append(`OtherHolidayContent[${index}].subImage`, c.subImage);
+        formData.append(`OtherHolidayContent[${index}].subDescription`, c.subDescription);
+      });
+    
+      
       //submit to database
-
       try {
-        const response = await axios.post('/api/holiday-blog', data);
+        const response = await axios.post('/api/holiday-blog',formData);
         if(response.data.success) {
           onSuccess();
           toast.success(response.data.message);
           setCategory("");
           setOverViewH("");
           setHeading("");
-          setImage("");
+          setImage(null);
           setMonth('');
           setInfo('');
-          setCoverImage('');
+          setCoverImage(null);
           setMetaDescription('');
           setMetaTitle('');
           setMetaKeywords('');
@@ -137,6 +206,12 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
           setSubContents([]);
           setOtherCategory("other");
           setDestination("");
+          if (imageInputRef.current) {
+            imageInputRef.current.value = "";
+          }
+          if (CoverImageInputRef.current) {
+            CoverImageInputRef.current.value = "";
+          }
         }else {
           toast.error(response.data.message);
         }
@@ -242,10 +317,10 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
               <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
                 Cover Image <span className="text-red-500">*</span>
               </label>
-              <input type="url" name="coverImage" id="coverImage" 
-              value={coverImage}
-              onChange={(e) => setCoverImage(e.target.value)}
-              placeholder='image url'
+              <input type="file" name="coverImage" id="coverImage"
+               accept='image/*'
+               onChange={handleCoverImageChange}
+               ref={CoverImageInputRef}
               className='input'
               />
             </div>
@@ -265,11 +340,11 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
                 <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
                   Image <span className="text-red-500">*</span>
                 </label>
-                <input type="url" name="image" id="image" 
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                placeholder='image url'
-                className='input'
+                <input type="file" name="coverImage" id="coverImage"
+                  accept='image/*'
+                  onChange={handleImageChange}
+                  ref={imageInputRef}
+                  className='input'
                 />
               </div>
               </>
@@ -367,11 +442,11 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
                     <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
                         image
                     </label>
-                    <input type="url" name="subImage" id="subImage" 
-                    value={s.subImage}
-                    onChange={(e) => handleContentsChange(index,'subImage', e.target.value)}
+                    <input type="file" name="subImage" id="subImage"
+                    accept='image/*'
+                    onChange={(e) => handleFileChange(index, 'subImage', e.target.files?.[0] || null)}
                     className='input'
-                    />
+                     />
                   </div>
                   <div className="flex flex-col">
                     <label className="block text-gray-700 text-sm font-bold " htmlFor="destination">
