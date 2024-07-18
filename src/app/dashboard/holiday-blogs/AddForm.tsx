@@ -2,6 +2,7 @@
 
 import { IDestinationList, IHolidayBlog, IInfoContent, ISelectedDestination, ISuccessFormProp } from '@/(types)/type';
 import Loader from '@/app/components/Loader';
+import Spinner from '@/app/components/Spinner';
 import { destiationCategory } from '@/lib/destiCategory';
 import { months } from '@/lib/months';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
@@ -9,9 +10,12 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast';
 
+type Props = {
+  onSuccess: () => void,
+  close: (value: boolean) => void;
+}
 
-
-const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
+const AddForm:React.FC<Props> = ({onSuccess, close}) => {
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [category, setCategory] = useState<string>("");
@@ -31,6 +35,7 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
     const imageInputRef = useRef<HTMLInputElement>(null);
 
     const [subContents, setSubContents] = useState<any[]>([])
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
   
     useEffect(() => {
@@ -186,6 +191,7 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
       });
     
       
+      setIsLoading(true);
       //submit to database
       try {
         const response = await axios.post('/api/holiday-blog',formData);
@@ -212,12 +218,16 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
           if (CoverImageInputRef.current) {
             CoverImageInputRef.current.value = "";
           }
+          close(false);
+          setIsLoading(false);
         }else {
           toast.error(response.data.message);
         }
       }catch (error) {
-        console.log(error)
+        setIsLoading(false);
         return toast.error("network error");
+      }finally {
+        setIsLoading(false);
       }
         
       }
@@ -513,8 +523,9 @@ const AddForm:React.FC<ISuccessFormProp> = ({onSuccess}) => {
               <button
                 className="bg-lightDark hover:dark text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
+                disabled={isLoading}
               >
-                Submit
+               {isLoading ? <Spinner/> : "Add"}
               </button>
             </div>
         </form>

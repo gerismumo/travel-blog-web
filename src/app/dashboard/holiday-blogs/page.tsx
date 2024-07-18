@@ -147,7 +147,7 @@ const Page = () => {
               >Publish</button>
           </div>
         </div>
-        {openAddForm && <AddForm onSuccess={fetchData} />}
+        {openAddForm && <AddForm onSuccess={fetchData} close={setOpenAddForm} />}
 
         <div className="overflow-auto">
           <table className='border-collapse w-full'>
@@ -179,7 +179,7 @@ const Page = () => {
                     {TruncateContent(`${d.category} ${d.month !== null ? `- ${months.find(m => m.id === parseInt(d.month as string))?.name}` : ''}`, 15)}
                     </td>
                     <td className='table-cell'>
-                      <img src={d.coverImage} alt="" 
+                      <img src={d.coverImage as string} alt="" 
                       className='h-[50px] w-[50px]'
                       />
                     </td>

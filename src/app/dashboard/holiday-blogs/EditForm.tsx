@@ -1,4 +1,5 @@
 import { IDestinationList, IHolidayBlogList, IInfoContent } from '@/(types)/type';
+import Spinner from '@/app/components/Spinner';
 import { months } from '@/lib/months';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
@@ -12,13 +13,14 @@ interface EditFormProps {
 }
 
 const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
-    console.log('edit data', data);
+    // console.log('edit data', data);
     
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [loadingDestination, setLoadingDestination] = useState<Boolean>(true);
 
     const [formData, setFormData] = useState<IHolidayBlogList | null>(data);
     const [initialData, setInitialData] = useState<IHolidayBlogList | null>(data);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -113,31 +115,37 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
             return;
           }
   
+          const updatedData = new FormData();
+          updatedData.append('_id',formData._id)
+          updatedData.append('category', formData.category);
+          updatedData.append('overViewHeading', formData.overViewHeading);
+          updatedData.append('coverImage', formData.coverImage as File | string); 
+          updatedData.append('heading', formData.heading);
+          updatedData.append('image', formData.image as File | string); 
+          updatedData.append('overViewDescription', formData.overViewDescription);
+          updatedData.append('metaTitle', formData.metaTitle);
+          updatedData.append('metaDescription', formData.metaDescription);
+          updatedData.append('metaKeyWords', formData.metaKeyWords);
+          updatedData.append('destination', formData.destination as any);
+          updatedData.append('otherCategory', formData.otherCategory as any);
+          updatedData.append('month', formData.month as any);
+          updatedData.append('WeatherHolidayContent', formData.WeatherHolidayContent as any);
+          
+          formData.OtherHolidayContent?.length > 0 && formData.OtherHolidayContent.forEach((c, index) => {
+            updatedData.append(`OtherHolidayContent[${index}].destination`, c.destination);
+            updatedData.append(`OtherHolidayContent[${index}].subHeading`, c.subHeading);
+            updatedData.append(`OtherHolidayContent[${index}].subImage`, c.subImage as File || String || null );
+            updatedData.append(`OtherHolidayContent[${index}].subDescription`, c.subDescription);
+          });
 
-        const data: IHolidayBlogList ={
-           _id: formData._id,
-           category: formData.category,
-           overViewHeading: formData.overViewHeading,
-           coverImage: formData.coverImage,
-           heading: formData.heading,
-           image: formData.image,
-           overViewDescription: formData.overViewDescription,
-           metaTitle: formData.metaTitle,
-           metaDescription: formData.metaDescription,
-           metaKeyWords: formData.metaKeyWords,
-           destination: formData.destination,
-           otherCategory: formData.otherCategory,
-           month: formData.month,
-           WeatherHolidayContent: formData.WeatherHolidayContent,
-           OtherHolidayContent: formData.OtherHolidayContent
-          }
-
+          setIsLoading(true)
           try {
-            const response = await axios.put(`/api/holiday-blog/${data._id}`, data);
+            const response = await axios.put(`/api/holiday-blog/${formData._id}`, updatedData);
             if(response.data.success) {
               toast.success(response.data.message);
               fetchData();
               closeForm(false);
+              setIsLoading(false)
               return;
             }else {
               toast.error(response.data.message);
@@ -145,6 +153,8 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
             }
           }catch(error) {
             toast.error("network error")
+          }finally {
+            setIsLoading(false)
           }
     };
 
@@ -219,11 +229,16 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
                         <label className="block text-gray-700 text-sm font-bold" htmlFor="coverImage">
                             Cover Image <span className="text-red-500">*</span>
                         </label>
-                        <input type="url" name="coverImage" id="coverImage"
-                            value={formData.coverImage}
-                            onChange={handleInputChange}
-                            placeholder='image url'
-                            className='input' />
+                        <input type="file" name="coverImage" id="coverImage"
+                        accept='image/*'
+                        onChange={(e) => {
+                            const target = e.target as HTMLInputElement;
+                            if (target && target.files && target.files[0]) {
+                              setFormData({ ...formData, coverImage: target.files[0] });
+                            }
+                          }}
+                        className='input'
+                        />
                     </div>
                 )}
                 {initialData?.heading && (
@@ -242,11 +257,16 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
                         <label className="block text-gray-700 text-sm font-bold" htmlFor="coverImage">
                             Image <span className="text-red-500">*</span>
                         </label>
-                        <input type="url" name="image" id="image"
-                            value={formData.image}
-                            onChange={handleInputChange}
-                            placeholder='image url'
-                            className='input' />
+                        <input type="file" name="image" id="image"
+                        accept='image/*'
+                        onChange={(e) => {
+                            const target = e.target as HTMLInputElement;
+                            if (target && target.files && target.files[0]) {
+                              setFormData({ ...formData, image: target.files[0] });
+                            }
+                          }}
+                        className='input'
+                        />
                     </div>
                 )}
                 {initialData?.overViewDescription && (
@@ -334,10 +354,16 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
                                     <label className="block text-gray-700 text-sm font-bold" htmlFor="subImage">
                                         Image
                                     </label>
-                                    <input type="url" name="subImage" id="subImage"
-                                        value={s.subImage}
-                                        onChange={(e) => handleOtherHolidayContentChange(index, 'subImage', e.target.value)}
-                                        className='input' />
+                                    <input type="file" name="subImage" id="subImage"
+                                    onChange={(e) => {
+                                        const target = e.target as HTMLInputElement;
+                                        if (target && target.files && target.files[0]) {
+                                          handleOtherHolidayContentChange(index, 'subImage', target.files[0]);
+                                        }
+                                      }}
+                                     accept='image/*'
+                                     className='input'
+                                     />
                                 </div>
                                 <div className="flex flex-col">
                                     <label className="block text-gray-700 text-sm font-bold" htmlFor="subDescription">
@@ -402,7 +428,7 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
                     <button
                         className="bg-lightDark hover:dark text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         type="submit">
-                        Submit
+                        {isLoading ? <Spinner/> : "Edit"}
                     </button>
                 </div>
             </form>

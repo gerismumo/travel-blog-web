@@ -152,7 +152,7 @@ export interface ISelectedDestination {
 export interface IInfoContent {
   destination: string;
   subHeading: string;
-  subImage: string;
+  subImage: string | File | null;
   subDescription: string;
 }
 
@@ -177,9 +177,9 @@ export interface IHolidayBlogList {
   _id: string;
   category: string;
   overViewHeading: string;
-  coverImage: string;
+  coverImage: string | File | null;
   heading: string;
-  image: string;
+  image: string | File | null;
   overViewDescription: string;
   metaTitle: string;
   metaDescription: string;

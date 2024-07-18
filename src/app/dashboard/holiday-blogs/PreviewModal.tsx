@@ -53,7 +53,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, data, onClose }) => {
             {data?.coverImage && (
               <div className="flex flex-col justify-center ">
                 <h2 className="font-[600] text-dark">Cover Image</h2>
-                <img src={data?.coverImage} alt="" className="w-full h-auto max-h-96 object-cover" />
+                <img src={data?.coverImage as string} alt="" className="w-full h-auto max-h-96 object-cover" />
               </div>
             )}
             {data?.category && (
@@ -77,7 +77,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, data, onClose }) => {
             {data?.image && (
               <div className="flex flex-col justify-center ">
                 <h2 className="font-[600] text-dark">Image</h2>
-                <img src={data?.image} alt="" className="w-full h-auto max-h-96 object-cover" />
+                <img src={data?.image as string} alt="" className="w-full h-auto max-h-96 object-cover" />
               </div>
             )}
             {data?.heading && (
@@ -156,7 +156,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, data, onClose }) => {
                     {h.subImage && (
                       <div className="flex flex-col justify-center">
                         <h2 className="font-[600] text-dark">Image</h2>
-                        <img src={h.subImage} alt="" className="w-full h-auto max-h-96 object-cover" />
+                        <img src={h.subImage as string} alt="" className="w-full h-auto max-h-96 object-cover" />
                       </div>
                     )}
                     {h.subDescription && (
