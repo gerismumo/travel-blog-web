@@ -2,11 +2,44 @@ import { HolidayBlog } from "@/(models)/models";
 import { IHolidayBlogList } from "@/(types)/type";
 import cache from "@/utils/cache";
 import connectDB from "@/utils/dbConnect";
+import { deleteFromMinio } from "@/utils/uploadToMinio";
+import { NextResponse } from "next/server";
 
 export async function DELETE(req: Request, {params}: {params: {id: string}}) {
     try {
         cache.del("hBg");
         await connectDB(); 
+
+        const existingData = await HolidayBlog.findById(params.id);
+        if(!existingData) {
+            return Response.json({success: false, message: "Data not found"})
+        }
+
+        //delete images from minio
+        try {
+            const desiredImgStr = new URL(existingData.image).pathname.replace('/blogs/', '');
+            const CoverImagStr = new URL(existingData.coverImage).pathname.replace('/blogs/', '');
+
+            await deleteFromMinio({ bucketName: 'blogs', fileName: CoverImagStr });
+            if(existingData.image) {
+                await deleteFromMinio({ bucketName: 'blogs', fileName: desiredImgStr });
+            }
+
+            if(existingData.OtherHolidayContent.length > 0) {
+                for(const c of existingData.OtherHolidayContent) {
+                    const SubImagStr = new URL(c?.subImage).pathname.replace('/blogs/', '');
+                    try {
+                        await deleteFromMinio({ bucketName: 'blogs', fileName: SubImagStr });
+                    }catch(error) {
+                        return NextResponse.json({ success: false, message: 'Image upload failed, try again later' });
+                    }
+                    
+                }
+            }
+        }catch(error: any) {
+            return NextResponse.json({ success: false, message: 'error occured, try again later' });
+        }
+
         const deleteData = await HolidayBlog.findByIdAndDelete(params.id);
         if(deleteData) {
             return Response.json({success: true, message: "delete success"})

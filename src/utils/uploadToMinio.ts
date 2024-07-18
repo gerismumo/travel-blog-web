@@ -48,7 +48,7 @@ export async function deleteFromMinio({ bucketName, fileName }: DeleteParams): P
     try {
         await new Promise((resolve, reject) => {
             minioClient.removeObject(bucketName, fileName, (err: any) => {
-                // console.log(bucketName, fileName)
+                console.log(bucketName, fileName)
                 if (err) {
                     console.log("Image deletion failed")
                     reject(new Error('Image deletion failed'));
