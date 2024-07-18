@@ -235,14 +235,14 @@ export interface INewsList {
 export interface IPlaceToVisit {
   heading: string;
   description: string;
-  image: string;
+  image:  File | string | null;
 }
 
 export interface IThingsToDo {
   destination: string;
   overviewHeading: string;
   overviewDescription: string;
-  image: string;
+  image: File | string | null;
   metaTitle: string;
   metaDescription: string;
   metaKeyWords: string;

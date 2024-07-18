@@ -1,19 +1,23 @@
 "use client"
 import { IDestinationList, IPlaceToVisit, ISuccessFormProp, IThingsToDo } from '@/(types)/type';
 import Loader from '@/app/components/Loader';
+import Spinner from '@/app/components/Spinner';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
+type Props = {
+    onSuccess: () => void;
+    close: (value: boolean) => void;
+}
 
-
-const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
+const AddForm: React.FC<Props> = ({onSuccess, close}) => {
     const [formData, setFormData] = useState<IThingsToDo>({
         destination: "",
         overviewHeading: "",
         overviewDescription: "",
-        image: "",
+        image: null,
         metaTitle: "",
         metaDescription: "",
         metaKeyWords: "",
@@ -22,6 +26,7 @@ const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
 
     const [destinations, setDestinations] = useState<IDestinationList[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,13 +46,17 @@ const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
     const handleAddPlace = () => {
         setFormData({
             ...formData,
-            placesToVisit: [...formData.placesToVisit, { heading: "", description: "", image: "" }]
+            placesToVisit: [...formData.placesToVisit, { heading: "", description: "", image: null }]
         });
     };
 
     const handlePlaceChange = (index: number, key: keyof IPlaceToVisit, value: string) => {
         const updatedPlaces = [...formData.placesToVisit];
-        updatedPlaces[index][key] = value;
+        if(key === 'image') {
+            updatedPlaces[index][key] = value as File | string | null;
+        }else {
+            updatedPlaces[index][key] = value as string;
+        }
         setFormData({
             ...formData,
             placesToVisit: updatedPlaces
@@ -66,8 +75,41 @@ const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (
+            !formData.destination ||
+            !formData.overviewHeading ||
+            !formData.overviewDescription ||
+            !formData.image ||
+            !formData.metaTitle ||
+            !formData.metaDescription ||
+            !formData.metaKeyWords ||
+            formData.placesToVisit.some(
+                (place) => !place.heading || !place.description || !place.image
+            )
+        ) {
+            toast.error("All fields are required, including places to visit");
+            return;
+        }
+
+        const Data = new FormData();
+        Data.append("destination", formData.destination);
+        Data.append("overviewHeading", formData.overviewHeading);
+        Data.append("overviewDescription", formData.overviewDescription);
+        Data.append("image", formData.image as File);
+        Data.append("metaTitle", formData.metaTitle);
+        Data.append("metaDescription", formData.metaDescription);
+        Data.append("metaKeyWords", formData.metaKeyWords);
+
+        formData.placesToVisit.forEach((p, index) => {
+            Data.append(`placesToVisit[${index}].heading`, p.heading);
+            Data.append(`placesToVisit[${index}].description`, p.description);
+            Data.append(`placesToVisit[${index}].image`, p.image as File);
+        })
+
+        setIsLoading(true);
         try {
-            const response = await axios.post('/api/things-to-do',formData );
+            const response = await axios.post('/api/things-to-do', Data);
             if(response.data.success) {
                 onSuccess();
                 toast.success(response.data.message);
@@ -75,17 +117,22 @@ const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
                     destination: "",
                     overviewHeading: "",
                     overviewDescription: "",
-                    image: "",
+                    image: null,
                     metaTitle: "",
                     metaDescription: "",
                     metaKeyWords: "",
                     placesToVisit: []
                 });
+                setIsLoading(false);
+                close(false);
             }else {
                 toast.error(response.data.message);
             }
         }catch(error) {
+            console.log(error);
             toast.error("networ error")
+        }finally {
+            setIsLoading(false);
         }
     }
 
@@ -139,11 +186,14 @@ const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
                 </div>
                 <div className="flex flex-col">
                     <label className="block text-gray-700 text-sm font-bold" htmlFor="image">Image URL</label>
-                    <input
-                        type="text"
-                        id="image"
-                        value={formData.image}
-                        onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                    <input type="file" name="image" id="image" 
+                        accept='image/*'
+                        onChange={(e) => {
+                            const target = e.target as any;
+                            if(target && target.files && target.files[0]) {
+                                setFormData({...formData, image: target.files[0] });
+                            }
+                        }}
                         className='input'
                     />
                 </div>
@@ -199,11 +249,14 @@ const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
                         </div>
                         <div className="flex flex-col">
                             <label className="block text-gray-700 text-sm font-bold" htmlFor={`placeImage${index}`}>Image URL:</label>
-                            <input
-                                type="text"
-                                id={`placeImage${index}`}
-                                value={place.image}
-                                onChange={(e) => handlePlaceChange(index, 'image', e.target.value)}
+                            <input type="file" name="placeImage" id={`placeImage${index}`} 
+                                accept='image/*'
+                                onChange={(e) => {
+                                    const target = e.target as any;
+                                    if(target && target.files && target.files[0]) {
+                                        handlePlaceChange(index, 'image', target.files[0])
+                                    }
+                                }}
                                 className='input'
                             />
                         </div>
@@ -226,9 +279,10 @@ const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
                 </button>
                 <button 
                 type="submit"
+                disabled={isLoading}
                 className="bg-lightDark hover:dark text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
-                    Submit
+                 {isLoading ? <Spinner/> : "Add"}
                 </button>
             </form>
         </div>

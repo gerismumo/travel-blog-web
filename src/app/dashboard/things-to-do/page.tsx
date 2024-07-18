@@ -12,6 +12,7 @@ import Loader from '@/app/components/Loader';
 import { getDestinations } from '@/utils/(apis)/destinationApi';
 import PreviewModal from './PreviewModal';
 import ConfirmModal from '@/app/components/ConfirmModal';
+import Spinner from '@/app/components/Spinner';
 
 const Page:React.FC = () => {
   const[contentList, setContentList] = useState<IThingsToDoList[]>([]);
@@ -27,6 +28,7 @@ const Page:React.FC = () => {
     const [previewContent, setPreviewContent] = useState<IThingsToDoList | null>(null);
     const [loadingDestination, setLoadingDestination] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
 
     const fetchData = async () => {
@@ -121,7 +123,7 @@ const Page:React.FC = () => {
 
   const handleAddPlace = () => {
     if (!editObject) return;
-    const newPlace: IPlaceToVisit = { heading: '', description: '', image: '' };
+    const newPlace: IPlaceToVisit = { heading: '', description: '', image: null };
     setEditObject({ ...editObject, placesToVisit: [...editObject.placesToVisit, newPlace] });
   };
 
@@ -135,6 +137,22 @@ const Page:React.FC = () => {
         return;
       }
 
+      if (
+        !editObject.destination ||
+        !editObject.overviewHeading ||
+        !editObject.overviewDescription ||
+        !editObject.image ||
+        !editObject.metaTitle ||
+        !editObject.metaDescription ||
+        !editObject.metaKeyWords ||
+        editObject.placesToVisit.some(
+            (place) => !place.heading || !place.description || !place.image
+        )
+    ) {
+        toast.error("All fields are required, including places to visit");
+        return;
+    }
+
       const data: IThingsToDoList = {
         _id: editObject._id,
         destination: editObject.destination,
@@ -147,19 +165,38 @@ const Page:React.FC = () => {
         placesToVisit: editObject.placesToVisit
       }
 
+      const formData = new FormData();
+        formData.append("destination", editObject.destination);
+        formData.append("overviewHeading", editObject.overviewHeading);
+        formData.append("overviewDescription", editObject.overviewDescription);
+        formData.append("image", editObject.image as any);
+        formData.append("metaTitle", editObject.metaTitle);
+        formData.append("metaDescription", editObject.metaDescription);
+        formData.append("metaKeyWords", editObject.metaKeyWords);
+
+        editObject.placesToVisit.forEach((p, index) => {
+          formData.append(`placesToVisit[${index}].heading`, p.heading);
+          formData.append(`placesToVisit[${index}].description`, p.description);
+          formData.append(`placesToVisit[${index}].image`, p.image as File);
+      })
+      
+      setIsLoading(true);
       try{
-        const response = await axios.put(`/api/things-to-do/${editObject._id}`, data);
+        const response = await axios.put(`/api/things-to-do/${editObject._id}`, formData);
 
         if(response.data.success) {
           toast.success(response.data.message);
           setOpenEdit(false);
           fetchData();
+          setIsLoading(false);
         }else {
           toast.error(response.data.message);
         }
 
       }catch(error: any) {
         toast.error('network error')
+      }finally {
+        setIsLoading(false);
       }
     }
 
@@ -211,7 +248,7 @@ const Page:React.FC = () => {
               >Publish</button>
           </div>
         </div>
-        {openAddForm && <AddForm onSuccess={fetchData} />}
+        {openAddForm && <AddForm onSuccess={fetchData} close={setOpenAddForm} />}
         <div className="overflow-auto">
             <table className='border-collapse w-[100%]'>
                 <thead>
@@ -305,10 +342,14 @@ const Page:React.FC = () => {
                                                 <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
                                                     Image
                                                 </label>
-                                                <input type="url" name="image" id="image"
-                                                  value={editObject?.image}
-                                                  onChange={(e) => setEditObject(editObject ? {...editObject, image: e.target.value}: null)}
-                                                  className='input w-full'
+                                                <input type="file" name="image" id="image"
+                                                  onChange={(e) => {
+                                                    const target = e.target as any;
+                                                    if(target && target.files && target.files[0]) {
+                                                      setEditObject(editObject ? {...editObject, image:  target.files[0]}: null)
+                                                    }
+                                                  }}
+                                                  className='input'
                                                  />
                                                 </div>
                                                 <div className="flex flex-col">
@@ -342,12 +383,16 @@ const Page:React.FC = () => {
                                                     </div>
                                                     <div className="flex flex-col ">
                                                       <label className="block text-gray-700 text-sm font-bold ">Image</label>
-                                                      <input
-                                                        type="text"
-                                                        value={place.image}
-                                                        onChange={(e) => handlePlaceChange(index, 'image', e.target.value)}
-                                                        className="input"
-                                                      />
+                                                      <input type="file" name={`image${index}`} id={`image${index}`} 
+                                                        accept='image/*'
+                                                        onChange={(e) => {
+                                                          const target = e.target as any;
+                                                          if(target && target.files && target.files[0]) {
+                                                            handlePlaceChange(index, 'image', target.files[0])
+                                                          }
+                                                        }}
+                                                        className='input'
+                                                       />
                                                     </div>
                                                   </div>
                                                 ))}
@@ -365,8 +410,9 @@ const Page:React.FC = () => {
                                                 <button
                                                     className="bg-lightDark hover:dark text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                                     type="submit"
+                                                    disabled={isLoading}
                                                 >
-                                                    Submit
+                                                    {isLoading? <Spinner/> : "Edit"}
                                                 </button>
                                                 </div>
                                             </form>

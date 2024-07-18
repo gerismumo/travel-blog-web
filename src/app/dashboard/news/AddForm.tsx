@@ -65,6 +65,7 @@ const AddForm: React.FC<Props> = ({onSuccess, close}) => {
     formData.append('metaTitle', metaTitle);
     formData.append('metaDescription', metaDescription);
     formData.append('metaKeyWords', metaKeywords);
+    
     subNews.forEach((s, index) => {
       formData.append(`subNews[${index}].subHeading`, s.subHeading);
       formData.append(`subNews[${index}].subImage`, s.subImage as File || null);
