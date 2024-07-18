@@ -52,7 +52,9 @@ export async function POST(req:NextRequest) {
 
       cache.del("hBg");
       //image insert to minio
-
+      if(!process.env.IMAGE_URL) {
+        return NextResponse.json({ success: false, message: 'Error occured, try again later' });
+      }
       // coverImage
       let  CoverImageName;
         try {
@@ -85,9 +87,7 @@ export async function POST(req:NextRequest) {
             return NextResponse.json({ success: false, message: 'Image upload failed, try again later' });
         }
 
-        if(!process.env.IMAGE_URL) {
-          return NextResponse.json({ success: false, message: 'Error occured, try again later' });
-      }
+        
       //image url
       image = `${process.env.IMAGE_URL}/blogs/${ImageName}`
       }

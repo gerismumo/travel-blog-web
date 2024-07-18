@@ -207,13 +207,13 @@ export interface IWeatherBlogList {
 
 export interface ISubNews {
   subHeading: string;
-  subImage: string;
+  subImage: File | string | null;
   subText: string;
 }
 
 export interface INews {
   heading: string;
-  image: string;
+  image: File | string | null;
   info: string;
   metaTitle: string;
   metaDescription: string;
