@@ -12,6 +12,7 @@ import fontawesome from '@/(icons)/fontawesome';
 import Loading from './loading';
 import PreviewModal from './PreviewModal';
 import ConfirmModal from '@/app/components/ConfirmModal';
+import Spinner from '@/app/components/Spinner';
 
 const Page = () => {
   const[contentList, setContentList] = useState<INewsList[]>([]);
@@ -25,6 +26,7 @@ const Page = () => {
   const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false); 
   const [previewContent, setPreviewContent] = useState<INewsList | null>(null); 
   const [loading, setLoading] = useState<boolean>(true); 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchData = async () => {
     try {
@@ -92,7 +94,11 @@ const Page = () => {
   const handleSubNewsChange = (index: number, field: keyof ISubNews, value: string) => {
     if (!editObject) return;
     const updatedSubNews = [...editObject.subNews];
-    updatedSubNews[index][field] = value;
+    if(field ==='subImage') {
+      updatedSubNews[index][field] = value as File | string | null;
+    }else {
+      updatedSubNews[index][field] = value;
+    }
     setEditObject({ ...editObject, subNews: updatedSubNews });
   };
 
@@ -105,29 +111,39 @@ const Page = () => {
       return;
     }
 
-    const data: INewsList = {
-      _id: editObject._id,
-      heading: editObject.heading,
-      info: editObject.info,
-      image: editObject.image,
-      metaTitle: editObject.metaTitle,
-      metaDescription: editObject.metaDescription,
-      metaKeyWords: editObject.metaKeyWords,
-      subNews: editObject.subNews
-    }
 
+    const formData = new FormData();
+
+    formData.append('_id',editObject._id );
+    formData.append('heading', editObject.heading);
+    formData.append('info', editObject.info);
+    formData.append('image', editObject.image);
+    formData.append('metaTitle', editObject.metaTitle);
+    formData.append('metaDescription', editObject.metaDescription);
+    formData.append('metaKeyWords', editObject.metaKeyWords);
+
+    editObject.subNews.forEach((s, index) => {
+      formData.append(`subNews[${index}].subHeading`, s.subHeading);
+      formData.append(`subNews[${index}].subImage`, s.subImage as File || null);
+      formData.append(`subNews[${index}].subText`, s.subText);
+    })
+
+    // console.log('sub news',editObject.subNews);
+    setIsLoading(true)
     try {
-      const response = await axios.put(`/api/news/${editObject._id}`, data);
+      const response = await axios.put(`/api/news/${editObject._id}`, formData);
         if (response.data.success) {
           toast.success(response.data.message);
           fetchData();
+          setIsLoading(false)
+          setOpenEdit(false);
         } else {
           toast.error(response.data.message);
         }
     } catch (error) {
       toast.error('network error');
     } finally {
-      setLoading(false);
+      setIsLoading(false)
     }
   }
 
@@ -164,7 +180,7 @@ const Page = () => {
           </button>
         </div>
     </div>
-        {openAddForm && <AddForm onSuccess={fetchData} />}
+        {openAddForm && <AddForm onSuccess={fetchData} close={setOpenAddForm} />}
     <div className="flex flex-col overflow-auto mt-5">
       <table className='border-collapse  overflow-auto'>
         <thead>
@@ -243,18 +259,17 @@ const Page = () => {
                           <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
                               Image 
                           </label>
-                          <input type="text"
-                          name="metaTitle" id="metaTitle"
-                          value={editObject?.image} 
-                          onChange={(e) =>
-                              setEditObject(
-                              editObject
-                                  ? { ...editObject,image: e.target.value }
-                                  : null
-                              )
-                          }
+                          <input type="file" name="image" id="image"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const target = e.target as any;
+                                if(target && target.files && target.files[0]){
+                                  setEditObject(editObject ? {...editObject, image: target.files[0]}: null)
+                                }
+                          }}
                           className='input'
-                          />
+                           />
+                          
                         </div>
                         <div className="flex flex-col">
                           <label className="block text-gray-700 text-sm font-bold " htmlFor="date">
@@ -324,14 +339,15 @@ const Page = () => {
                               <label className="block text-gray-700 text-sm font-bold" htmlFor={`subImage-${index}`}>
                                 Sub Image
                               </label>
-                              <input
-                                type="text"
-                                name={`subImage-${index}`}
-                                id={`subImage-${index}`}
-                                value={s.subImage}
-                                onChange={(e) => handleSubNewsChange(index, 'subImage', e.target.value)}
-                                className="input"
-                              />
+                              <input type="file" name={`subImage-${index}`} id={`subImage-${index}`}
+                              onChange={(e) => {
+                                const target = e.target as any;
+                                if(target && target.files && target.files[0]){
+                                  handleSubNewsChange(index, 'subImage', target.files[0])
+                                }
+                              }}
+                              className='input'
+                               />
                             </div>
                             <div className="flex flex-col">
                               <label className="block text-gray-700 text-sm font-bold" htmlFor={`subText-${index}`}>
@@ -353,7 +369,7 @@ const Page = () => {
                               className="bg-lightDark hover:bg-[#3C4048] text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                               type="submit"
                           >
-                              Submit
+                              {isLoading ? <Spinner/> : "Edit"}
                           </button>
                         </div>
                       </form>

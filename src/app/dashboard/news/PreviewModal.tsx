@@ -34,7 +34,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) =
         <div className="p-6 overflow-y-auto">
           <div className="mt-4">
             <div className="flex justify-center">
-                <img src={content?.image} alt="" className="w-full h-auto max-h-96 object-cover" />
+                <img src={content?.image as string} alt="" className="w-full h-auto max-h-96 object-cover" />
             </div>
             <div className="flex flex-col ">
                 <h2 className="font-[600] text-dark">Heading</h2>
@@ -73,7 +73,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) =
                 </div>
                 <div className="flex flex-col ">
                   <h2 className="font-[600] text-dark">Image</h2>
-                  <img src={s.subImage} alt="" className="w-full h-auto max-h-96 object-cover" />
+                  <img src={s.subImage as string} alt="" className="w-full h-auto max-h-96 object-cover" />
                 </div>
                 <div className="flex flex-col ">
                   <h2 className="font-[600] text-dark">Info</h2>

@@ -356,7 +356,7 @@ const EditForm: React.FC<EditFormProps> = ({ data, fetchData, closeForm }) => {
                                     </label>
                                     <input type="file" name="subImage" id="subImage"
                                     onChange={(e) => {
-                                        const target = e.target as HTMLInputElement;
+                                        const target = e.target as any;
                                         if (target && target.files && target.files[0]) {
                                           handleOtherHolidayContentChange(index, 'subImage', target.files[0]);
                                         }

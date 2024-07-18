@@ -6,9 +6,12 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 
+type Props = {
+  onSuccess: () => void,
+  close: (value: boolean) => void,
+}
 
-
-const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
+const AddForm: React.FC<Props> = ({onSuccess, close}) => {
   const [heading, setHeading] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
   const [info, setInfo] = useState<string>("");
@@ -84,6 +87,7 @@ const AddForm: React.FC<ISuccessFormProp> = ({onSuccess}) => {
           { subHeading: '', subImage: '', subText: '' },
         ]);
         setIsLoading(false);
+        close(false);
       }else {
         toast.error(response.data.message);
       }
