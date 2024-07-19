@@ -23,6 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "utils/dbConnect.ts", "jest.config.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "utils/dbConnect.ts", "jest.config.js", "src/utils/uploadToMinio.js"],
   "exclude": ["node_modules"]
 }

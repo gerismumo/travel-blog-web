@@ -2,18 +2,18 @@ import { minioClient, readableStreamFromBrowserStream } from "@/utils/minioConfi
 import path from "path";
 import { v4 as uuidv4 } from 'uuid';
 
-interface UploadParams {
-    bucketName: string;
-    file: File;
-    folder: string;
-}
+// interface UploadParams {
+//     bucketName: string;
+//     file: File;
+//     folder: string;
+// }
 
-interface DeleteParams {
-    bucketName: string;
-    fileName: string;
-}
+// interface DeleteParams {
+//     bucketName: string;
+//     fileName: string;
+// }
 
-export async function uploadToMinio({ bucketName, file, folder }: UploadParams): Promise<any> {
+export async function uploadToMinio({ bucketName, file, folder }) {
     try {
         const originalFileName = file.name;
         const fileExtension = path.extname(originalFileName);
@@ -21,14 +21,14 @@ export async function uploadToMinio({ bucketName, file, folder }: UploadParams):
         const stream = file.stream();
         const nodeStream = await readableStreamFromBrowserStream(stream);
 
-        const data: any = await new Promise((resolve, reject) => {
+        const data= await new Promise((resolve, reject) => {
             minioClient.putObject(
                 bucketName,
                 fileName,
                 nodeStream,
                 file.size,
                 { 'Content-Type': file.type },
-                (err: any, etag: any) => {
+                (err, etag) => {
                     if (err) {
                         reject(new Error('Image upload failed'));
                     } else {
@@ -44,11 +44,11 @@ export async function uploadToMinio({ bucketName, file, folder }: UploadParams):
 }
 
 
-export async function deleteFromMinio({ bucketName, fileName }: DeleteParams): Promise<void> {
+export async function deleteFromMinio({ bucketName, fileName }) {
     try {
         await new Promise((resolve, reject) => {
-            minioClient.removeObject(bucketName, fileName, (err: any) => {
-                console.log(bucketName, fileName)
+            minioClient.removeObject(bucketName, fileName, (err) => {
+                // console.log(bucketName, fileName)
                 if (err) {
                     console.log("Image deletion failed")
                     reject(new Error('Image deletion failed'));
