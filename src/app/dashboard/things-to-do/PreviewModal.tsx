@@ -56,7 +56,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) =
                 <p className="text-gray-700 text-sm mb-4">{content.overviewHeading}</p>
             </div>
             <div className="flex flex-col">
-                <img src={content?.image} alt="" className="w-full h-auto max-h-96 object-cover" />
+                <img src={content?.image as string} alt="" className="w-full h-auto max-h-96 object-cover" />
             </div>
             <div className="flex flex-col ">
                 <h2 className="font-[600] text-dark">Description</h2>
@@ -88,7 +88,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({ show, content, onClose }) =
                         <p className="text-gray-700 text-sm mb-4">{p.description}</p>
                     </div>
                     <div className="flex flex-col">
-                        <img src={p.image} alt="" className="w-full h-auto max-h-96 object-cover" />
+                        <img src={p.image as string} alt="" className="w-full h-auto max-h-96 object-cover" />
                     </div>
                 </div>
             ))}
